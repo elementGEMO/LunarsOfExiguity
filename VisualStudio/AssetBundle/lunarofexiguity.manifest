@@ -1,0 +1,20 @@
+ManifestFileVersion: 0
+CRC: 3355965232
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 3a8143a98b65a8cde06e43876ae6c7cc
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: c21d61fe394c58399df3c6fb5c7c99b3
+HashAppended: 0
+ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/Fracture/IconLunarConsumed.png
+- Assets/Fracture/IconLunarOutline.png
+Dependencies: []

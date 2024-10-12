@@ -1,13 +1,14 @@
-﻿using UnityEngine.Networking;
-using BepInEx;
+﻿using BepInEx;
 using R2API;
-using RoR2;
+using System.IO;
+using UnityEngine;
 
 [assembly: HG.Reflection.SearchableAttribute.OptIn]
 
 namespace LunarsOfExiguity
 {
     [BepInDependency(LanguageAPI.PluginGUID)]
+    [BepInDependency(ItemAPI.PluginGUID)]
     [BepInPlugin(PluginGUID, PluginName, PluginVersion)]
     public class Main : BaseUnityPlugin
     {
@@ -17,33 +18,27 @@ namespace LunarsOfExiguity
         public const string PluginVersion = "1.0.0";
         public void Awake()
         {
+            new AssetStatics(this);
             Log.Init(Logger);
 
-            Inventory.onServerItemGiven += StopLunarStacking;
-            SetUpLunars();
-        }
-        private void StopLunarStacking(Inventory inventory, ItemIndex itemIndex, int itemCount)
-        {
-            //Log.Debug(inventory.name);
-            //Log.Debug(ItemCatalog.GetItemDef(item).name);
-            //Log.Debug(what);
-
-            if (!NetworkServer.active && inventory) return;
-
-            ItemDef item = ItemCatalog.GetItemDef(itemIndex);
-            CharacterMaster masterComponent = inventory.GetComponent<CharacterMaster>();
-            if (!item || !masterComponent) return;
-
-            if (item.tier == ItemTier.Lunar && inventory.GetItemCount(item) > 1)
-            {
-                //inventory.RemoveItem(itemIndex, itemCount - 1);
-                inventory.RemoveItem(itemIndex, inventory.GetItemCount(item));
-                CharacterMasterNotificationQueue.SendTransformNotification(masterComponent, itemIndex, (ItemIndex) 0, CharacterMasterNotificationQueue.TransformationType.LunarSun);
-            }
+            new Fractured();
+            //SetUpLunars();
         }
         private void SetUpLunars()
         {
 
+        }
+    }
+    public class AssetStatics
+    {
+        public static readonly string tokenPrefix = "GEMO_LOE_";
+        public static AssetBundle bundle;
+        public static BaseUnityPlugin plugin;
+
+        public AssetStatics(BaseUnityPlugin plugin)
+        {
+            AssetStatics.plugin = plugin;
+            bundle = AssetBundle.LoadFromFile(Path.Combine(Directory.GetParent(plugin.Info.Location).ToString(), "lunarofexiguity"));
         }
     }
 }
