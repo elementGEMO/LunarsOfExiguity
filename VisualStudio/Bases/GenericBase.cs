@@ -7,13 +7,15 @@ public abstract class GenericBase<T> where T : UnityEngine.Object
 
     public GenericBase()
     {
-        if (IsEnabled())
-        {
-            Initialize();
-        }
+        if (IsEnabled()) Create();
     }
 
     protected virtual bool IsEnabled() => true;
-    protected virtual void Initialize() { }
+    protected virtual void Create() { }
+    protected virtual void Initialize()
+    {
+        
+    }
+    
     public T Get() => Value;
 }

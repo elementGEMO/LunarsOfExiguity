@@ -1,5 +1,6 @@
 ﻿using BepInEx;
 using BepInEx.Configuration;
+using LunarsOfExiguity.Content.Lunar.Reworks;
 
 namespace LunarsOfExiguity
 {
@@ -27,9 +28,9 @@ namespace LunarsOfExiguity
                 "[ 0 = Whole | 1 = Tenths | 2 = Hundrenths | 3 = ... ]\n Rounds item values to respective decimal spot"
             );
 
-            RelicNameRewrite = plugin.Config.Bind(
+            ItemNameStyle = plugin.Config.Bind(
                 StaticName,
-                "Relic Names", RewriteOptions.RelicRewrite,
+                "Relic Names", NameStyle.Relic,
                 "Changing the naming conventions of Lunars"
             );
 
@@ -41,20 +42,14 @@ namespace LunarsOfExiguity
         }
         public static void LunarConfig(BaseUnityPlugin plugin)
         {
-            GestureOfTheDrowned.Enable_Rework = plugin.Config.Bind(
-                GestureOfTheDrowned.Internal,
-                "Enable Rework", true,
-                "[ True = Reworked | False = Vanilla | Removed Stacking ]"
-            );
-
-            GestureOfTheDrowned.Base_Equip_Percent = plugin.Config.Bind(
-                GestureOfTheDrowned.Internal,
+            AutoCastEquipmentRework.Base_Equip_Percent = plugin.Config.Bind(
+                "AutoCastEquipment",
                 "Rework - Percent Duration", 15f,
                 "[ 15.0f = 15% Duration ]\n Duration per Equipment use"
             );
 
-            GestureOfTheDrowned.Max_Equip_Percent = plugin.Config.Bind(
-                GestureOfTheDrowned.Internal,
+            AutoCastEquipmentRework.Max_Equip_Percent = plugin.Config.Bind(
+                "AutoCastEquipment",
                 "Rework - Max Percent", 100f,
                 "[ 100.0f = 100% Max Duration ]\n Max duration per Equipment use"
             );

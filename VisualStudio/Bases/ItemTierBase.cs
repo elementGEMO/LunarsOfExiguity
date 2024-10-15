@@ -14,7 +14,7 @@ public abstract class ItemTierBase : GenericBase<ItemTierDef>
 
     protected virtual ItemTierDef.PickupRules PickupRules => ItemTierDef.PickupRules.Default;
 
-    protected override void Initialize()
+    protected override void Create()
     {
         Value = ScriptableObject.CreateInstance<ItemTierDef>();
         if (Value)
@@ -29,6 +29,8 @@ public abstract class ItemTierBase : GenericBase<ItemTierDef>
             Value.canRestack = CanBeRestacked;
 
             Value.pickupRules = PickupRules;
+
+            Value.tier = ItemTier.AssignedAtRuntime;
         }
     }
 }

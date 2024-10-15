@@ -3,17 +3,23 @@ using RoR2;
 
 namespace LunarsOfExiguity;
 
-public abstract class ItemReworkBase : GenericBase<ItemDef>
+public abstract class ItemReworkBase
 {
+    protected abstract string Name { get; }
+    
     protected virtual string RelicNameOverride { get; }
     protected virtual string CursedNameOverride { get; }
     
     protected virtual string PickupOverride { get; }
     protected virtual string DescriptionOverride { get; }
 
-    protected override void Initialize() => ItemCatalog.availability.CallWhenAvailable(DelayedInitialize);
+    protected ItemReworkBase()
+    {
+        if (IsEnabled()) ItemCatalog.availability.CallWhenAvailable(Create);
+    }
 
-    private void DelayedInitialize()
+    protected virtual bool IsEnabled() => Main.Instance.Config.Bind(Name, "Enable Rework", true, "[ True = Reworked | False = Vanilla | Removed Stacking ]").Value;
+    private void Create()
     {
         ItemIndex itemIndex = ItemCatalog.FindItemIndex(Name);
         if (itemIndex == ItemIndex.None)
@@ -22,21 +28,28 @@ public abstract class ItemReworkBase : GenericBase<ItemDef>
             return;
         }
 
-        Value = ItemCatalog.GetItemDef(itemIndex);
-        if (Value)
+        ItemDef itemDef = ItemCatalog.GetItemDef(itemIndex);
+        if (itemDef)
         {
             switch (MainConfig.ItemNameStyle.Value)
             {
                 case MainConfig.NameStyle.Relic:
-                    if (!string.IsNullOrWhiteSpace(RelicNameOverride)) LanguageAPI.Add(Value.nameToken, RelicNameOverride);
+                    if (!string.IsNullOrWhiteSpace(RelicNameOverride)) LanguageAPI.Add(itemDef.nameToken, RelicNameOverride);
                     break;
                 case MainConfig.NameStyle.Cursed:
-                    if (!string.IsNullOrWhiteSpace(CursedNameOverride)) LanguageAPI.Add(Value.nameToken, CursedNameOverride);
+                    if (!string.IsNullOrWhiteSpace(CursedNameOverride)) LanguageAPI.Add(itemDef.nameToken, CursedNameOverride);
                     break;
             }
             
-            if (!string.IsNullOrWhiteSpace(Value.pickupToken)) LanguageAPI.Add(Value.pickupToken, PickupOverride);
-            if (!string.IsNullOrWhiteSpace(Value.descriptionToken)) LanguageAPI.Add(Value.descriptionToken, DescriptionOverride);
+            if (!string.IsNullOrWhiteSpace(itemDef.pickupToken)) LanguageAPI.Add(itemDef.pickupToken, PickupOverride);
+            if (!string.IsNullOrWhiteSpace(itemDef.descriptionToken)) LanguageAPI.Add(itemDef.descriptionToken, DescriptionOverride);
+            
+            Initialize();
         }
+    }
+
+    protected virtual void Initialize()
+    {
+        
     }
 }

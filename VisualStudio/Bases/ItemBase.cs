@@ -14,11 +14,11 @@ public abstract class ItemBase : GenericBase<ItemDef>
     protected virtual CombinedItemTier Tier => ItemTier.NoTier;
     
     protected virtual string DisplayName { get; }
-    protected abstract string PickupText { get; }
-    protected abstract string Description { get; }
-    protected abstract string Lore { get; }
+    protected virtual string PickupText { get; }
+    protected virtual string Description { get; }
+    protected virtual string Lore { get; }
 
-    protected override void Initialize()
+    protected override void Create()
     {
         Value = ScriptableObject.CreateInstance<ItemDef>();
         Value.name = Name;

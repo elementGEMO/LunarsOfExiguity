@@ -2,6 +2,8 @@
 using RoR2;
 using R2API;
 using System.IO;
+using LunarsOfExiguity.Content.Lunar.Items;
+using LunarsOfExiguity.Content.Lunar.Reworks;
 using UnityEngine;
 //using ShaderSwapper;
 
@@ -15,12 +17,16 @@ namespace LunarsOfExiguity
     [BepInPlugin(PluginGUID, PluginName, PluginVersion)]
     public class Main : BaseUnityPlugin
     {
+        public static Main Instance { get; private set; }
+        
         public const string PluginGUID = PluginAuthor + "." + PluginName;
         public const string PluginAuthor = "noodlegemo";
         public const string PluginName = "LunarsOfExiguity";
         public const string PluginVersion = "1.0.0";
         public void Awake()
         {
+            Instance = this; 
+            
             MainConfig.SetUp(this);
             if (MainConfig.EnableLogs.Value) Log.Init(Logger);
             new AssetStatics(this);
@@ -30,9 +36,9 @@ namespace LunarsOfExiguity
         }
         private void SetUpLunars()
         {
-            new Fractured();
-            new GestureOfTheDrowned(GestureOfTheDrowned.Enable_Rework.Value);
-            new FocusedConvergence();
+            new FracturedItem();
+            new AutoCastEquipmentRework();
+            new FocusedConvergenceRework();
         }
         /*
         private void SetUpPurified()

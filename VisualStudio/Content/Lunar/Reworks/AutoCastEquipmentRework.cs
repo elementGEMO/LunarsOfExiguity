@@ -1,53 +1,44 @@
-﻿using BepInEx.Configuration;
+﻿using System;
+using BepInEx.Configuration;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
-using RoR2.Skills;
-using RoR2;
 using R2API;
-using System;
+using RoR2;
+using RoR2.Skills;
 using UnityEngine;
 using UnityEngine.Networking;
 
-using static LunarsOfExiguity.ColorCode;
-using static LunarsOfExiguity.ItemUtils;
+namespace LunarsOfExiguity.Content.Lunar.Reworks;
 
-namespace LunarsOfExiguity
+public class AutoCastEquipmentRework : ItemReworkBase
 {
-    public class GestureOfTheDrowned : ItemBaseRework
+    protected override string Name => "AutoCastEquipment";
+    
+    protected override string RelicNameOverride => "Relic of the Drowned";
+    protected override string PickupOverride => "Equipments no longer use charge... " + "BUT activating your Equipment disables all skills temporarily".Style(ColorCode.FontColor.cDeath) + ".";
+
+    protected override string DescriptionOverride => string.Format(
+        "Equipments no longer use charge".Style(ColorCode.FontColor.cIsUtility) + ". Activating your Equipment temporarily " +
+        "disables all skills ".Style(ColorCode.FontColor.cIsHealth) + "for " + "{0}% ".Style(ColorCode.FontColor.cIsHealth) + "of the " +
+        "Equipment cooldown ".Style(ColorCode.FontColor.cIsUtility) + "on " + "each use".Style(ColorCode.FontColor.cIsHealth) +
+        ", up to a " + "maximum ".Style(ColorCode.FontColor.cIsHealth) + "of " + "{1}%".Style(ColorCode.FontColor.cIsHealth) + ".",
+        ItemUtils.RoundToValue(Base_Equip_Percent.Value), ItemUtils.RoundToValue(Max_Equip_Percent.Value));
+    
+    public static ConfigEntry<float> Base_Equip_Percent;
+    public static ConfigEntry<float> Max_Equip_Percent;
+
+    protected override void Initialize()
     {
-        public GestureOfTheDrowned(bool configValue = true) : base(configValue) { }
-        protected override string Token => "ITEM_AUTOCASTEQUIPMENT_";
-
-        public static string Internal = "Gesture of the Drowned";
-        public static ConfigEntry<bool> Enable_Rework;
-        public static ConfigEntry<float> Base_Equip_Percent;
-        public static ConfigEntry<float> Max_Equip_Percent;
-
-        protected override void LanguageTokens()
-        {
-            if (MainConfig.RelicNameRewrite.Value == MainConfig.RewriteOptions.RelicRewrite) LanguageAPI.Add(Token + "NAME", "Relic of the Drowned");
-            LanguageAPI.Add(Token + "PICKUP", "Equipments no longer use charge... " + "BUT activating your Equipment disables all skills temporarily".Style(FontColor.cDeath) + ".");
-            LanguageAPI.Add(Token + "DESC", string.Format(
-                "Equipments no longer use charge".Style(FontColor.cIsUtility) + ". Activating your Equipment temporarily " + "disables all skills ".Style(FontColor.cIsHealth) + "for " + "{0}% ".Style(FontColor.cIsHealth) + "of the " + "Equipment cooldown ".Style(FontColor.cIsUtility) + "on " + "each use".Style(FontColor.cIsHealth) + ", up to a " + "maximum ".Style(FontColor.cIsHealth) + "of " + "{1}%".Style(FontColor.cIsHealth) + ".",
-                RoundVal(Base_Equip_Percent.Value), RoundVal(Max_Equip_Percent.Value)
-            ));
-        }
-        protected override void DisabledTokens()
-        {
-            if (MainConfig.RelicNameRewrite.Value == MainConfig.RewriteOptions.RelicRewrite) LanguageAPI.Add(Token + "NAME", "Relic of the Drowned");
-            LanguageAPI.Add(Token + "DESC", "Reduce Equipment cooldown ".Style(FontColor.cIsUtility) + "by " + "50%".Style(FontColor.cIsUtility) + ". Forces your Equipment to " + "activate ".Style(FontColor.cIsUtility) + "whenever it is off " + "cooldown".Style(FontColor.cIsUtility) + ".");
-        }
-        protected override void Methods()
-        {
-            new DrownedDebuff();
-
-            IL.RoR2.EquipmentSlot.MyFixedUpdate += DisableAutoCast;
-            IL.RoR2.Inventory.CalculateEquipmentCooldownScale += DisableCooldownReduction;
-            IL.RoR2.EquipmentSlot.OnEquipmentExecuted += NoChargeUse;
-            On.RoR2.EquipmentSlot.OnEquipmentExecuted += DisableSkills;
-            CharacterBody.onBodyAwakeGlobal += DebuffAdded;
-        }
-
+        new DrownedDebuff();
+        
+        IL.RoR2.EquipmentSlot.MyFixedUpdate += DisableAutoCast;
+        IL.RoR2.Inventory.CalculateEquipmentCooldownScale += DisableCooldownReduction;
+        IL.RoR2.EquipmentSlot.OnEquipmentExecuted += NoChargeUse;
+        On.RoR2.EquipmentSlot.OnEquipmentExecuted += DisableSkills;
+        CharacterBody.onBodyAwakeGlobal += DebuffAdded;
+    }
+    
+    
         private static void DisableAutoCast(ILContext il)
         {
             ILCursor cursor = new(il);
@@ -68,8 +59,8 @@ namespace LunarsOfExiguity
                     cursor.Goto(previousIndex);
                     cursor.MoveAfterLabels();
                     cursor.Emit(OpCodes.Br, skipLabel.Target);
-                } else Log.Warning(Internal + " - #2 (DisableAutoCast) Failure");
-            } else Log.Warning(Internal + " - #1 (DisableAutoCast) Failure");
+                } else Log.Warning("AutoCastEquipment" + " - #2 (DisableAutoCast) Failure");
+            } else Log.Warning("AutoCastEquipment" + " - #1 (DisableAutoCast) Failure");
         }
         private static void DisableCooldownReduction(ILContext il)
         {
@@ -95,8 +86,8 @@ namespace LunarsOfExiguity
                     cursor.Goto(previousIndex);
                     cursor.MoveAfterLabels();
                     cursor.Emit(OpCodes.Br, skipLabel.Target);
-                } else Log.Warning(Internal + " - #2 (DisableCooldownReduction) Failure");
-            } else Log.Warning(Internal + " - #1 (DisableCooldownReduction) Failure");
+                } else Log.Warning("AutoCastEquipment" + " - #2 (DisableCooldownReduction) Failure");
+            } else Log.Warning("AutoCastEquipment" + " - #1 (DisableCooldownReduction) Failure");
         }
         private static void NoChargeUse(ILContext il)
         {
@@ -131,8 +122,8 @@ namespace LunarsOfExiguity
                     var skipLabel = cursor.MarkLabel();
                     cursor.Goto(previousIndex);
                     cursor.Emit(OpCodes.Br, skipLabel.Target);
-                } else Log.Warning(Internal + " - #2 (NoChargeUse) Failure");
-            } else Log.Warning(Internal + " - #1 (NoChargeUse) Failure");
+                } else Log.Warning("AutoCastEquipment" + " - #2 (NoChargeUse) Failure");
+            } else Log.Warning("AutoCastEquipment" + " - #1 (NoChargeUse) Failure");
         }
         private static void DisableSkills(On.RoR2.EquipmentSlot.orig_OnEquipmentExecuted orig, EquipmentSlot self)
         {
@@ -153,8 +144,7 @@ namespace LunarsOfExiguity
     }
     public class DrownedDebuff
     {
-        private static readonly string Internal = "Gesture of the Drowned";
-        private static readonly Sprite DrownedIcon = AssetStatics.bundle.LoadAsset<Sprite>("DrownedDebuffIcon");
+        //private static readonly Sprite DrownedIcon = AssetStatics.bundle.LoadAsset<Sprite>("DrownedDebuffIcon");
         public static BuffDef DrownedDebuffDef;
         public DrownedDebuff()
         {
@@ -165,7 +155,7 @@ namespace LunarsOfExiguity
             DrownedDebuffDef.isDebuff = false;
             DrownedDebuffDef.isHidden = false;
             DrownedDebuffDef.buffColor = new Color(0.706f, 0.753f, 0.976f);
-            DrownedDebuffDef.iconSprite = DrownedIcon;
+            //DrownedDebuffDef.iconSprite = DrownedIcon;
 
             ContentAddition.AddBuffDef(DrownedDebuffDef);
 
@@ -181,7 +171,7 @@ namespace LunarsOfExiguity
             {
                 cursor.Emit(OpCodes.Ldarg, 0);
                 cursor.EmitDelegate(HandleDrownedDebuff);
-            } else Log.Warning(Internal + " - #1 (DisableSkills) Failure");
+            } else Log.Warning("AutoCastEquipment" + " - #1 (DisableSkills) Failure");
         }
         private static void HandleDrownedDebuff(CharacterBody self)
         {
@@ -200,7 +190,7 @@ namespace LunarsOfExiguity
             if (self.hasAuthority)
             {
                 SkillDef disableSkill = LegacyResourcesAPI.Load<SkillDef>("Skills/DisabledSkills");
-                if (!disableSkill) Log.Warning(Internal + " - #2 (DisableSkills) Failure");
+                if (!disableSkill) Log.Warning("AutoCastEquipment" + " - #2 (DisableSkills) Failure");
                 else if (disable && self.skillLocator)
                 {
                     if (self.skillLocator.primary) self.skillLocator.primary.SetSkillOverride(self, disableSkill, GenericSkill.SkillOverridePriority.Contextual);
@@ -245,7 +235,7 @@ namespace LunarsOfExiguity
                 origin = Self.gameObject.transform.position,
                 scale = 0.5f
             }, true);
-            Duration = Math.Min(Duration + duration, baseDuration * GestureOfTheDrowned.Max_Equip_Percent.Value / 100f);
+            Duration = Math.Min(Duration + duration, baseDuration * AutoCastEquipmentRework.Max_Equip_Percent.Value / 100f);
         }
-    }
+    
 }
