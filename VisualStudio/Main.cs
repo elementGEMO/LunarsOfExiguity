@@ -3,8 +3,9 @@ using RoR2;
 using R2API;
 using System.IO;
 using LunarsOfExiguity.Content.Buffs;
-using LunarsOfExiguity.Content.Lunar.Items;
+using LunarsOfExiguity.Content.Items;
 using LunarsOfExiguity.Content.Lunar.Reworks;
+using LunarsOfExiguity.Content.Reworks;
 using UnityEngine;
 //using ShaderSwapper;
 

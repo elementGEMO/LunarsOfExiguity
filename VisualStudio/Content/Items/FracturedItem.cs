@@ -3,7 +3,7 @@ using RoR2;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace LunarsOfExiguity.Content.Lunar.Items;
+namespace LunarsOfExiguity.Content.Items;
 
 public class FracturedItem : ItemBase
 {

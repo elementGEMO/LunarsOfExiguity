@@ -1,6 +1,6 @@
 ﻿using RoR2;
 
-namespace LunarsOfExiguity.Content.Purified;
+namespace LunarsOfExiguity.Content.ItemTiers;
 
 public class PurifiedTier : ItemTierBase
 {

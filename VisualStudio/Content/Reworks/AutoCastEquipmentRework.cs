@@ -1,14 +1,11 @@
 ﻿using System;
-using BepInEx.Configuration;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
-using R2API;
 using RoR2;
-using RoR2.Skills;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace LunarsOfExiguity.Content.Lunar.Reworks;
+namespace LunarsOfExiguity.Content.Reworks;
 
 public class AutoCastEquipmentRework : ItemReworkBase
 {
