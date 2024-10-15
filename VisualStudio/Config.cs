@@ -60,9 +60,11 @@ namespace LunarsOfExiguity
             );
         }
 
+        public static ConfigEntry<NameStyle> ItemNameStyle;
+        
         public static ConfigEntry<int> RoundNumber;
         public static ConfigEntry<bool> EnableLogs;
-        public static ConfigEntry<RewriteOptions> RelicNameRewrite;
+  
         public static ConfigEntry<FracturedOptions> FracturedCount;
 
         public enum FracturedOptions
@@ -70,11 +72,19 @@ namespace LunarsOfExiguity
             ItemOnFracture,
             NoItemOnFracture
         }
+        
         public enum RewriteOptions
         {
             Vanilla,
             RelicRewrite,
             CursedRewrite
+        }
+
+        public enum NameStyle
+        {
+            Vanilla,
+            Relic,
+            Cursed
         }
     }
 }
