@@ -30,19 +30,16 @@ namespace LunarsOfExiguity
         protected override void LanguageTokens()
         {
             if (MainConfig.RelicNameRewrite.Value == MainConfig.RewriteOptions.RelicRewrite) LanguageAPI.Add(Token + "NAME", "Relic of Focus");
-            //LanguageAPI.Add(Token + "PICKUP", "Equipments no longer use charge... " + "BUT activating your Equipment disables all skills temporarily".Style(FontColor.cDeath) + ".");
+            LanguageAPI.Add(Token + "PICKUP", "Charge the Teleporter faster... " + "BUT all enemies are invincible".Style(FontColor.cDeath) + ", and take damage at the end, reduced by you taking damage.");
             LanguageAPI.Add(Token + "DESC", string.Format(
-                "Teleporters charge {0}% faster, but all enemies are invincible and until Teleporter is 99% charged. At 99% charge, enemies lose {1}% health, but taking damage during charge reduces final damage by {2}% per hit.",
+                "Teleporters charge " + "{0}% ".Style(FontColor.cIsUtility) + "faster, but " + "all enemies are invincible ".Style(FontColor.cIsHealth) + " until Teleporter is " + "99% ".Style(FontColor.cIsUtility) + "charged. At " + "99% ".Style(FontColor.cIsUtility) + "charge, " + "enemies ".Style(FontColor.cIsHealth) + "lose " + "{1}% health".Style(FontColor.cIsDamage) + ", but taking damage during charge reduces final damage by " + "{2}% ".Style(FontColor.cIsDamage) + "per hit.",
                 RoundVal(Charge_Speed_Percent.Value), RoundVal(Max_Damage_Percent.Value), RoundVal(Percent_Loss_Hit.Value)
             ));
         }
         protected override void DisabledTokens()
         {
             if (MainConfig.RelicNameRewrite.Value == MainConfig.RewriteOptions.RelicRewrite) LanguageAPI.Add(Token + "NAME", "Relic of Focus");
-            /*
-            if (MainConfig.RelicNameRewrite.Value == MainConfig.RewriteOptions.RelicRewrite) LanguageAPI.Add(Token + "NAME", "Relic of the Drowned");
-            LanguageAPI.Add(Token + "DESC", "Reduce Equipment cooldown ".Style(FontColor.cIsUtility) + "by " + "50%".Style(FontColor.cIsUtility) + ". Forces your Equipment to " + "activate ".Style(FontColor.cIsUtility) + "whenever it is off " + "cooldown".Style(FontColor.cIsUtility) + ".");
-            */
+            LanguageAPI.Add(Token + "DESC", "Teleporters charge " + "30% faster".Style(FontColor.cIsUtility) + ", but the size of the Teleporter zone is " + "50% ".Style(FontColor.cIsHealth) + "smaller.");
         }
         protected override void Methods()
         {
@@ -85,6 +82,13 @@ namespace LunarsOfExiguity
                             HealthComponent health = nonPlayer.GetComponent<HealthComponent>();
                             if (health && health.alive)
                             {
+                                EffectManager.SpawnEffect(EntityStates.Missions.BrotherEncounter.Phase1.centerOrbDestroyEffect, new EffectData()
+                                {
+                                    origin = health.body.transform.position,
+                                    rotation = UnityEngine.Random.rotation,
+                                    scale = finalDamage
+                                }, true);
+
                                 DamageInfo setDamage = new()
                                 {
                                     attacker = null,
@@ -93,18 +97,14 @@ namespace LunarsOfExiguity
                                     damageColorIndex = ConvergenceDamage,
                                     damage = health.combinedHealth * finalDamage
                                 };
-                                EffectManager.SpawnEffect(GlobalEventManager.CommonAssets.runicMeteorEffect, new EffectData
-                                {
-                                    origin = health.body.transform.position,
-                                    scale = 2f
-                                }, true);
+
                                 health.body.RemoveOldestTimedBuff(RoR2Content.Buffs.Immune);
                                 health.TakeDamage(setDamage);
                             }
                         }
                     }
                 });
-            }
+            } else Log.Warning(Internal + " - #1 (DamageAll) Failure");
         }
         private static void DisableConvergence(On.RoR2.HoldoutZoneController.orig_Start orig, HoldoutZoneController self)
         {
@@ -146,7 +146,7 @@ namespace LunarsOfExiguity
                         }
                     }
                 });
-            }
+            } else Log.Warning(Internal + " - #1 (IncreaseDamageCounter) Failure");
         }
         private static void Invincibility(CharacterBody self) => self.gameObject.AddComponent<InvincibleDuringHoldout>();
     }
@@ -208,7 +208,7 @@ namespace LunarsOfExiguity
         {
             itemCount = Util.GetItemCountForTeam(zoneController.chargingTeam, RoR2Content.Items.FocusConvergence.itemIndex, true, false);
             if (enabledTime.timeSince < HoldoutZoneController.FocusConvergenceController.startupDelay) itemCount = 0;
-            float lerp = Mathf.MoveTowards(currentValue, itemCount > 0 ? 1f : 0f, 1f * deltaTime);
+            float lerp = Mathf.MoveTowards(currentValue, itemCount > 0 ? 1f : 0f, 0.5f * deltaTime);
             if (currentValue <= 0f && lerp > 0f) Util.PlaySound("Play_item_lunar_focusedConvergence", gameObject);
             currentValue = lerp;
         }
