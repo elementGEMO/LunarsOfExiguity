@@ -46,7 +46,7 @@ public class FracturedItem : ItemBase
                 if (!StepInventoryInfection(inventoryReplacementCandidate.inventory, inventoryReplacementCandidate.originalItem)) PendingFractures.RemoveAt(i);
                 else
                 {
-                    inventoryReplacementCandidate.time = Run.FixedTimeStamp.now + FractureDelay;
+                    inventoryReplacementCandidate.time = Run.FixedTimeStamp.now + MainConfig.FractureItemDelay.Value;
                     PendingFractures[i] = inventoryReplacementCandidate;
                 }
             }
@@ -90,7 +90,7 @@ public class FracturedItem : ItemBase
         {
             inventory = inventory,
             originalItem = originalItemIndex,
-            time = Run.FixedTimeStamp.now + FractureDelay
+            time = Run.FixedTimeStamp.now + MainConfig.FractureItemDelay.Value
         });
     }
     
@@ -102,5 +102,4 @@ public class FracturedItem : ItemBase
     }
     
     private static List<InventoryReplacementCandidate> PendingFractures = [];
-    public static readonly float FractureDelay = 0.5f;
 }

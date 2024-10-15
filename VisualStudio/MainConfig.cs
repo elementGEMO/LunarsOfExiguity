@@ -8,6 +8,7 @@ namespace LunarsOfExiguity
     {
         public static ConfigEntry<bool> EnableLogging;
         public static ConfigEntry<bool> GainItemOnFracture;
+        public static ConfigEntry<float> FractureItemDelay;
         public static ConfigEntry<NameStyle> ItemNameStyle;
         public static ConfigEntry<int> RoundingLength;
 
@@ -28,6 +29,7 @@ namespace LunarsOfExiguity
             RoundingLength = plugin.Config.Bind(section, "Item Stats Round", 0, "[ 0 = Whole | 1 = Tenths | 2 = Hundredths | 3 = ... ]\n Rounds item values to respective decimal place.");
             ItemNameStyle = plugin.Config.Bind(section, "Relic Names", NameStyle.Relic, "The naming conventions of lunar items.");
             GainItemOnFracture = plugin.Config.Bind(section, "Gain Item on Fracture", true, "Whether to gain the 'Fractured' item to count lunar item conversions.");
+            FractureItemDelay = plugin.Config.Bind(section, "Fracture Delay", 0.5f, "PLEASE WRITE SOMETHING FOR THIS GEMO I AM LAZY.");
         }
         public static void LunarConfig(BaseUnityPlugin plugin)
         {
