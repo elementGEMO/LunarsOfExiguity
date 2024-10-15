@@ -40,10 +40,10 @@ public abstract class ItemBase : GenericBase<ItemDef>
         if (Value)
         {
             Value.AutoPopulateTokens();
-            Value.nameToken = AssetStatics.tokenPrefix + Value.nameToken;
-            Value.pickupToken = AssetStatics.tokenPrefix + Value.pickupToken;
-            Value.descriptionToken = AssetStatics.tokenPrefix + Value.descriptionToken;
-            Value.loreToken = AssetStatics.tokenPrefix + Value.loreToken;
+            Value.nameToken = LunarsOfExiguityPlugin.TokenPrefix + Value.nameToken;
+            Value.pickupToken = LunarsOfExiguityPlugin.TokenPrefix + Value.pickupToken;
+            Value.descriptionToken = LunarsOfExiguityPlugin.TokenPrefix + Value.descriptionToken;
+            Value.loreToken = LunarsOfExiguityPlugin.TokenPrefix + Value.loreToken;
             
             if (!string.IsNullOrWhiteSpace(DisplayName)) LanguageAPI.Add(Value.nameToken, DisplayName);
             if (!string.IsNullOrWhiteSpace(PickupText)) LanguageAPI.Add(Value.pickupToken, PickupText);

@@ -20,7 +20,10 @@ namespace LunarsOfExiguity
     [BepInPlugin(PluginGUID, PluginName, PluginVersion)]
     public class LunarsOfExiguityPlugin : BaseUnityPlugin
     {
+        public static readonly string TokenPrefix = "GEMO_LOE_";
+        
         public static LunarsOfExiguityPlugin Instance { get; private set; }
+        public static AssetBundle AssetBundle { get; private set; }
         
         public const string PluginGUID = PluginAuthor + "." + PluginName;
         public const string PluginAuthor = "noodlegemo";
@@ -35,7 +38,7 @@ namespace LunarsOfExiguity
             
             if (LunarsOfExiguityConfig.EnableLogging.Value) Log.Init(Logger);
     
-            new AssetStatics(this);
+            SetupAssets();
             SetupContent();
         }
 
@@ -62,18 +65,7 @@ namespace LunarsOfExiguity
             new AutoCastEquipmentRework();
             new FocusedConvergenceRework();
         }
-    }
-    
-    public class AssetStatics
-    {
-        public static readonly string tokenPrefix = "GEMO_LOE_";
-        public static AssetBundle bundle;
-        public static BaseUnityPlugin plugin;
 
-        public AssetStatics(BaseUnityPlugin plugin)
-        {
-            AssetStatics.plugin = plugin;
-            bundle = AssetBundle.LoadFromFile(System.IO.Path.Combine(Directory.GetParent(plugin.Info.Location).ToString(), "lunarofexiguity"));
-        }
+        private void SetupAssets() => AssetBundle = AssetBundle.LoadFromFile(System.IO.Path.Combine(Directory.GetParent(Info.Location)!.ToString(), "lunarofexiguity"));
     }
 }
