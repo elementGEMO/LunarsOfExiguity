@@ -18,7 +18,7 @@ public abstract class ItemReworkBase
         if (IsEnabled()) ItemCatalog.availability.CallWhenAvailable(Create);
     }
 
-    protected virtual bool IsEnabled() => Main.Instance.Config.Bind(Name, "Enable Rework", true, "[ True = Reworked | False = Vanilla | Removed Stacking ]").Value;
+    protected virtual bool IsEnabled() => LunarsOfExiguityPlugin.Instance.Config.Bind(Name, "Enable Rework", true, "[ True = Reworked | False = Vanilla | Removed Stacking ]").Value;
     private void Create()
     {
         ItemIndex itemIndex = ItemCatalog.FindItemIndex(Name);
@@ -31,12 +31,12 @@ public abstract class ItemReworkBase
         ItemDef itemDef = ItemCatalog.GetItemDef(itemIndex);
         if (itemDef)
         {
-            switch (MainConfig.ItemNameStyle.Value)
+            switch (LunarsOfExiguityConfig.ItemNameStyle.Value)
             {
-                case MainConfig.NameStyle.Relic:
+                case LunarsOfExiguityConfig.NameStyle.Relic:
                     if (!string.IsNullOrWhiteSpace(RelicNameOverride)) LanguageAPI.Add(itemDef.nameToken, RelicNameOverride);
                     break;
-                case MainConfig.NameStyle.Cursed:
+                case LunarsOfExiguityConfig.NameStyle.Cursed:
                     if (!string.IsNullOrWhiteSpace(CursedNameOverride)) LanguageAPI.Add(itemDef.nameToken, CursedNameOverride);
                     break;
             }

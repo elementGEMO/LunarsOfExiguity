@@ -16,7 +16,7 @@ public class FocusedConvergenceRework : ItemReworkBase
 
     protected override string RelicNameOverride => "Relic of Focus";
     protected override string PickupOverride => "Increase the speed of Teleporter charging... BUT all enemies are invincible for it's duration.";
-    protected override string DescriptionOverride => $"Teleporters charge <style=cIsUtility>{MainConfig.AdditionalChargeSpeedPercentage.Value}%</style> faster, but enemies are <style=cIsHealing>invulnerable</style> during it's duration. Once complete, enemies take <style=cIsDamage>{MainConfig.MaxDamagePercentage.Value}%</style> of their <style=cIsHealing>health</style> in <style=cIsDamage>damage</style>, reduced by <style=cIsDamage>{MainConfig.DamageLossOnHitPercentage.Value}%</style> for each time you were hit.";
+    protected override string DescriptionOverride => $"Teleporters charge <style=cIsUtility>{LunarsOfExiguityConfig.AdditionalChargeSpeedPercentage.Value}%</style> faster, but enemies are <style=cIsHealing>invulnerable</style> during it's duration. Once complete, enemies take <style=cIsDamage>{LunarsOfExiguityConfig.MaxDamagePercentage.Value}%</style> of their <style=cIsHealing>health</style> in <style=cIsDamage>damage</style>, reduced by <style=cIsDamage>{LunarsOfExiguityConfig.DamageLossOnHitPercentage.Value}%</style> for each time you were hit.";
 
     protected override void Initialize()
     {
@@ -46,8 +46,8 @@ public class FocusedConvergenceRework : ItemReworkBase
                     if (component) totalDamageInstances += component.DamageInstances;
                 }
 
-                float finalDamageMultiplier = MainConfig.MaxDamagePercentage.Value * 0.01f *
-                                              Mathf.Pow(1f - MainConfig.DamageLossOnHitPercentage.Value / 0.01f,
+                float finalDamageMultiplier = LunarsOfExiguityConfig.MaxDamagePercentage.Value * 0.01f *
+                                              Mathf.Pow(1f - LunarsOfExiguityConfig.DamageLossOnHitPercentage.Value / 0.01f,
                                                   totalDamageInstances / itemCount) * itemCount;
                 foreach (TeamComponent monsterTeamComponent in TeamComponent.GetTeamMembers(TeamIndex.Monster))
                 {
@@ -174,7 +174,7 @@ public class FocusedConvergenceRework : ItemReworkBase
         }
         private void ApplyRate(ref float rate)
         {
-            if (itemCount > 0) rate *= 1f + Mathf.Pow(MainConfig.AdditionalChargeSpeedPercentage.Value * 0.01f, 1 / itemCount);
+            if (itemCount > 0) rate *= 1f + Mathf.Pow(LunarsOfExiguityConfig.AdditionalChargeSpeedPercentage.Value * 0.01f, 1 / itemCount);
         }
         
         private void Update()

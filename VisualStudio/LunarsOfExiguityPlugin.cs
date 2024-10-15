@@ -4,6 +4,7 @@ using R2API;
 using System.IO;
 using LunarsOfExiguity.Content.Buffs;
 using LunarsOfExiguity.Content.Items;
+using LunarsOfExiguity.Content.ItemTiers;
 using LunarsOfExiguity.Content.Lunar.Reworks;
 using LunarsOfExiguity.Content.Reworks;
 using UnityEngine;
@@ -17,46 +18,52 @@ namespace LunarsOfExiguity
     [BepInDependency(ItemAPI.PluginGUID)]
     [BepInDependency(ColorsAPI.PluginGUID)]
     [BepInPlugin(PluginGUID, PluginName, PluginVersion)]
-    public class Main : BaseUnityPlugin
+    public class LunarsOfExiguityPlugin : BaseUnityPlugin
     {
-        public static Main Instance { get; private set; }
+        public static LunarsOfExiguityPlugin Instance { get; private set; }
         
         public const string PluginGUID = PluginAuthor + "." + PluginName;
         public const string PluginAuthor = "noodlegemo";
         public const string PluginName = "LunarsOfExiguity";
         public const string PluginVersion = "1.0.0";
-        public void Awake()
-        {
-            Instance = this; 
-            
-            MainConfig.SetUp(this);
-            if (MainConfig.EnableLogging.Value) Log.Init(Logger);
-            new AssetStatics(this);
 
-            //StartCoroutine(AssetStatics.bundle.UpgradeStubbedShadersAsync());
-            SetUpLunars();
+        private void Awake() => Instance = this;
+
+        private void Start()
+        {
+            LunarsOfExiguityConfig.Init();
+            
+            if (LunarsOfExiguityConfig.EnableLogging.Value) Log.Init(Logger);
+    
+            new AssetStatics(this);
+            SetupContent();
         }
-        private void SetUpLunars()
+
+        private void SetupContent()
+        {
+            SetupBuffs();
+            SetupItems();
+            SetupReworks();
+        }
+
+        private void SetupBuffs()
         {
             new RelicDisableSkillsDebuff();
+        }
+
+        private void SetupItems()
+        {
+            new PurifiedTier();
             new FracturedItem();
+        }
+
+        private void SetupReworks()
+        {
             new AutoCastEquipmentRework();
             new FocusedConvergenceRework();
         }
-        /*
-        private void SetUpPurified()
-        {
-            new PurifiedTier();
-            //ItemCatalog.availability.onAvailable += TempAdd;
-            //ItemCatalog.GetItemDef(RoR2Content.Items.Pearl.itemIndex).deprecatedTier = PurifiedTier.PurifiedTierDef.tier;
-            //new PurifiedDrowned();
-        }
-        private void TempAdd()
-        {
-            ItemCatalog.GetItemDef(RoR2Content.Items.Pearl.itemIndex)._itemTierDef = PurifiedTier.PurifiedTierDef;
-        }
-        */
     }
+    
     public class AssetStatics
     {
         public static readonly string tokenPrefix = "GEMO_LOE_";

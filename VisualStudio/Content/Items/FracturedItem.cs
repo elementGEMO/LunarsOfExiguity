@@ -44,7 +44,7 @@ public class FracturedItem : ItemBase
                 if (!StepInventoryFracture(inventoryReplacementCandidate.inventory, inventoryReplacementCandidate.originalItem)) PendingFractures.RemoveAt(i);
                 else
                 {
-                    inventoryReplacementCandidate.time = Run.FixedTimeStamp.now + MainConfig.FractureItemDelay.Value;
+                    inventoryReplacementCandidate.time = Run.FixedTimeStamp.now + LunarsOfExiguityConfig.FractureItemDelay.Value;
                     PendingFractures[i] = inventoryReplacementCandidate;
                 }
             }
@@ -78,7 +78,7 @@ public class FracturedItem : ItemBase
             int itemCount = inventory.GetItemCount(itemIndex);
             if (itemCount > 1)
             {
-                if (MainConfig.GainItemOnFracture.Value) TryQueueReplacement(inventory, itemIndex);
+                if (LunarsOfExiguityConfig.GainItemOnFracture.Value) TryQueueReplacement(inventory, itemIndex);
                 else inventory.RemoveItem(itemIndex, itemCount);
             }
         }
@@ -90,7 +90,7 @@ public class FracturedItem : ItemBase
         {
             inventory = inventory,
             originalItem = originalItemIndex,
-            time = Run.FixedTimeStamp.now + MainConfig.FractureItemDelay.Value
+            time = Run.FixedTimeStamp.now + LunarsOfExiguityConfig.FractureItemDelay.Value
         });
     }
     
