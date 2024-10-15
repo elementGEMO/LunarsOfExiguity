@@ -18,11 +18,11 @@ namespace LunarsOfExiguity
     [BepInDependency(ItemAPI.PluginGUID)]
     [BepInDependency(ColorsAPI.PluginGUID)]
     [BepInPlugin(PluginGUID, PluginName, PluginVersion)]
-    public class LunarsOfExiguityPlugin : BaseUnityPlugin
+    public class LoEPlugin : BaseUnityPlugin
     {
         public static readonly string TokenPrefix = "GEMO_LOE_";
         
-        public static LunarsOfExiguityPlugin Instance { get; private set; }
+        public static LoEPlugin Instance { get; private set; }
         public static AssetBundle AssetBundle { get; private set; }
         
         public const string PluginGUID = PluginAuthor + "." + PluginName;
@@ -34,9 +34,9 @@ namespace LunarsOfExiguity
 
         private void Start()
         {
-            LunarsOfExiguityConfig.Init();
+            LoEConfig.Init();
             
-            if (LunarsOfExiguityConfig.EnableLogging.Value) Log.Init(Logger);
+            if (LoEConfig.EnableLogging.Value) LoELog.Init(Logger);
     
             SetupAssets();
             SetupContent();

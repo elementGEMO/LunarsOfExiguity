@@ -18,25 +18,25 @@ public abstract class ItemReworkBase
         if (IsEnabled()) ItemCatalog.availability.CallWhenAvailable(Create);
     }
 
-    protected virtual bool IsEnabled() => LunarsOfExiguityPlugin.Instance.Config.Bind(Name, "Enable Rework", true, "[ True = Reworked | False = Vanilla | Removed Stacking ]").Value;
+    protected virtual bool IsEnabled() => LoEPlugin.Instance.Config.Bind(Name, "Enable Rework", true, "[ True = Reworked | False = Vanilla | Removed Stacking ]").Value;
     private void Create()
     {
         ItemIndex itemIndex = ItemCatalog.FindItemIndex(Name);
         if (itemIndex == ItemIndex.None)
         {
-            Log.Warning($"Failed to find ItemIndex for {Name}.");
+            LoELog.Warning($"Failed to find ItemIndex for {Name}.");
             return;
         }
 
         ItemDef itemDef = ItemCatalog.GetItemDef(itemIndex);
         if (itemDef)
         {
-            switch (LunarsOfExiguityConfig.ItemNameStyle.Value)
+            switch (LoEConfig.ItemNameStyle.Value)
             {
-                case LunarsOfExiguityConfig.NameStyle.Relic:
+                case LoEConfig.NameStyle.Relic:
                     if (!string.IsNullOrWhiteSpace(RelicNameOverride)) LanguageAPI.Add(itemDef.nameToken, RelicNameOverride);
                     break;
-                case LunarsOfExiguityConfig.NameStyle.Cursed:
+                case LoEConfig.NameStyle.Cursed:
                     if (!string.IsNullOrWhiteSpace(CursedNameOverride)) LanguageAPI.Add(itemDef.nameToken, CursedNameOverride);
                     break;
             }

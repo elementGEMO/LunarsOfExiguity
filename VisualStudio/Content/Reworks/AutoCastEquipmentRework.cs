@@ -13,7 +13,7 @@ public class AutoCastEquipmentRework : ItemReworkBase
     
     protected override string RelicNameOverride => "Relic of the Drowned";
     protected override string PickupOverride => "Equipment use requires no charges... <style=cDeath>BUT activation disables all skills temporarily</style>.";
-    protected override string DescriptionOverride => $"Equipment no longer requires charges. <style=cIsUtility>Activating</style> your Equipment disables all skills for <style=cIsUtility>{LunarsOfExiguityConfig.BaseDisableSkillsPercentage}%</style> of it's <style=cIsUtility>cooldown</style> for each use, up to a maximum of <style=cIsUtility>{LunarsOfExiguityConfig.MaxDisableSkillsPercentage}%</style>.";
+    protected override string DescriptionOverride => $"Equipment no longer requires charges. <style=cIsUtility>Activating</style> your Equipment disables all skills for <style=cIsUtility>{LoEConfig.BaseDisableSkillsPercentage}%</style> of it's <style=cIsUtility>cooldown</style> for each use, up to a maximum of <style=cIsUtility>{LoEConfig.MaxDisableSkillsPercentage}%</style>.";
 
     protected override void Initialize()
     {
@@ -45,8 +45,8 @@ public class AutoCastEquipmentRework : ItemReworkBase
                     cursor.Goto(previousIndex);
                     cursor.MoveAfterLabels();
                     cursor.Emit(OpCodes.Br, skipLabel.Target);
-                } else Log.Warning("AutoCastEquipment" + " - #2 (DisableAutoCast) Failure");
-            } else Log.Warning("AutoCastEquipment" + " - #1 (DisableAutoCast) Failure");
+                } else LoELog.Warning("AutoCastEquipment" + " - #2 (DisableAutoCast) Failure");
+            } else LoELog.Warning("AutoCastEquipment" + " - #1 (DisableAutoCast) Failure");
         }
         private static void DisableCooldownReduction(ILContext il)
         {
@@ -72,8 +72,8 @@ public class AutoCastEquipmentRework : ItemReworkBase
                     cursor.Goto(previousIndex);
                     cursor.MoveAfterLabels();
                     cursor.Emit(OpCodes.Br, skipLabel.Target);
-                } else Log.Warning("AutoCastEquipment" + " - #2 (DisableCooldownReduction) Failure");
-            } else Log.Warning("AutoCastEquipment" + " - #1 (DisableCooldownReduction) Failure");
+                } else LoELog.Warning("AutoCastEquipment" + " - #2 (DisableCooldownReduction) Failure");
+            } else LoELog.Warning("AutoCastEquipment" + " - #1 (DisableCooldownReduction) Failure");
         }
         private static void NoChargeUse(ILContext il)
         {
@@ -108,8 +108,8 @@ public class AutoCastEquipmentRework : ItemReworkBase
                     var skipLabel = cursor.MarkLabel();
                     cursor.Goto(previousIndex);
                     cursor.Emit(OpCodes.Br, skipLabel.Target);
-                } else Log.Warning("AutoCastEquipment" + " - #2 (NoChargeUse) Failure");
-            } else Log.Warning("AutoCastEquipment" + " - #1 (NoChargeUse) Failure");
+                } else LoELog.Warning("AutoCastEquipment" + " - #2 (NoChargeUse) Failure");
+            } else LoELog.Warning("AutoCastEquipment" + " - #1 (NoChargeUse) Failure");
         }
         private static void DisableSkills(On.RoR2.EquipmentSlot.orig_OnEquipmentExecuted orig, EquipmentSlot self)
         {
@@ -122,7 +122,7 @@ public class AutoCastEquipmentRework : ItemReworkBase
                 if (drownedHandler && hasItem)
                 {
                     float duration = EquipmentCatalog.GetEquipmentDef(self.equipmentIndex).cooldown * self.inventory.CalculateEquipmentCooldownScale();
-                    drownedHandler.IncreaseDuration(duration * LunarsOfExiguityConfig.BaseDisableSkillsPercentage.Value / 100f, duration);
+                    drownedHandler.IncreaseDuration(duration * LoEConfig.BaseDisableSkillsPercentage.Value / 100f, duration);
                 }
             }
         }
@@ -158,7 +158,7 @@ public class AutoCastEquipmentRework : ItemReworkBase
                 origin = Self.gameObject.transform.position,
                 scale = 0.5f
             }, true);
-            Duration = Math.Min(Duration + duration, baseDuration * LunarsOfExiguityConfig.MaxDisableSkillsPercentage.Value / 100f);
+            Duration = Math.Min(Duration + duration, baseDuration * LoEConfig.MaxDisableSkillsPercentage.Value / 100f);
         }
     
 }

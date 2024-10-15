@@ -27,7 +27,7 @@ public class RelicDisableSkillsDebuff : BuffBase
                     var disableSkill = LegacyResourcesAPI.Load<SkillDef>("Skills/DisabledSkills");
                     if (!disableSkill)
                     {
-                        Log.Warning("RelicDisableSkillsDebuff Failed to Find DisabledSkills SkillDef");
+                        LoELog.Warning("RelicDisableSkillsDebuff Failed to Find DisabledSkills SkillDef");
                         return;
                     }
 
@@ -51,7 +51,7 @@ public class RelicDisableSkillsDebuff : BuffBase
                 return;
             } 
             
-            Log.Warning("Failed to Apply RelicDisableSkillsDebuff CharacterBody.RecalculateStats Hook.");
+            LoELog.Warning("Failed to Apply RelicDisableSkillsDebuff CharacterBody.RecalculateStats Hook.");
         };
     }
 }
