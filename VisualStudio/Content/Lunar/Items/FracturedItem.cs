@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using BepInEx.Configuration;
 using RoR2;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -16,9 +15,8 @@ public class FracturedItem : ItemBase
     protected override ItemTag[] Tags => [ItemTag.CannotCopy, ItemTag.CannotSteal, ItemTag.CannotDuplicate];
 
     protected override string DisplayName => "Fractured";
-    protected override string PickupText => "Your " + "Lunar ".Style(ColorCode.FontColor.cIsLunar) + "items have shattered into pieces.";
-    protected override string Description => "The aftermath of obtaining additional " + "Lunar ".Style(ColorCode.FontColor.cIsLunar) + "items.";
-
+    protected override string PickupText => "Your <style=cIsLunar>lunar</style items have shattered into pieces.";
+  
     protected override void Initialize()
     {
         Inventory.onInventoryChangedGlobal += OnInventoryChangedGlobal;
@@ -43,7 +41,7 @@ public class FracturedItem : ItemBase
             InventoryReplacementCandidate inventoryReplacementCandidate = PendingFractures[i];
             if (inventoryReplacementCandidate.time.hasPassed)
             {
-                if (!StepInventoryInfection(inventoryReplacementCandidate.inventory, inventoryReplacementCandidate.originalItem)) PendingFractures.RemoveAt(i);
+                if (!StepInventoryFracture(inventoryReplacementCandidate.inventory, inventoryReplacementCandidate.originalItem)) PendingFractures.RemoveAt(i);
                 else
                 {
                     inventoryReplacementCandidate.time = Run.FixedTimeStamp.now + MainConfig.FractureItemDelay.Value;
@@ -53,7 +51,7 @@ public class FracturedItem : ItemBase
         }
     }
     
-    private static bool StepInventoryInfection(Inventory inventory, ItemIndex originalItemIndex)
+    private static bool StepInventoryFracture(Inventory inventory, ItemIndex originalItemIndex)
     {
         ItemIndex itemIndex = ItemCatalog.FindItemIndex("Fractured");
         if (itemIndex == ItemIndex.None) return false;
@@ -62,10 +60,12 @@ public class FracturedItem : ItemBase
         if (count > 0)
         {
             inventory.RemoveItem(originalItemIndex, count);
-            inventory.GiveItem(ItemCatalog.FindItemIndex("Fractured"), count);
+            inventory.GiveItem(itemIndex, count);
+            
             var characterMaster = inventory.GetComponent<CharacterMaster>();
             if (characterMaster) CharacterMasterNotificationQueue.SendTransformNotification(characterMaster, originalItemIndex, itemIndex, CharacterMasterNotificationQueue.TransformationType.LunarSun);
         }
+        
         return true;
     }
 
@@ -101,5 +101,5 @@ public class FracturedItem : ItemBase
         public Run.FixedTimeStamp time;
     }
     
-    private static List<InventoryReplacementCandidate> PendingFractures = [];
+    private static readonly List<InventoryReplacementCandidate> PendingFractures = [];
 }
