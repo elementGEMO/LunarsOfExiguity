@@ -10,7 +10,6 @@ public abstract class ItemReworkBase : GenericBase<ItemDef>
     
     protected virtual string PickupOverride { get; }
     protected virtual string DescriptionOverride { get; }
-    protected virtual string LoreOverride { get; }
 
     protected override void Initialize() => ItemCatalog.availability.CallWhenAvailable(DelayedInitialize);
 
@@ -38,7 +37,6 @@ public abstract class ItemReworkBase : GenericBase<ItemDef>
             
             if (!string.IsNullOrWhiteSpace(Value.pickupToken)) LanguageAPI.Add(Value.pickupToken, PickupOverride);
             if (!string.IsNullOrWhiteSpace(Value.descriptionToken)) LanguageAPI.Add(Value.descriptionToken, DescriptionOverride);
-            if (!string.IsNullOrWhiteSpace(Value.loreToken)) LanguageAPI.Add(Value.loreToken, LoreOverride);
         }
     }
 }
