@@ -1,18 +1,18 @@
 ﻿using System.Collections.Generic;
 using BepInEx.Configuration;
 using RoR2;
+using UnityEngine;
 using UnityEngine.Networking;
 
 namespace LunarsOfExiguity.Content.Lunar.Items;
 
 public class FracturedItem : ItemBase
 {
-    private static List<InventoryReplacementCandidate> PendingFractures = [];
-    public static readonly float FractureDelay = 0.5f;
-
-    
     protected override string Name => "Fractured";
 
+    protected override GameObject PickupModelPrefab { get; }
+    protected override Sprite PickupIconSprite { get; }
+    
     protected override ItemTag[] Tags => [ItemTag.CannotCopy, ItemTag.CannotSteal, ItemTag.CannotDuplicate];
 
     protected override string DisplayName => "Fractured";
@@ -100,4 +100,7 @@ public class FracturedItem : ItemBase
         public ItemIndex originalItem;
         public Run.FixedTimeStamp time;
     }
+    
+    private static List<InventoryReplacementCandidate> PendingFractures = [];
+    public static readonly float FractureDelay = 0.5f;
 }

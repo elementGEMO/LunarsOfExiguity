@@ -7,6 +7,8 @@ namespace LunarsOfExiguity;
 public abstract class BuffBase : GenericBase<BuffDef>
 {
     protected virtual Color Color => Color.white;
+
+    protected virtual Sprite IconSprite => null;
     
     protected virtual bool IsCooldown => false;
     protected virtual bool IsDebuff => false;
@@ -19,6 +21,7 @@ public abstract class BuffBase : GenericBase<BuffDef>
         Value.name = $"bd{Name}";
 
         Value.buffColor = Color;
+        Value.iconSprite = IconSprite;
         
         Value.isCooldown = IsCooldown;
         Value.isDebuff = IsDebuff;

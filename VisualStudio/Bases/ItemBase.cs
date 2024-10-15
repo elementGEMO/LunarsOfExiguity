@@ -9,6 +9,9 @@ public abstract class ItemBase : GenericBase<ItemDef>
     protected virtual bool IsConsumed => false;
     protected virtual bool IsRemovable => false;
     protected virtual bool IsHidden => false;
+
+    protected virtual GameObject PickupModelPrefab => null;
+    protected virtual Sprite PickupIconSprite => null;
     
     protected virtual ItemTag[] Tags => [];
     protected virtual CombinedItemTier Tier => ItemTier.NoTier;
@@ -26,6 +29,9 @@ public abstract class ItemBase : GenericBase<ItemDef>
         Value.isConsumed = IsConsumed;
         Value.canRemove = IsRemovable;
         Value.hidden = IsHidden;
+
+        Value.pickupModelPrefab = PickupModelPrefab;
+        Value.pickupIconSprite = PickupIconSprite;
 
         Value.tags = Tags;
         Value._itemTierDef = Tier;
