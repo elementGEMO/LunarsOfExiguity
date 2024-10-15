@@ -13,9 +13,8 @@ using static LunarsOfExiguity.ItemUtils;
 
 namespace LunarsOfExiguity
 {
-    public class GestureOfTheDrowned : ItemBaseRework
+    public class GestureOfTheDrowned(bool configValue = true) : ItemBaseRework(configValue)
     {
-        public GestureOfTheDrowned(bool configValue = true) : base(configValue) { }
         protected override string Token => "ITEM_AUTOCASTEQUIPMENT_";
 
         public static string Internal = "Gesture of the Drowned";

@@ -41,22 +41,49 @@ namespace LunarsOfExiguity
         }
         public static void LunarConfig(BaseUnityPlugin plugin)
         {
+            // Relic of the Drowned
             GestureOfTheDrowned.Enable_Rework = plugin.Config.Bind(
                 GestureOfTheDrowned.Internal,
                 "Enable Rework", true,
                 "[ True = Reworked | False = Vanilla | Removed Stacking ]"
             );
-
             GestureOfTheDrowned.Base_Equip_Percent = plugin.Config.Bind(
                 GestureOfTheDrowned.Internal,
                 "Rework - Percent Duration", 15f,
-                "[ 15.0f = 15% Duration ]\n Duration per Equipment use"
+                "[ 15 = 15% Duration | Per Equipment Use ]"
             );
-
             GestureOfTheDrowned.Max_Equip_Percent = plugin.Config.Bind(
                 GestureOfTheDrowned.Internal,
                 "Rework - Max Percent", 100f,
-                "[ 100.0f = 100% Max Duration ]\n Max duration per Equipment use"
+                "[ 100 = 100% Max Duration | Per Equipment Use]"
+            );
+
+            // Relic of Focus
+            FocusedConvergence.Enable_Rework = plugin.Config.Bind(
+                FocusedConvergence.Internal,
+                "Enable Rework", true,
+                "[ True = Reworked | False = Vanilla | Removed Stacking ]"
+            );
+            FocusedConvergence.Charge_Speed_Percent = plugin.Config.Bind(
+                FocusedConvergence.Internal,
+                "Rework - Charge Speed", 100f,
+                "[ 100 = 100% Charge Speed | Teleporter Charge Speed Increase ]"
+            );
+            FocusedConvergence.Max_Damage_Percent = plugin.Config.Bind(
+                FocusedConvergence.Internal,
+                "Rework - Health Damage", 100,
+                new ConfigDescription(
+                    "[ 100 = 100% Health Damage | Against Enemies At 99% Teleporter Charge ]",
+                    new AcceptableValueRange<int>(0, 100)
+                )
+            );
+            FocusedConvergence.Percent_Loss_Hit = plugin.Config.Bind(
+                FocusedConvergence.Internal,
+                "Rework - Percent Loss", 25,
+                new ConfigDescription(
+                    "[ 25 = 25% Percent Loss | On Health Damage Per Hit Recieved ]",
+                    new AcceptableValueRange<int>(0, 100)
+                )
             );
         }
 
