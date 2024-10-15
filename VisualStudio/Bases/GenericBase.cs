@@ -7,7 +7,11 @@ public abstract class GenericBase<T> where T : UnityEngine.Object
 
     public GenericBase()
     {
-        if (IsEnabled()) Create();
+        if (IsEnabled())
+        {
+            Create();
+            Initialize();
+        }
     }
 
     protected virtual bool IsEnabled() => true;

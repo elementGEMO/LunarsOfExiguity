@@ -44,5 +44,7 @@ public abstract class ItemBase : GenericBase<ItemDef>
             if (!string.IsNullOrWhiteSpace(Description)) LanguageAPI.Add(Value.descriptionToken, Description);
             if (!string.IsNullOrWhiteSpace(Lore)) LanguageAPI.Add(Value.loreToken, Lore);
         }
+
+        ItemAPI.Add(new CustomItem(Value, []));
     }
 }

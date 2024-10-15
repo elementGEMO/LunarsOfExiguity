@@ -5,7 +5,7 @@ namespace LunarsOfExiguity;
 
 public static class ItemUtils
 {
-    public static float RoundToValue(float x) => MathF.Round(x, MainConfig.RoundNumber.Value);
+    public static float RoundToValue(float x) => MathF.Round(x, MainConfig.RoundingLength.Value);
     
     public static string SignVal(this float value) => value >= 0 ? "+" + value : "-" + value;
 

@@ -1,4 +1,5 @@
-﻿using BepInEx.Configuration;
+﻿using System.Collections.Generic;
+using BepInEx.Configuration;
 using RoR2;
 using UnityEngine.Networking;
 
@@ -6,6 +7,10 @@ namespace LunarsOfExiguity.Content.Lunar.Items;
 
 public class FracturedItem : ItemBase
 {
+    private static List<InventoryReplacementCandidate> PendingFractures = [];
+    public static readonly float FractureDelay = 0.5f;
+
+    
     protected override string Name => "Fractured";
 
     protected override ItemTag[] Tags => [ItemTag.CannotCopy, ItemTag.CannotSteal, ItemTag.CannotDuplicate];
@@ -16,26 +21,83 @@ public class FracturedItem : ItemBase
 
     protected override void Initialize()
     {
-        Inventory.onServerItemGiven += StopLunarStacking;
+        Inventory.onInventoryChangedGlobal += OnInventoryChangedGlobal;
+        RoR2Application.onFixedUpdate += OnFixedUpdate;
     }
 
-    private void StopLunarStacking(Inventory inventory, ItemIndex itemIndex, int itemCount)
+    private void OnFixedUpdate()
     {
-        if (!NetworkServer.active && inventory) return;
+        if (PendingFractures.Count > 0) ProcessPendingFractures();
+    }
 
-        ItemDef item = ItemCatalog.GetItemDef(itemIndex);
-        CharacterMaster masterComponent = inventory.GetComponent<CharacterMaster>();
-
-        if (!item || !masterComponent) return;
-
-        if (item.tier == ItemTier.Lunar && inventory.GetItemCount(item) > 1)
+    private static void ProcessPendingFractures()
+    {
+        if (!NetworkServer.active || !Run.instance)
         {
-            itemCount = inventory.GetItemCount(item) - 1;
-            inventory.RemoveItem(itemIndex, itemCount);
-            if (MainConfig.FracturedCount.Value == MainConfig.FracturedOptions.ItemOnFracture) inventory.GiveItem(Get().itemIndex, itemCount);
-            CharacterMasterNotificationQueue.SendTransformNotification(masterComponent, itemIndex, Get().itemIndex, CharacterMasterNotificationQueue.TransformationType.LunarSun);
+            PendingFractures.Clear();
+            return;
+        }
+        
+        for (int i = PendingFractures.Count - 1; i >= 0; i--)
+        {
+            InventoryReplacementCandidate inventoryReplacementCandidate = PendingFractures[i];
+            if (inventoryReplacementCandidate.time.hasPassed)
+            {
+                if (!StepInventoryInfection(inventoryReplacementCandidate.inventory, inventoryReplacementCandidate.originalItem)) PendingFractures.RemoveAt(i);
+                else
+                {
+                    inventoryReplacementCandidate.time = Run.FixedTimeStamp.now + FractureDelay;
+                    PendingFractures[i] = inventoryReplacementCandidate;
+                }
+            }
+        }
+    }
+    
+    private static bool StepInventoryInfection(Inventory inventory, ItemIndex originalItemIndex)
+    {
+        ItemIndex itemIndex = ItemCatalog.FindItemIndex("Fractured");
+        if (itemIndex == ItemIndex.None) return false;
+        
+        var count = inventory.GetItemCount(originalItemIndex) - 1;
+        if (count > 0)
+        {
+            inventory.RemoveItem(originalItemIndex, count);
+            inventory.GiveItem(ItemCatalog.FindItemIndex("Fractured"), count);
+            var characterMaster = inventory.GetComponent<CharacterMaster>();
+            if (characterMaster) CharacterMasterNotificationQueue.SendTransformNotification(characterMaster, originalItemIndex, itemIndex, CharacterMasterNotificationQueue.TransformationType.LunarSun);
+        }
+        return true;
+    }
+
+    private void OnInventoryChangedGlobal(Inventory inventory)
+    {
+        if (!NetworkServer.active) return;
+        foreach (ItemIndex itemIndex in inventory.itemAcquisitionOrder)
+        {
+            if (ItemCatalog.GetItemDef(itemIndex).tier != ItemTier.Lunar) continue;
+            int itemCount = inventory.GetItemCount(itemIndex);
+            if (itemCount > 1)
+            {
+                if (MainConfig.GainItemOnFracture.Value) TryQueueReplacement(inventory, itemIndex);
+                else inventory.RemoveItem(itemIndex, itemCount);
+            }
         }
     }
 
-    public static ConfigEntry<bool> Gain_Item;
+    private static void TryQueueReplacement(Inventory inventory, ItemIndex originalItemIndex)
+    {
+        PendingFractures.Add(new InventoryReplacementCandidate
+        {
+            inventory = inventory,
+            originalItem = originalItemIndex,
+            time = Run.FixedTimeStamp.now + FractureDelay
+        });
+    }
+    
+    private struct InventoryReplacementCandidate
+    {
+        public Inventory inventory;
+        public ItemIndex originalItem;
+        public Run.FixedTimeStamp time;
+    }
 }

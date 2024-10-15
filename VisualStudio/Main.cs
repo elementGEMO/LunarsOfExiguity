@@ -2,6 +2,7 @@
 using RoR2;
 using R2API;
 using System.IO;
+using LunarsOfExiguity.Content.Buffs;
 using LunarsOfExiguity.Content.Lunar.Items;
 using LunarsOfExiguity.Content.Lunar.Reworks;
 using UnityEngine;
@@ -28,7 +29,7 @@ namespace LunarsOfExiguity
             Instance = this; 
             
             MainConfig.SetUp(this);
-            if (MainConfig.EnableLogs.Value) Log.Init(Logger);
+            if (MainConfig.EnableLogging.Value) Log.Init(Logger);
             new AssetStatics(this);
 
             //StartCoroutine(AssetStatics.bundle.UpgradeStubbedShadersAsync());
@@ -36,6 +37,7 @@ namespace LunarsOfExiguity
         }
         private void SetUpLunars()
         {
+            new RelicDisableSkillsDebuff();
             new FracturedItem();
             new AutoCastEquipmentRework();
             new FocusedConvergenceRework();

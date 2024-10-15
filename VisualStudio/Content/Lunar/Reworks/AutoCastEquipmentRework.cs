@@ -15,22 +15,11 @@ public class AutoCastEquipmentRework : ItemReworkBase
     protected override string Name => "AutoCastEquipment";
     
     protected override string RelicNameOverride => "Relic of the Drowned";
-    protected override string PickupOverride => "Equipments no longer use charge... " + "BUT activating your Equipment disables all skills temporarily".Style(ColorCode.FontColor.cDeath) + ".";
-
-    protected override string DescriptionOverride => string.Format(
-        "Equipments no longer use charge".Style(ColorCode.FontColor.cIsUtility) + ". Activating your Equipment temporarily " +
-        "disables all skills ".Style(ColorCode.FontColor.cIsHealth) + "for " + "{0}% ".Style(ColorCode.FontColor.cIsHealth) + "of the " +
-        "Equipment cooldown ".Style(ColorCode.FontColor.cIsUtility) + "on " + "each use".Style(ColorCode.FontColor.cIsHealth) +
-        ", up to a " + "maximum ".Style(ColorCode.FontColor.cIsHealth) + "of " + "{1}%".Style(ColorCode.FontColor.cIsHealth) + ".",
-        ItemUtils.RoundToValue(Base_Equip_Percent.Value), ItemUtils.RoundToValue(Max_Equip_Percent.Value));
-    
-    public static ConfigEntry<float> Base_Equip_Percent;
-    public static ConfigEntry<float> Max_Equip_Percent;
+    protected override string PickupOverride => "Equipment use requires no charges... <style=cDeath>BUT activation disables all skills temporarily</style>.";
+    protected override string DescriptionOverride => $"Equipment no longer requires charges. <style=cIsUtility>Activating</style> your Equipment disables all skills for <style=cIsUtility>{MainConfig.BaseDisableSkillsPercentage}%</style> of it's <style=cIsUtility>cooldown</style> for each use, up to a maximum of <style=cIsUtility>{MainConfig.MaxDisableSkillsPercentage}%</style>.";
 
     protected override void Initialize()
     {
-        new DrownedDebuff();
-        
         IL.RoR2.EquipmentSlot.MyFixedUpdate += DisableAutoCast;
         IL.RoR2.Inventory.CalculateEquipmentCooldownScale += DisableCooldownReduction;
         IL.RoR2.EquipmentSlot.OnEquipmentExecuted += NoChargeUse;
@@ -136,78 +125,13 @@ public class AutoCastEquipmentRework : ItemReworkBase
                 if (drownedHandler && hasItem)
                 {
                     float duration = EquipmentCatalog.GetEquipmentDef(self.equipmentIndex).cooldown * self.inventory.CalculateEquipmentCooldownScale();
-                    drownedHandler.IncreaseDuration(duration * Base_Equip_Percent.Value / 100f, duration);
+                    drownedHandler.IncreaseDuration(duration * MainConfig.BaseDisableSkillsPercentage.Value / 100f, duration);
                 }
             }
         }
         private static void DebuffAdded(CharacterBody self) => self.gameObject.AddComponent<DrownedHandler>();
     }
-    public class DrownedDebuff
-    {
-        //private static readonly Sprite DrownedIcon = AssetStatics.bundle.LoadAsset<Sprite>("DrownedDebuffIcon");
-        public static BuffDef DrownedDebuffDef;
-        public DrownedDebuff()
-        {
-            DrownedDebuffDef = ScriptableObject.CreateInstance<BuffDef>();
-            DrownedDebuffDef.name = "DrownDisabledDebuff";
-            DrownedDebuffDef.isCooldown = false;
-            DrownedDebuffDef.canStack = true;
-            DrownedDebuffDef.isDebuff = false;
-            DrownedDebuffDef.isHidden = false;
-            DrownedDebuffDef.buffColor = new Color(0.706f, 0.753f, 0.976f);
-            //DrownedDebuffDef.iconSprite = DrownedIcon;
 
-            ContentAddition.AddBuffDef(DrownedDebuffDef);
-
-            IL.RoR2.CharacterBody.RecalculateStats += DisableSkills;
-        }
-        private static void DisableSkills(ILContext il)
-        {
-            ILCursor cursor = new(il);
-
-            if (cursor.TryGotoNext(
-                x => x.MatchCallOrCallvirt<CharacterBody>(nameof(CharacterBody.HandleDisableAllSkillsDebuff))
-            ))
-            {
-                cursor.Emit(OpCodes.Ldarg, 0);
-                cursor.EmitDelegate(HandleDrownedDebuff);
-            } else Log.Warning("AutoCastEquipment" + " - #1 (DisableSkills) Failure");
-        }
-        private static void HandleDrownedDebuff(CharacterBody self)
-        {
-            if (!self) return;
-            if (self.HasBuff(DrownedDebuffDef))
-            {
-                HandleDrownedState(self, true);
-            }
-            else
-            {
-                HandleDrownedState(self, false);
-            }
-        }
-        private static void HandleDrownedState(CharacterBody self, bool disable)
-        {
-            if (self.hasAuthority)
-            {
-                SkillDef disableSkill = LegacyResourcesAPI.Load<SkillDef>("Skills/DisabledSkills");
-                if (!disableSkill) Log.Warning("AutoCastEquipment" + " - #2 (DisableSkills) Failure");
-                else if (disable && self.skillLocator)
-                {
-                    if (self.skillLocator.primary) self.skillLocator.primary.SetSkillOverride(self, disableSkill, GenericSkill.SkillOverridePriority.Contextual);
-                    if (self.skillLocator.secondary) self.skillLocator.secondary.SetSkillOverride(self, disableSkill, GenericSkill.SkillOverridePriority.Contextual);
-                    if (self.skillLocator.utility) self.skillLocator.utility.SetSkillOverride(self, disableSkill, GenericSkill.SkillOverridePriority.Contextual);
-                    if (self.skillLocator.special) self.skillLocator.special.SetSkillOverride(self, disableSkill, GenericSkill.SkillOverridePriority.Contextual);
-                }
-                else if (self.skillLocator)
-                {
-                    if (self.skillLocator.primary) self.skillLocator.primary.UnsetSkillOverride(self, disableSkill, GenericSkill.SkillOverridePriority.Contextual);
-                    if (self.skillLocator.secondary) self.skillLocator.secondary.UnsetSkillOverride(self, disableSkill, GenericSkill.SkillOverridePriority.Contextual);
-                    if (self.skillLocator.utility) self.skillLocator.utility.UnsetSkillOverride(self, disableSkill, GenericSkill.SkillOverridePriority.Contextual);
-                    if (self.skillLocator.special) self.skillLocator.special.UnsetSkillOverride(self, disableSkill, GenericSkill.SkillOverridePriority.Contextual);
-                }
-            }
-        }
-    }
     public class DrownedHandler : NetworkBehaviour
     {
         private float Duration;
@@ -215,14 +139,16 @@ public class AutoCastEquipmentRework : ItemReworkBase
         private void Awake() => Self = GetComponent<CharacterBody>();
         private void FixedUpdate()
         {
+            BuffIndex buffIndex = BuffCatalog.FindBuffIndex("bdRelicDisableSkills");
+            
             if (Self && Duration > 0)
             {
                 Duration -= Time.deltaTime;
-                Self.SetBuffCount(DrownedDebuff.DrownedDebuffDef.buffIndex, (int) Math.Round(Duration));
+                Self.SetBuffCount(buffIndex, (int) Math.Round(Duration));
             }
-            else if (Self && Self.HasBuff(DrownedDebuff.DrownedDebuffDef))
+            else if (Self && Self.HasBuff(buffIndex))
             {
-                Self.RemoveBuff(DrownedDebuff.DrownedDebuffDef.buffIndex);
+                Self.RemoveBuff(buffIndex);
             }
         }
         public void IncreaseDuration(float duration, float baseDuration)
@@ -235,7 +161,7 @@ public class AutoCastEquipmentRework : ItemReworkBase
                 origin = Self.gameObject.transform.position,
                 scale = 0.5f
             }, true);
-            Duration = Math.Min(Duration + duration, baseDuration * AutoCastEquipmentRework.Max_Equip_Percent.Value / 100f);
+            Duration = Math.Min(Duration + duration, baseDuration * MainConfig.MaxDisableSkillsPercentage.Value / 100f);
         }
     
 }
