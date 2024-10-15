@@ -14,6 +14,12 @@ namespace LunarsOfExiguity
 
         public static ConfigEntry<float> BaseDisableSkillsPercentage;
         public static ConfigEntry<float> MaxDisableSkillsPercentage;
+        
+        public static ConfigEntry<float> AdditionalChargeSpeedPercentage;
+        public static ConfigEntry<float> MaxDamagePercentage;
+        public static ConfigEntry<float> DamageLossOnHitPercentage;
+
+
 
         public static void SetUp(BaseUnityPlugin plugin)
         {
@@ -35,6 +41,11 @@ namespace LunarsOfExiguity
         {
             BaseDisableSkillsPercentage = plugin.Config.Bind("AutoCastEquipment", "Rework - Percent Duration", 15f, "[ 15.0f = 15% Duration ]\n Duration per Equipment use");
             MaxDisableSkillsPercentage = plugin.Config.Bind("AutoCastEquipment", "Rework - Max Percent", 100f, "[ 100.0f = 100% Max Duration ]\n Max duration per Equipment use");
+
+            // GEMO CHANGE THESE GEMO CHANGE THESE
+            AdditionalChargeSpeedPercentage = plugin.Config.Bind("FocusConvergence", "Speed", 100f);
+            MaxDamagePercentage = plugin.Config.Bind("FocusConvergence", "Max", 100f);
+            DamageLossOnHitPercentage = plugin.Config.Bind("FocusConvergence", "Loss", 25f);
         }
 
         public enum NameStyle
