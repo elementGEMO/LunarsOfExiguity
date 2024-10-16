@@ -2,7 +2,7 @@
 
 namespace LunarsOfExiguity
 {
-    internal static class Log
+    internal static class LoELog
     {
         private static ManualLogSource _logSource;
 
