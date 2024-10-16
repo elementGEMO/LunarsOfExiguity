@@ -9,18 +9,21 @@ public class PurifiedTier : ItemTierBase
 
     public static ItemTierDef PurifiedItemTierDef;
 
-    protected override Texture IconBackgroundTexture => LoEPlugin.Bundle.LoadAsset<Sprite>("PurifiedBGIcon").texture;
+    protected override Texture IconBackgroundTexture => LoEPlugin.Bundle.LoadAsset<Sprite>("PureBackgroundIcon").texture;
 
     protected override ColorCatalog.ColorIndex Color => ColorCatalog.ColorIndex.BossItem;
     protected override ColorCatalog.ColorIndex DarkColor => ColorCatalog.ColorIndex.BossItemDark;
-
-    // Unsure why you would want this, but to ensure no change from source, I'll mark it false,
 
     protected override void Initialize()
     {
         PurifiedItemTierDef = Value;
 
         ItemDef pearlDef = Addressables.LoadAsset<ItemDef>("RoR2/Base/Pearl/Pearl.asset").WaitForCompletion();
+        pearlDef.pickupIconSprite = LoEPlugin.Bundle.LoadAsset<Sprite>("PearlIcon");
         pearlDef._itemTierDef = PurifiedItemTierDef;
+
+        ItemDef shinyPearlDef = Addressables.LoadAsset<ItemDef>("RoR2/Base/ShinyPearl/ShinyPearl.asset").WaitForCompletion();
+        shinyPearlDef.pickupIconSprite = LoEPlugin.Bundle.LoadAsset<Sprite>("ShinyPearlIcon");
+        shinyPearlDef._itemTierDef = PurifiedItemTierDef;
     }
 }

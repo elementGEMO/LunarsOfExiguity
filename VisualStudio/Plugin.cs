@@ -48,7 +48,7 @@ namespace LunarsOfExiguity
         {
             new PurifiedTier();
             new FracturedItem();
-            new PureGestureItem();
+            //new PureGestureItem();
         }
 
         private void SetupReworks()
