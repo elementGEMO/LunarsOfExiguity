@@ -1,25 +1,61 @@
-﻿using System;
-using Mono.Cecil.Cil;
+﻿using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using R2API;
 using RoR2;
+using System;
 using UnityEngine;
 using UnityEngine.Networking;
+using System.Collections.Generic;
+using BepInEx.Configuration;
 
-namespace LunarsOfExiguity.Content.Lunar.Reworks;
-
+namespace LunarsOfExiguity;
 public class FocusedConvergenceRework : ItemReworkBase
 {
+    public static ConfigEntry<float> Charge_Speed_Percent;
+    public static ConfigEntry<int> Max_Damage_Percent;
+    public static ConfigEntry<int> Percent_Loss_Hit;
+
     public static DamageColorIndex DamageColorIndex = ColorsAPI.RegisterDamageColor(new Color(0.278f, 0.184f, 0.925f));
-    
+
     protected override string Name => "FocusConvergence";
+    private static string InternalName;
 
     protected override string RelicNameOverride => "Relic of Focus";
-    protected override string PickupOverride => "Increase the speed of Teleporter charging... BUT all enemies are invincible for it's duration.";
-    protected override string DescriptionOverride => $"Teleporters charge <style=cIsUtility>{LoEConfig.AdditionalChargeSpeedPercentage.Value}%</style> faster, but enemies are <style=cIsHealing>invulnerable</style> during it's duration. Once complete, enemies take <style=cIsDamage>{LoEConfig.MaxDamagePercentage.Value}%</style> of their <style=cIsHealing>health</style> in <style=cIsDamage>damage</style>, reduced by <style=cIsDamage>{LoEConfig.DamageLossOnHitPercentage.Value}%</style> for each time you were hit.";
+    protected override string CursedNameOverride => RelicNameOverride;
+    protected override string PickupOverride => "...";
+    protected override string DescriptionOverride => "...";
+
+    protected override bool IsEnabled()
+    {
+        Charge_Speed_Percent = LoEPlugin.Instance.Config.Bind(
+            Name + " - Rework",
+            "Rework - Charge Speed", 100f,
+            "[ 100 = 100% Charge Speed | Teleporter Charge Speed Increase ]"
+        );
+        Max_Damage_Percent = LoEPlugin.Instance.Config.Bind(
+            Name + " - Rework",
+            "Rework - Health Damage", 100,
+            new ConfigDescription(
+                "[ 100 = 100% Health Damage | Against Enemies At 99% Teleporter Charge ]",
+                new AcceptableValueRange<int>(0, 100)
+            )
+        );
+        Percent_Loss_Hit = LoEPlugin.Instance.Config.Bind(
+            Name + " - Rework",
+            "Rework - Percent Loss", 25,
+            new ConfigDescription(
+                "[ 25 = 25% Percent Loss | On Health Damage Per Hit Recieved ]",
+                new AcceptableValueRange<int>(0, 100)
+            )
+        );
+
+        return base.IsEnabled();
+    }
 
     protected override void Initialize()
     {
+        InternalName = Name;
+
         IL.RoR2.HoldoutZoneController.DoUpdate += DamageAll;
         On.RoR2.HoldoutZoneController.Start += DisableConvergence;
         IL.RoR2.HealthComponent.TakeDamageProcess += IncreaseDamageCounter;
@@ -33,52 +69,58 @@ public class FocusedConvergenceRework : ItemReworkBase
         {
             cursor.EmitDelegate(() =>
             {
-                int itemCount = Util.GetItemCountGlobal(RoR2Content.Items.FocusConvergence.itemIndex, true, false);
-                if (itemCount == 0) return;
-
-                int totalDamageInstances = 0;
-                foreach (TeamComponent playerTeamComponent in TeamComponent.GetTeamMembers(TeamIndex.Player))
+                bool hasItem = Util.GetItemCountGlobal(RoR2Content.Items.FocusConvergence.itemIndex, true, false) > 0;
+                if (hasItem)
                 {
-                    HealthComponent healthComponent = playerTeamComponent.body?.healthComponent;
-                    if (!healthComponent || !healthComponent.alive) continue;
+                    List<TeamComponent> allPlayers = [];
 
-                    var component = healthComponent.body.GetComponent<InvincibleDuringHoldout>();
-                    if (component) totalDamageInstances += component.DamageInstances;
-                }
+                    foreach (TeamComponent playerComponent in TeamComponent.GetTeamMembers(TeamIndex.Player))
+                    {
+                        HealthComponent healthComponent = playerComponent.body?.healthComponent;
+                        if (!healthComponent || !healthComponent.alive) continue;
 
-                float finalDamageMultiplier = LoEConfig.MaxDamagePercentage.Value * 0.01f *
-                                              Mathf.Pow(1f - LoEConfig.DamageLossOnHitPercentage.Value / 0.01f,
-                                                  totalDamageInstances / itemCount) * itemCount;
-                foreach (TeamComponent monsterTeamComponent in TeamComponent.GetTeamMembers(TeamIndex.Monster))
-                {
-                    HealthComponent healthComponent = monsterTeamComponent.body?.healthComponent;
-                    if (!healthComponent || !healthComponent.alive) continue;
+                        if (healthComponent.body.inventory?.GetItemCount(RoR2Content.Items.FocusConvergence.itemIndex) > 0)
+                        {
+                            allPlayers.Add(playerComponent);
+                        }
+                    }
 
-                    EffectManager.SpawnEffect(EntityStates.Missions.BrotherEncounter.Phase1.centerOrbDestroyEffect,
-                        new EffectData
+                    foreach (TeamComponent monsterComponent in TeamComponent.GetTeamMembers(TeamIndex.Monster))
+                    {
+                        HealthComponent healthComponent = monsterComponent.body?.healthComponent;
+                        if (!healthComponent || !healthComponent.alive) continue;
+
+                        EffectManager.SpawnEffect(EntityStates.Missions.BrotherEncounter.Phase1.centerOrbDestroyEffect, new EffectData()
                         {
                             origin = healthComponent.body.corePosition,
                             rotation = UnityEngine.Random.rotation,
-                            scale = finalDamageMultiplier
+                            scale = healthComponent.body.radius
                         }, true);
 
-                    healthComponent.body.RemoveOldestTimedBuff(RoR2Content.Buffs.Immune);
-                    healthComponent.TakeDamage(new DamageInfo
-                    {
-                        procCoefficient = 0,
-                        damageType = DamageType.BypassArmor | DamageType.BypassOneShotProtection |
-                                     DamageType.BypassBlock,
-                        damageColorIndex = DamageColorIndex,
-                        damage = healthComponent.fullCombinedHealth * finalDamageMultiplier
-                    });
+                        healthComponent.body.RemoveOldestTimedBuff(RoR2Content.Buffs.Immune);
+
+                        foreach (TeamComponent playerComponent in allPlayers)
+                        {
+                            if (!healthComponent || !healthComponent.alive) break;
+
+                            var component = healthComponent.body.GetComponent<InvincibleDuringHoldout>();
+                            float finalDamageMultiplier = Max_Damage_Percent.Value / 100f * Mathf.Pow(1f - Percent_Loss_Hit.Value, component.DamageInstances);
+
+                            healthComponent.TakeDamage(new DamageInfo
+                            {
+                                attacker = playerComponent.body.gameObject,
+                                procCoefficient = 0,
+                                damageType = DamageType.BypassArmor | DamageType.BypassOneShotProtection | DamageType.BypassBlock,
+                                damageColorIndex = DamageColorIndex,
+                                damage = healthComponent.fullCombinedHealth * finalDamageMultiplier
+                            });
+                        }
+                    }
                 }
             });
             return;
-        }
-        
-        LoELog.Error("Failed to Apply FocusConvergenceRework HoldoutZoneController.DoUpdate Hook.");
+        } else Log.Warning(InternalName + " - #1 (DamageAll) Failure");
     }
-    
     private static void DisableConvergence(On.RoR2.HoldoutZoneController.orig_Start orig, HoldoutZoneController self)
     {
         self.gameObject.AddComponent<FasterDuration>();
@@ -86,7 +128,6 @@ public class FocusedConvergenceRework : ItemReworkBase
 
         orig(self);
     }
-    
     private static void IncreaseDamageCounter(ILContext il)
     {
         ILCursor cursor = new(il);
@@ -109,7 +150,7 @@ public class FocusedConvergenceRework : ItemReworkBase
             cursor.EmitDelegate<Action<HealthComponent, DamageInfo>>((self, damageInfo) =>
             {
                 if (!self.alive || damageInfo.damage > 0 || !TeleporterInteraction.instance || !TeleporterInteraction.instance.isCharged) return;
-  
+
                 if (self.body?.inventory)
                 {
                     var component = self.GetComponent<InvincibleDuringHoldout>();
@@ -117,18 +158,25 @@ public class FocusedConvergenceRework : ItemReworkBase
                 }
             });
             return;
-        } 
-        LoELog.Error("Failed to Apply FocusConvergenceRework HealthComponent.TakeDamageProcess Hook.");
+        } else Log.Warning(InternalName + " - #1 (IncreaseDamageCounter) Failure");
     }
-    
     private static void Invincibility(CharacterBody self) => self.gameObject.AddComponent<InvincibleDuringHoldout>();
-    
-    
+
     public class InvincibleDuringHoldout : NetworkBehaviour
     {
         private CharacterBody Self;
         public int DamageInstances;
-        private void Awake() => Self = GetComponent<CharacterBody>();
+        private void Awake()
+        {
+            if (!GetComponent<HealthComponent>() || !GetComponent<HealthComponent>().alive)
+            {
+                Destroy(GetComponent<InvincibleDuringHoldout>());
+            }
+            else
+            {
+                Self = GetComponent<CharacterBody>();
+            }
+        }
         private void FixedUpdate()
         {
             if (Self)
@@ -148,8 +196,7 @@ public class FocusedConvergenceRework : ItemReworkBase
             }
         }
     }
-    
-    
+
     public class FasterDuration : MonoBehaviour
     {
         private HoldoutZoneController zoneController;
@@ -174,9 +221,9 @@ public class FocusedConvergenceRework : ItemReworkBase
         }
         private void ApplyRate(ref float rate)
         {
-            if (itemCount > 0) rate *= 1f + Mathf.Pow(LoEConfig.AdditionalChargeSpeedPercentage.Value * 0.01f, 1 / itemCount);
+            if (itemCount > 0) rate *= 1f + Mathf.Pow(Charge_Speed_Percent.Value * 0.01f, 1 / itemCount);
         }
-        
+
         private void Update()
         {
             itemCount = Util.GetItemCountForTeam(zoneController.chargingTeam, RoR2Content.Items.FocusConvergence.itemIndex, true, false);

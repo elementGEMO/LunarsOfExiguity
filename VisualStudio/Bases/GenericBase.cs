@@ -1,5 +1,4 @@
 ﻿namespace LunarsOfExiguity;
-
 public abstract class GenericBase<T> where T : UnityEngine.Object
 {
     protected abstract string Name { get; }
@@ -16,10 +15,7 @@ public abstract class GenericBase<T> where T : UnityEngine.Object
 
     protected virtual bool IsEnabled() => true;
     protected virtual void Create() { }
-    protected virtual void Initialize()
-    {
-        
-    }
-    
+    protected virtual void Initialize() { }
+
     public T Get() => Value;
 }
