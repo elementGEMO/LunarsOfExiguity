@@ -2,7 +2,6 @@
 using RoR2;
 
 namespace LunarsOfExiguity;
-
 public abstract class ItemReworkBase
 {
     protected abstract string Name { get; }

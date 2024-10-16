@@ -2,14 +2,14 @@
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
-
+namespace LunarsOfExiguity;
 public class PurifiedTier : ItemTierBase
 {
     protected override string Name => "Purified";
 
     public static ItemTierDef PurifiedItemTierDef;
 
-    protected override Texture BackgroundTexture => LoEPlugin.Bundle.LoadAsset<Sprite>("PurifiedBGIcon").texture;
+    protected override Texture IconBackgroundTexture => LoEPlugin.Bundle.LoadAsset<Sprite>("PurifiedBGIcon").texture;
 
     protected override ColorCatalog.ColorIndex Color => ColorCatalog.ColorIndex.BossItem;
     protected override ColorCatalog.ColorIndex DarkColor => ColorCatalog.ColorIndex.BossItemDark;
@@ -22,14 +22,5 @@ public class PurifiedTier : ItemTierBase
 
         ItemDef pearlDef = Addressables.LoadAsset<ItemDef>("RoR2/Base/Pearl/Pearl.asset").WaitForCompletion();
         pearlDef._itemTierDef = PurifiedItemTierDef;
-        //pearlDef.deprecatedTier = PurifiedItemTierDef.tier;
-
-        //Log.Debug("Tier: " + PurifiedItemTierDef + ", Name: " + PurifiedItemTierDef.name + ", Tier: " + PurifiedItemTierDef.tier);
-
-        /*
-        ItemCatalog.availability.CallWhenAvailable(() =>
-        {
-        });
-        */
     }
 }

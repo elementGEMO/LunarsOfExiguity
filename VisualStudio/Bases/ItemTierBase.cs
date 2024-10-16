@@ -1,15 +1,18 @@
 ﻿using R2API;
 using RoR2;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 
 namespace LunarsOfExiguity;
-
 public abstract class ItemTierBase : GenericBase<ItemTierDef>
 {
     protected virtual ColorCatalog.ColorIndex Color => ColorCatalog.ColorIndex.None;
     protected virtual ColorCatalog.ColorIndex DarkColor => ColorCatalog.ColorIndex.None;
 
+    protected virtual GameObject HighlightPrefab => null;
+    protected virtual GameObject DropletDisplayPrefab => null;
+    protected virtual Texture IconBackgroundTexture => null;
+
+    protected virtual bool CanBeDropped => true;
     protected virtual bool CanBeScrapped => false;
     protected virtual bool CanBeRestacked => true;
 
@@ -27,9 +30,8 @@ public abstract class ItemTierBase : GenericBase<ItemTierDef>
             Value.darkColorIndex = DarkColor;
 
             Value.highlightPrefab = HighlightPrefab;
-            Value.dropletDisplayPrefab = DropletPrefab;
-
-            Value.bgIconTexture = BackgroundTexture;
+            Value.dropletDisplayPrefab = DropletDisplayPrefab;
+            Value.bgIconTexture = IconBackgroundTexture;
 
             Value.isDroppable = CanBeDropped;
             Value.canScrap = CanBeScrapped;
@@ -38,7 +40,6 @@ public abstract class ItemTierBase : GenericBase<ItemTierDef>
             Value.pickupRules = PickupRules;
 
             Value.tier = ItemTier.AssignedAtRuntime;
-            //Value._tier = ItemTier.AssignedAtRuntime;
         }
 
         ContentAddition.AddItemTierDef(Value);
