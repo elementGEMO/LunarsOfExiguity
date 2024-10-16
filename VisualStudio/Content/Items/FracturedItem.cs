@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.Networking;
 using BepInEx.Configuration;
 
-namespace LunarsOfExiguity;
 public class FracturedItem : ItemBase
 {
     public static ConfigEntry<float> Fracture_Delay;
@@ -14,7 +13,6 @@ public class FracturedItem : ItemBase
     public static ItemDef ItemDef;
 
     protected override GameObject PickupModelPrefab { get; }
-    protected override Sprite PickupIconSprite => LoEPlugin.Bundle.LoadAsset<Sprite>("IconLunarConsumed");
 
     protected override ItemTag[] Tags => [ItemTag.CannotCopy, ItemTag.CannotSteal, ItemTag.CannotDuplicate];
 
@@ -64,7 +62,6 @@ public class FracturedItem : ItemBase
                 if (!StepInventoryFracture(inventoryReplacementCandidate.inventory, inventoryReplacementCandidate.originalItem)) PendingFractures.RemoveAt(i);
                 else
                 {
-                    inventoryReplacementCandidate.time = Run.FixedTimeStamp.now + Fracture_Delay.Value;
                     PendingFractures[i] = inventoryReplacementCandidate;
                 }
             }
@@ -73,7 +70,6 @@ public class FracturedItem : ItemBase
 
     private static bool StepInventoryFracture(Inventory inventory, ItemIndex originalItemIndex)
     {
-        ItemIndex itemIndex = ItemDef.itemIndex;
         if (itemIndex == ItemIndex.None) return false;
 
         var count = inventory.GetItemCount(originalItemIndex) - 1;
@@ -98,7 +94,6 @@ public class FracturedItem : ItemBase
             int itemCount = inventory.GetItemCount(itemIndex);
             if (itemCount > 1)
             {
-                if (Gain_Fracture.Value) TryQueueReplacement(inventory, itemIndex);
                 else inventory.RemoveItem(itemIndex, itemCount);
             }
         }
@@ -110,7 +105,6 @@ public class FracturedItem : ItemBase
         {
             inventory = inventory,
             originalItem = originalItemIndex,
-            time = Run.FixedTimeStamp.now + Fracture_Delay.Value
         });
     }
 

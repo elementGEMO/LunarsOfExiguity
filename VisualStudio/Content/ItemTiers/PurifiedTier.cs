@@ -2,7 +2,6 @@
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
-namespace LunarsOfExiguity;
 
 public class PurifiedTier : ItemTierBase
 {
@@ -16,7 +15,6 @@ public class PurifiedTier : ItemTierBase
     protected override ColorCatalog.ColorIndex DarkColor => ColorCatalog.ColorIndex.BossItemDark;
 
     // Unsure why you would want this, but to ensure no change from source, I'll mark it false,
-    //protected override bool CanBeRestacked => false;
 
     protected override void Initialize()
     {
@@ -31,8 +29,6 @@ public class PurifiedTier : ItemTierBase
         /*
         ItemCatalog.availability.CallWhenAvailable(() =>
         {
-            //ItemCatalog.GetItemDef(RoR2Content.Items.Pearl.itemIndex).deprecatedTier = Value.tier;
-            ItemDef 
         });
         */
     }

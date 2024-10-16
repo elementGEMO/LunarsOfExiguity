@@ -4,18 +4,12 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 
 namespace LunarsOfExiguity;
+
 public abstract class ItemTierBase : GenericBase<ItemTierDef>
 {
     protected virtual ColorCatalog.ColorIndex Color => ColorCatalog.ColorIndex.None;
     protected virtual ColorCatalog.ColorIndex DarkColor => ColorCatalog.ColorIndex.None;
 
-    public GameObject HighlightPrefab = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/UI/HighlightTier1Item.prefab").WaitForCompletion();
-
-    public GameObject DropletPrefab = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/Common/VoidOrb.prefab").WaitForCompletion();
-
-    protected virtual Texture BackgroundTexture => null;
-
-    protected virtual bool CanBeDropped => true;
     protected virtual bool CanBeScrapped => false;
     protected virtual bool CanBeRestacked => true;
 

@@ -1,6 +1,7 @@
 ﻿using RoR2;
 
 namespace LunarsOfExiguity;
+
 public struct CombinedItemTier
 {
     public ItemTierDef ItemTierDef;
