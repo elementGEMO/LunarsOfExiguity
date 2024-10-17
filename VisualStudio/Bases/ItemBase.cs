@@ -16,6 +16,7 @@ public abstract class ItemBase : GenericBase<ItemDef>
     protected virtual CombinedItemTier Tier => ItemTier.NoTier;
 
     protected virtual string DisplayName { get; }
+    protected virtual string CursedNameOverride { get; }
     protected virtual string PickupText { get; }
     protected virtual string Description { get; }
     protected virtual string Lore { get; }
@@ -44,7 +45,15 @@ public abstract class ItemBase : GenericBase<ItemDef>
             Value.descriptionToken = LoEPlugin.TokenPrefix + Value.descriptionToken;
             Value.loreToken = LoEPlugin.TokenPrefix + Value.loreToken;
 
-            if (!string.IsNullOrWhiteSpace(DisplayName)) LanguageAPI.Add(Value.nameToken, DisplayName);
+            if (LoEConfig.Rework_Name.Value == LoEConfig.RewriteOptions.Cursed)
+            {
+                if (!string.IsNullOrWhiteSpace(CursedNameOverride)) LanguageAPI.Add(Value.nameToken, CursedNameOverride);
+            }
+            else
+            {
+                if (!string.IsNullOrWhiteSpace(DisplayName)) LanguageAPI.Add(Value.nameToken, DisplayName);
+            }
+
             if (!string.IsNullOrWhiteSpace(PickupText)) LanguageAPI.Add(Value.pickupToken, PickupText);
             if (!string.IsNullOrWhiteSpace(Description)) LanguageAPI.Add(Value.descriptionToken, Description);
             if (!string.IsNullOrWhiteSpace(Lore)) LanguageAPI.Add(Value.loreToken, Lore);

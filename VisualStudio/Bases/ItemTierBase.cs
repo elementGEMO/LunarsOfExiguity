@@ -1,6 +1,7 @@
 ﻿using R2API;
 using RoR2;
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace LunarsOfExiguity;
 public abstract class ItemTierBase : GenericBase<ItemTierDef>

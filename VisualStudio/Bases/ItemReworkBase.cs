@@ -17,7 +17,7 @@ public abstract class ItemReworkBase
         if (IsEnabled()) ItemCatalog.availability.CallWhenAvailable(Create);
     }
 
-    protected virtual bool IsEnabled() => LoEPlugin.Instance.Config.Bind("Rework - " + Name, "Enable Rework", true, "[ True = Reworked | False = Vanilla ]").Value;
+    protected virtual bool IsEnabled() => LoEPlugin.Instance.Config.Bind(Name + " - Rework", "Enable Rework", true, "[ True = Reworked | False = Vanilla ]").Value;
     private void Create()
     {
         ItemIndex itemIndex = ItemCatalog.FindItemIndex(Name);

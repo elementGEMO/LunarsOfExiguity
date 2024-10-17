@@ -1,4 +1,6 @@
-﻿using RoR2;
+﻿using R2API;
+using RoR2;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
@@ -11,8 +13,10 @@ public class PurifiedTier : ItemTierBase
 
     protected override Texture IconBackgroundTexture => LoEPlugin.Bundle.LoadAsset<Sprite>("PureBackgroundIcon").texture;
 
-    protected override ColorCatalog.ColorIndex Color => ColorCatalog.ColorIndex.BossItem;
-    protected override ColorCatalog.ColorIndex DarkColor => ColorCatalog.ColorIndex.BossItemDark;
+    protected override ColorCatalog.ColorIndex Color => Colors.TempPureLight;
+    protected override ColorCatalog.ColorIndex DarkColor => Colors.TempPureDark;
+
+    public static List<ItemDef> ItemTierPool => [];
 
     protected override void Initialize()
     {
@@ -21,9 +25,11 @@ public class PurifiedTier : ItemTierBase
         ItemDef pearlDef = Addressables.LoadAsset<ItemDef>("RoR2/Base/Pearl/Pearl.asset").WaitForCompletion();
         pearlDef.pickupIconSprite = LoEPlugin.Bundle.LoadAsset<Sprite>("PearlIcon");
         pearlDef._itemTierDef = PurifiedItemTierDef;
+        ItemTierPool.Add(pearlDef);
 
         ItemDef shinyPearlDef = Addressables.LoadAsset<ItemDef>("RoR2/Base/ShinyPearl/ShinyPearl.asset").WaitForCompletion();
         shinyPearlDef.pickupIconSprite = LoEPlugin.Bundle.LoadAsset<Sprite>("ShinyPearlIcon");
         shinyPearlDef._itemTierDef = PurifiedItemTierDef;
+        ItemTierPool.Add(shinyPearlDef);
     }
 }

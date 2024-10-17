@@ -10,7 +10,6 @@ public static class LoEConfig
 
     public enum RewriteOptions
     {
-        Vanilla,
         Relic,
         Cursed
     }
@@ -28,7 +27,7 @@ public static class LoEConfig
         );
         Rework_Name = LoEPlugin.Instance.Config.Bind(
             token, "Relic Names", RewriteOptions.Relic,
-            "[ Chanes the naming conventions of Lunars ]"
+            "[ Chanes the naming conventions of Lunars | Does not effect 'Disables ...' ]"
         );
         Round_To = LoEPlugin.Instance.Config.Bind(
             token, "Item Stat Rounding", 0,

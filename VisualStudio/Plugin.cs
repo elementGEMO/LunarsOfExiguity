@@ -34,9 +34,11 @@ namespace LunarsOfExiguity
         }
         private void SetupContent()
         {
+            Colors.Init();
+
             SetupBuffs();
-            SetupItems();
             SetupReworks();
+            SetupItems();
         }
 
         private void SetupBuffs()
@@ -47,8 +49,9 @@ namespace LunarsOfExiguity
         private void SetupItems()
         {
             new PurifiedTier();
+
             new FracturedItem();
-            //new PureGestureItem();
+            new PureGestureItem();
         }
 
         private void SetupReworks()
@@ -56,6 +59,6 @@ namespace LunarsOfExiguity
             new GestureDrownedRework();
             new FocusedConvergenceRework();
         }
-        private void SetupAssets() => Bundle = AssetBundle.LoadFromFile(System.IO.Path.Combine(Directory.GetParent(Info.Location)!.ToString(), "lunarofexiguity"));
+        private void SetupAssets() => Bundle = AssetBundle.LoadFromFile(Path.Combine(Directory.GetParent(Info.Location)!.ToString(), "lunarofexiguity"));
     }
 }
