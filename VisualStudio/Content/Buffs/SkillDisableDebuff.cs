@@ -1,5 +1,4 @@
-﻿using System;
-using Mono.Cecil.Cil;
+﻿using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using RoR2;
 using RoR2.Skills;
@@ -10,13 +9,17 @@ public class SkillDisableDebuff : BuffBase
 {
     protected override string Name => "RelicDisableSkills";
     public static BuffDef BuffDef;
+
     protected override Sprite IconSprite => LoEPlugin.Bundle.LoadAsset<Sprite>("DrownedDebuffIcon");
     protected override Color Color => new(0.706f, 0.753f, 0.976f);
     protected override bool IsStackable => true;
 
+    //protected override bool IsEnabled() => GestureDrownedRework.Rework_Enabled.Value;
+
     protected override void Initialize()
     {
         BuffDef = Value;
+
         IL.RoR2.CharacterBody.RecalculateStats += DisableSkills;
     }
     private static void DisableSkills(ILContext il)
@@ -29,7 +32,8 @@ public class SkillDisableDebuff : BuffBase
         {
             cursor.Emit(OpCodes.Ldarg, 0);
             cursor.EmitDelegate(HandleDrownedDebuff);
-        } else Log.Warning(BuffDef.name + " - #1 (DisableSkills) Failure");
+        }
+        else Log.Warning(BuffDef.name + " - #1 (DisableSkills) Failure");
     }
     private static void HandleDrownedDebuff(CharacterBody self)
     {

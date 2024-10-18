@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using RoR2;
+﻿using RoR2;
 using UnityEngine;
 using UnityEngine.Networking;
 using BepInEx.Configuration;
+using System.Collections.Generic;
 
 using static LoEColors;
 
@@ -23,23 +23,24 @@ public class FracturedItem : ItemBase
     protected override string DisplayName => "Fractured";
     protected override string PickupText => "Your " + "Lunar ".Style(FontColor.cIsLunar) + "items have shattered into pieces.";
 
-    private void InitConfigs()
+    protected override bool IsEnabled()
     {
         Fracture_Delay = LoEPlugin.Instance.Config.Bind(
-            ItemDef.name + " - Item", "Fractured Delay", 0.5f,
+            DisplayName + " - Item", "Fractured Delay", 0.5f,
             "[ 0.5 = 0.5s Fracture Notificaion Delay ]"
         );
 
         Gain_Fracture = LoEPlugin.Instance.Config.Bind(
-            ItemDef.name + " - Item", "Gain Fractured Item", true,
+            DisplayName + " - Item", "Gain Fractured Item", true,
             "[ True = Gain 'Fractured' when a Lunar is Fractured | False = Nothing Happens ]"
         );
+
+        return true;
     }
 
     protected override void Initialize()
     {
         ItemDef = Value;
-        InitConfigs();
 
         Inventory.onInventoryChangedGlobal += OnInventoryChangedGlobal;
         RoR2Application.onFixedUpdate += OnFixedUpdate;
@@ -101,7 +102,7 @@ public class FracturedItem : ItemBase
             {
                 if (Gain_Fracture.Value) TryQueueReplacement(inventory, itemIndex);
                 else inventory.RemoveItem(itemIndex, itemCount);
-            }
+            } 
         }
     }
 

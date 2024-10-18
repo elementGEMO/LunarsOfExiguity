@@ -1,7 +1,6 @@
 ﻿using R2API;
 using RoR2;
 using UnityEngine;
-using System.Collections.Generic;
 
 namespace LunarsOfExiguity;
 public abstract class ItemTierBase : GenericBase<ItemTierDef>
@@ -14,7 +13,7 @@ public abstract class ItemTierBase : GenericBase<ItemTierDef>
     protected virtual Texture IconBackgroundTexture => null;
 
     protected virtual bool CanBeDropped => true;
-    protected virtual bool CanBeScrapped => false;
+    protected virtual bool CanBeScrapped => true;
     protected virtual bool CanBeRestacked => true;
 
     protected virtual ItemTierDef.PickupRules PickupRules => ItemTierDef.PickupRules.Default;

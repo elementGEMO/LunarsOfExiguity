@@ -5,7 +5,6 @@ namespace LunarsOfExiguity;
 public abstract class ItemReworkBase
 {
     protected abstract string Name { get; }
-
     protected virtual string RelicNameOverride { get; }
     protected virtual string CursedNameOverride { get; }
 
@@ -17,8 +16,9 @@ public abstract class ItemReworkBase
         if (IsEnabled()) ItemCatalog.availability.CallWhenAvailable(Create);
     }
 
-    protected virtual bool IsEnabled() => LoEPlugin.Instance.Config.Bind(Name + " - Rework", "Enable Rework", true, "[ True = Reworked | False = Vanilla ]").Value;
-    private void Create()
+    protected virtual bool IsEnabled() => true;
+
+    protected virtual void Create()
     {
         ItemIndex itemIndex = ItemCatalog.FindItemIndex(Name);
         if (itemIndex == ItemIndex.None)

@@ -1,4 +1,5 @@
-﻿using Mono.Cecil.Cil;
+﻿/*
+using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using R2API;
 using RoR2;
@@ -119,7 +120,8 @@ public class FocusedConvergenceRework : ItemReworkBase
                 }
             });
             return;
-        } else Log.Warning(InternalName + " - #1 (DamageAll) Failure");
+        }
+        else Log.Warning(InternalName + " - #1 (DamageAll) Failure");
     }
     private static void DisableConvergence(On.RoR2.HoldoutZoneController.orig_Start orig, HoldoutZoneController self)
     {
@@ -158,7 +160,8 @@ public class FocusedConvergenceRework : ItemReworkBase
                 }
             });
             return;
-        } else Log.Warning(InternalName + " - #1 (IncreaseDamageCounter) Failure");
+        }
+        else Log.Warning(InternalName + " - #1 (IncreaseDamageCounter) Failure");
     }
     private static void Invincibility(CharacterBody self) => self.gameObject.AddComponent<InvincibleDuringHoldout>();
 
@@ -234,3 +237,4 @@ public class FocusedConvergenceRework : ItemReworkBase
         }
     }
 }
+*/

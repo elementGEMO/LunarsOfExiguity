@@ -34,30 +34,26 @@ namespace LunarsOfExiguity
         }
         private void SetupContent()
         {
+            SetUpMisc();
+            SetUpItems();
+            SetUpMethods();
+        }
+        private void SetUpMisc()
+        {
             Colors.Init();
-
-            SetupBuffs();
-            SetupReworks();
-            SetupItems();
-        }
-
-        private void SetupBuffs()
-        {
-            new SkillDisableDebuff();
-        }
-
-        private void SetupItems()
-        {
             new PurifiedTier();
 
+            new SkillDisableDebuff();
+        }
+        private void SetUpItems()
+        {
             new FracturedItem();
+            new GestureDrownedRework();
             new PureGestureItem();
         }
-
-        private void SetupReworks()
+        private void SetUpMethods()
         {
-            new GestureDrownedRework();
-            new FocusedConvergenceRework();
+            new GestureDrownedHooks();
         }
         private void SetupAssets() => Bundle = AssetBundle.LoadFromFile(Path.Combine(Directory.GetParent(Info.Location)!.ToString(), "lunarofexiguity"));
     }
