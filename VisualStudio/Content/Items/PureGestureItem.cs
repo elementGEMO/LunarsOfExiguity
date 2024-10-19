@@ -43,5 +43,15 @@ public class PureGestureItem : ItemBase
     {
         ItemDef = Value;
         PurifiedTier.ItemTierPool.Add(ItemDef.itemIndex);
+
+        ItemCatalog.availability.onAvailable += PairFractured;
+    }
+    private void PairFractured()
+    {
+        PurifiedTier.ItemCounterpartPool.Add(new ConsumeHooks.PurifiedFractureInfo
+        {
+            purifiedItem = ItemDef.itemIndex,
+            originalItem = ItemCatalog.FindItemIndex(GestureDrownedRework.StaticInternal)
+        });
     }
 }

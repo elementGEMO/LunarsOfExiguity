@@ -14,8 +14,6 @@ public class SkillDisableDebuff : BuffBase
     protected override Color Color => new(0.706f, 0.753f, 0.976f);
     protected override bool IsStackable => true;
 
-    //protected override bool IsEnabled() => GestureDrownedRework.Rework_Enabled.Value;
-
     protected override void Initialize()
     {
         BuffDef = Value;

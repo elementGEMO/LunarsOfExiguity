@@ -1,14 +1,8 @@
-﻿using System;
-using BepInEx.Configuration;
-using Mono.Cecil.Cil;
-using MonoMod.Cil;
-using RoR2;
-using UnityEngine;
-using UnityEngine.Networking;
+﻿using BepInEx.Configuration;
+using R2API;
 
 using static LoEUtils;
 using static LoEColors;
-using R2API;
 
 namespace LunarsOfExiguity;
 public class GestureDrownedRework : ItemReworkBase
@@ -18,6 +12,7 @@ public class GestureDrownedRework : ItemReworkBase
     public static ConfigEntry<float> Max_Equip_Percent;
 
     protected override string Name => "AutoCastEquipment";
+    public static readonly string StaticInternal = "AutoCastEquipment";
 
     protected override string RelicNameOverride => "Relic of the Drowned";
     protected override string CursedNameOverride => RelicNameOverride;

@@ -1,8 +1,8 @@
-﻿using R2API;
-using RoR2;
+﻿using RoR2;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
+
+using static LunarsOfExiguity.ConsumeHooks;
 
 namespace LunarsOfExiguity;
 public class PurifiedTier : ItemTierBase
@@ -18,23 +18,29 @@ public class PurifiedTier : ItemTierBase
 
     protected override bool CanBeScrapped => false;
 
-    public static List<ItemIndex> ItemTierPool => [];
-    //public static List<ItemReworkBase> ItemCounterpartPool => [];
-    public static List<ItemIndex> ConversionPure => [];
-    public static List<ItemIndex> ConversionRework => [];
+    public static List<ItemIndex> ItemTierPool = [];
+    public static List<ItemIndex> IgnoreBlemished = [];
+
+    public static List<PurifiedFractureInfo> ItemCounterpartPool = [];
 
     protected override void Initialize()
     {
         PurifiedItemTierDef = Value;
 
-        ItemDef pearlDef = Addressables.LoadAsset<ItemDef>("RoR2/Base/Pearl/Pearl.asset").WaitForCompletion();
+        ItemCatalog.availability.onAvailable += SetUpPearls;
+    }
+    private static void SetUpPearls()
+    {
+        ItemDef pearlDef = ItemCatalog.GetItemDef(ItemCatalog.FindItemIndex("Pearl"));
         pearlDef.pickupIconSprite = LoEPlugin.Bundle.LoadAsset<Sprite>("PearlIcon");
         pearlDef._itemTierDef = PurifiedItemTierDef;
         ItemTierPool.Add(pearlDef.itemIndex);
+        IgnoreBlemished.Add(pearlDef.itemIndex);
 
-        ItemDef shinyPearlDef = Addressables.LoadAsset<ItemDef>("RoR2/Base/ShinyPearl/ShinyPearl.asset").WaitForCompletion();
+        ItemDef shinyPearlDef = ItemCatalog.GetItemDef(ItemCatalog.FindItemIndex("ShinyPearl"));
         shinyPearlDef.pickupIconSprite = LoEPlugin.Bundle.LoadAsset<Sprite>("ShinyPearlIcon");
         shinyPearlDef._itemTierDef = PurifiedItemTierDef;
         ItemTierPool.Add(shinyPearlDef.itemIndex);
+        IgnoreBlemished.Add(shinyPearlDef.itemIndex);
     }
 }

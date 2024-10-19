@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 2638843418
+CRC: 522485052
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 53e860e543bc514558c94a901fb14a41
+    Hash: fad257b688d76772d1713e7bbd7ed0cb
   TypeTreeHash:
     serializedVersion: 2
     Hash: c21d61fe394c58399df3c6fb5c7c99b3
@@ -20,6 +20,6 @@ Assets:
 - Assets/Items/Pearls/PearlIcon.png
 - Assets/Items/Pearls/ShinyPearlIcon.png
 - Assets/ItemTiers/PureBackgroundIcon.png
-- Assets/Fracture/IconLunarConsumed.png
-- Assets/Fracture/IconLunarOutline.png
+- Assets/Items/Blemished/PureConsumedIcon.png
+- Assets/Items/Fractured/LunarConsumedIcon.png
 Dependencies: []

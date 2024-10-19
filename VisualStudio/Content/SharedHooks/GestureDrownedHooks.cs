@@ -3,7 +3,6 @@ using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using RoR2;
 using UnityEngine;
-using UnityEngine.Diagnostics;
 using UnityEngine.Networking;
 
 namespace LunarsOfExiguity;
@@ -15,15 +14,6 @@ public class GestureDrownedHooks
 
     public GestureDrownedHooks()
     {
-        ItemCatalog.availability.onAvailable += InitHooks;
-        /*
-        IL.RoR2.EquipmentSlot.OnEquipmentExecuted += NoChargeUse;
-        On.RoR2.EquipmentSlot.OnEquipmentExecuted += DisableSkills;
-        CharacterBody.onBodyAwakeGlobal += DebuffAdded;
-        */
-    }
-    public static void InitHooks()
-    {
         ReworkItemEnabled = GestureDrownedRework.Rework_Enabled.Value;
         PureItemEnabled = PureGestureItem.Item_Enabled.Value;
 
@@ -31,6 +21,8 @@ public class GestureDrownedHooks
         {
             IL.RoR2.EquipmentSlot.MyFixedUpdate += DisableAutoCast;
             IL.RoR2.Inventory.CalculateEquipmentCooldownScale += DisableCooldownReduction;
+            On.RoR2.EquipmentSlot.OnEquipmentExecuted += OnUseEffect;
+            CharacterBody.onBodyAwakeGlobal += DebuffAdded;
         }
         if (ReworkItemEnabled || PureItemEnabled)
         {
@@ -133,9 +125,7 @@ public class GestureDrownedHooks
         }
         else Log.Warning(InternalName + " - #1 (NoChargeUse) Failure");
     }
-
-    /*
-    private static void DisableSkills(On.RoR2.EquipmentSlot.orig_OnEquipmentExecuted orig, EquipmentSlot self)
+    private static void OnUseEffect(On.RoR2.EquipmentSlot.orig_OnEquipmentExecuted orig, EquipmentSlot self)
     {
         orig(self);
 
@@ -150,7 +140,6 @@ public class GestureDrownedHooks
             }
         }
     }
-    */
 
     private static void DebuffAdded(CharacterBody self) => self.gameObject.AddComponent<DrownedHandler>();
 
@@ -181,7 +170,7 @@ public class GestureDrownedHooks
             EffectManager.SpawnEffect(GlobalEventManager.CommonAssets.knockbackFinEffect, new EffectData
             {
                 origin = Self.gameObject.transform.position,
-                scale = 0.5f
+                scale = Self.radius / 2f
             }, true);
             Duration = Math.Min(Duration + duration, baseDuration * GestureDrownedRework.Max_Equip_Percent.Value / 100f);
         }

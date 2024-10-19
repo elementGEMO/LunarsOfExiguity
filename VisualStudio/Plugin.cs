@@ -48,11 +48,14 @@ namespace LunarsOfExiguity
         private void SetUpItems()
         {
             new FracturedItem();
+            new BlemishedItem();
+
             new GestureDrownedRework();
             new PureGestureItem();
         }
         private void SetUpMethods()
         {
+            new ConsumeHooks();
             new GestureDrownedHooks();
         }
         private void SetupAssets() => Bundle = AssetBundle.LoadFromFile(Path.Combine(Directory.GetParent(Info.Location)!.ToString(), "lunarofexiguity"));
