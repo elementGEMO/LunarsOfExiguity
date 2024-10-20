@@ -1,6 +1,7 @@
 ﻿using R2API;
 using RoR2;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 namespace LunarsOfExiguity;
 public abstract class ItemTierBase : GenericBase<ItemTierDef>
@@ -8,8 +9,8 @@ public abstract class ItemTierBase : GenericBase<ItemTierDef>
     protected virtual ColorCatalog.ColorIndex Color => ColorCatalog.ColorIndex.None;
     protected virtual ColorCatalog.ColorIndex DarkColor => ColorCatalog.ColorIndex.None;
 
-    protected virtual GameObject HighlightPrefab => null;
-    protected virtual GameObject DropletDisplayPrefab => null;
+    protected virtual GameObject HighlightPrefab => Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Common/GenericPickup.prefab").WaitForCompletion();
+    protected virtual GameObject DropletDisplayPrefab => Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Common/LunarOrb.prefab").WaitForCompletion();
     protected virtual Texture IconBackgroundTexture => null;
 
     protected virtual bool CanBeDropped => true;

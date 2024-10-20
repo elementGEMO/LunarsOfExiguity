@@ -2,7 +2,7 @@
 using R2API;
 using System.IO;
 using UnityEngine;
-//using ShaderSwapper;
+using ShaderSwapper;
 
 [assembly: HG.Reflection.SearchableAttribute.OptIn]
 
@@ -40,10 +40,10 @@ namespace LunarsOfExiguity
         }
         private void SetUpMisc()
         {
-            Colors.Init();
+            //Colors.Init();
             new PurifiedTier();
-
             new SkillDisableDebuff();
+            new ShrineCleanseRework();
         }
         private void SetUpItems()
         {
@@ -52,12 +52,18 @@ namespace LunarsOfExiguity
 
             new GestureDrownedRework();
             new PureGestureItem();
+
+            new FocusedConvergenceRework();
         }
         private void SetUpMethods()
         {
             new ConsumeHooks();
             new GestureDrownedHooks();
         }
-        private void SetupAssets() => Bundle = AssetBundle.LoadFromFile(Path.Combine(Directory.GetParent(Info.Location)!.ToString(), "lunarofexiguity"));
+        private void SetupAssets()
+        {
+            Bundle = AssetBundle.LoadFromFile(Path.Combine(Directory.GetParent(Info.Location)!.ToString(), "lunarofexiguity"));
+            StartCoroutine(Bundle.UpgradeStubbedShadersAsync());
+        }
     }
 }

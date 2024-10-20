@@ -57,8 +57,11 @@ public abstract class ItemBase : GenericBase<ItemDef>
             if (!string.IsNullOrWhiteSpace(PickupText)) LanguageAPI.Add(Value.pickupToken, PickupText);
             if (!string.IsNullOrWhiteSpace(Description)) LanguageAPI.Add(Value.descriptionToken, Description);
             if (!string.IsNullOrWhiteSpace(Lore)) LanguageAPI.Add(Value.loreToken, Lore);
+
+            CreateDisplay();
         }
 
         ItemAPI.Add(new CustomItem(Value, []));
     }
+    protected virtual void CreateDisplay() { }
 }

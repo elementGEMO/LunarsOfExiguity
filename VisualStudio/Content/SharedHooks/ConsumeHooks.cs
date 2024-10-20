@@ -70,7 +70,7 @@ public class ConsumeHooks
 
     private static bool HasPureCounterpart(Inventory inventory, ItemIndex itemIndex)
     {
-        foreach (PurifiedFractureInfo pair in PurifiedTier.ItemCounterpartPool)
+        foreach (PurifiedTier.PurifiedFractureInfo pair in PurifiedTier.ItemCounterpartPool)
         {
             bool sameIndex = itemIndex == pair.originalItem;
             if (!sameIndex) continue;
@@ -121,11 +121,6 @@ public class ConsumeHooks
         public ItemDef transformItem;
 
         public Run.FixedTimeStamp time;
-    }
-    public struct PurifiedFractureInfo
-    {
-        public ItemIndex originalItem;
-        public ItemIndex purifiedItem;
     }
 
     private static readonly List<InventoryReplacementCandidate> PendingReplacement = [];

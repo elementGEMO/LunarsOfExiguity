@@ -1,8 +1,7 @@
-﻿using RoR2;
+﻿using R2API;
+using RoR2;
 using System.Collections.Generic;
 using UnityEngine;
-
-using static LunarsOfExiguity.ConsumeHooks;
 
 namespace LunarsOfExiguity;
 public class PurifiedTier : ItemTierBase
@@ -11,8 +10,8 @@ public class PurifiedTier : ItemTierBase
 
     public static ItemTierDef PurifiedItemTierDef;
 
-    protected override ColorCatalog.ColorIndex Color => Colors.TempPureLight;
-    protected override ColorCatalog.ColorIndex DarkColor => Colors.TempPureDark;
+    protected override ColorCatalog.ColorIndex Color => ColorsAPI.RegisterColor(new Color32(210, 176, 136, 255)); //Colors.TempPureLight;
+    protected override ColorCatalog.ColorIndex DarkColor => ColorsAPI.RegisterColor(new Color32(173, 146, 108, 255)); //Colors.TempPureDark;
 
     protected override Texture IconBackgroundTexture => LoEPlugin.Bundle.LoadAsset<Sprite>("PureBackgroundIcon").texture;
 
@@ -22,6 +21,12 @@ public class PurifiedTier : ItemTierBase
     public static List<ItemIndex> IgnoreBlemished = [];
 
     public static List<PurifiedFractureInfo> ItemCounterpartPool = [];
+
+    public struct PurifiedFractureInfo
+    {
+        public ItemIndex originalItem;
+        public ItemIndex purifiedItem;
+    }
 
     protected override void Initialize()
     {

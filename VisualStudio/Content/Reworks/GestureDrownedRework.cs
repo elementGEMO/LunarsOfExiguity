@@ -3,6 +3,7 @@ using R2API;
 
 using static LoEUtils;
 using static LoEColors;
+using RoR2;
 
 namespace LunarsOfExiguity;
 public class GestureDrownedRework : ItemReworkBase
@@ -17,9 +18,9 @@ public class GestureDrownedRework : ItemReworkBase
     protected override string RelicNameOverride => "Relic of the Drowned";
     protected override string CursedNameOverride => RelicNameOverride;
 
-    protected override string PickupOverride => "Equipments no longer use charge... " + "BUT activating your Equipment disables all skills temporarily".Style(FontColor.cDeath) + ".";//"Equipment use requires no charges... <style=cDeath>BUT activation disables all skills temporarily</style>.";
+    protected override string PickupOverride => "Equipments no longer use charge... " + "BUT activating your Equipment disables all skills temporarily".Style(FontColor.cDeath) + ".";
     protected override string DescriptionOverride => string.Format(
-        "Equipments no longer use charge".Style(FontColor.cIsUtility) + ". Activating your Equipment temporarily " + "disables all skills ".Style(FontColor.cIsHealth) + "for " + "{0}% ".Style(FontColor.cIsHealth) + "of the " + "Equipment cooldown ".Style(FontColor.cIsUtility) + "on " + "each use".Style(FontColor.cIsHealth) + ", up to a " + "maximum ".Style(FontColor.cIsHealth) + "of " + "{1}%".Style(FontColor.cIsHealth) + ".",
+        "Equipments no longer use charge".Style(FontColor.cIsUtility) + ". Activating your Equipment temporarily " + "disables all skills ".Style(FontColor.cIsHealth) + "for " + "{0}% ".Style(FontColor.cIsHealth) + "of the " + "Equipment cooldown ".Style(FontColor.cIsUtility) + "for " + "each use".Style(FontColor.cIsHealth) + ", up to a " + "maximum ".Style(FontColor.cIsHealth) + "of " + "{1}%".Style(FontColor.cIsHealth) + ".",
         RoundVal(Base_Equip_Percent.Value), RoundVal(Max_Equip_Percent.Value)
     );
 

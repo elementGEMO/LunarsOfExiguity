@@ -1,20 +1,35 @@
 ManifestFileVersion: 0
-CRC: 522485052
+CRC: 3500623558
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: fad257b688d76772d1713e7bbd7ed0cb
+    Hash: 460aab302333af22b563b238c5fdad01
   TypeTreeHash:
     serializedVersion: 2
-    Hash: c21d61fe394c58399df3c6fb5c7c99b3
+    Hash: b824e6e31f7423187b48afc99cdf7781
 HashAppended: 0
 ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
 - Class: 28
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 48
   Script: {instanceID: 0}
 - Class: 213
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
+- Assets/Items/Gesture/PureGesture/PureGestureStubbedMat.mat
 - Assets/Items/Gesture/PureGesture/PureGestureIcon.png
 - Assets/Items/Gesture/DrownedDebuffIcon.png
 - Assets/Items/Pearls/PearlIcon.png
@@ -22,4 +37,5 @@ Assets:
 - Assets/ItemTiers/PureBackgroundIcon.png
 - Assets/Items/Blemished/PureConsumedIcon.png
 - Assets/Items/Fractured/LunarConsumedIcon.png
+- Assets/Items/Gesture/PureGesture/PureGestureModel.prefab
 Dependencies: []

@@ -1,4 +1,64 @@
-﻿/*
+﻿using BepInEx.Configuration;
+using R2API;
+
+using static LoEUtils;
+using static LoEColors;
+
+namespace LunarsOfExiguity;
+public class FocusedConvergenceRework : ItemReworkBase
+{
+    public static ConfigEntry<bool> Rework_Enabled;
+    public static ConfigEntry<float> Charge_Speed_Percent;
+    public static ConfigEntry<int> Max_Damage_Percent;
+    public static ConfigEntry<int> Percent_Loss_Hit;
+    //public static ConfigEntry<float> Base_Equip_Percent;
+    //public static ConfigEntry<float> Max_Equip_Percent;
+
+    protected override string Name => "FocusConvergence";
+    public static readonly string StaticInternal = "FocusConvergence";
+
+    protected override string RelicNameOverride => "Relic of Focus";
+    protected override string CursedNameOverride => RelicNameOverride;
+
+    protected override string PickupOverride => "...";
+    protected override string DescriptionOverride => string.Format(
+        "..."
+    );
+
+    protected override bool IsEnabled()
+    {
+        /*
+        Base_Equip_Percent = LoEPlugin.Instance.Config.Bind(
+            RelicNameOverride + " - Rework",
+            "Percent Duration", 15f,
+            "[ 15 = 15% Duration | Per Equipment Use ]"
+        );
+        Max_Equip_Percent = LoEPlugin.Instance.Config.Bind(
+            RelicNameOverride + " - Rework",
+            "Max Percent", 100f,
+            "[ 100 = 100% Max Duration | Per Equipment Use]"
+        );
+        */
+        Rework_Enabled = LoEPlugin.Instance.Config.Bind(
+            RelicNameOverride + " - Rework",
+            "Enable Rework", true,
+            "[ True = Reworked | False = Vanilla ]"
+        );
+
+        return Rework_Enabled.Value;
+    }
+    /*
+    protected override void Initialize()
+    {
+        LanguageAPI.AddOverlay(PureGestureItem.ItemDef.descriptionToken, string.Format(
+            PureGestureItem.SimpleDesc + "Fractures {1}".Style("#D2B088") + ".",
+            PureGestureItem.Percent_Chance.Value, LoEConfig.Rework_Name.Value == LoEConfig.RewriteOptions.Relic ? RelicNameOverride : CursedNameOverride
+        ));
+    }
+    */
+}
+
+/*
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using R2API;
