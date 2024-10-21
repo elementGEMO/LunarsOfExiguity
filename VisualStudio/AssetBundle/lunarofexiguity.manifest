@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 3500623558
+CRC: 2036753945
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 460aab302333af22b563b238c5fdad01
+    Hash: f7ad766b00d531cedbe48bb51e949a89
   TypeTreeHash:
     serializedVersion: 2
     Hash: b824e6e31f7423187b48afc99cdf7781
@@ -31,6 +31,7 @@ SerializeReferenceClassIdentifiers: []
 Assets:
 - Assets/Items/Gesture/PureGesture/PureGestureStubbedMat.mat
 - Assets/Items/Gesture/PureGesture/PureGestureIcon.png
+- Assets/Items/Focus/FocusCounterIcon.png
 - Assets/Items/Gesture/DrownedDebuffIcon.png
 - Assets/Items/Pearls/PearlIcon.png
 - Assets/Items/Pearls/ShinyPearlIcon.png

@@ -9,7 +9,7 @@ public abstract class ItemTierBase : GenericBase<ItemTierDef>
     protected virtual ColorCatalog.ColorIndex Color => ColorCatalog.ColorIndex.None;
     protected virtual ColorCatalog.ColorIndex DarkColor => ColorCatalog.ColorIndex.None;
 
-    protected virtual GameObject HighlightPrefab => Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Common/GenericPickup.prefab").WaitForCompletion();
+    protected virtual GameObject HighlightPrefab => Addressables.LoadAssetAsync<GameObject>("RoR2/Base/UI/HighlightTier1Item.prefab").WaitForCompletion();//Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Common/GenericPickup.prefab").WaitForCompletion();
     protected virtual GameObject DropletDisplayPrefab => Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Common/LunarOrb.prefab").WaitForCompletion();
     protected virtual Texture IconBackgroundTexture => null;
 

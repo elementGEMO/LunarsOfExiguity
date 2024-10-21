@@ -46,9 +46,14 @@ public class GestureDrownedRework : ItemReworkBase
     }
     protected override void Initialize()
     {
+        LanguageAPI.AddOverlay(PureGestureItem.ItemDef.pickupToken, string.Format(
+            PureGestureItem.SimplePickup + "Fractures {0}".Style("#D2B088") + ".",
+            LoEConfig.Rework_Name.Value == LoEConfig.RewriteOptions.Relic ? RelicNameOverride : CursedNameOverride
+        ));
+
         LanguageAPI.AddOverlay(PureGestureItem.ItemDef.descriptionToken, string.Format(
-            PureGestureItem.SimpleDesc + "Fractures {1}".Style("#D2B088") + ".",
-            PureGestureItem.Percent_Chance.Value, LoEConfig.Rework_Name.Value == LoEConfig.RewriteOptions.Relic ? RelicNameOverride : CursedNameOverride
+            PureGestureItem.SimpleDesc + "Fractures {0}".Style("#D2B088") + ".",
+            LoEConfig.Rework_Name.Value == LoEConfig.RewriteOptions.Relic ? RelicNameOverride : CursedNameOverride
         ));
     }
 }

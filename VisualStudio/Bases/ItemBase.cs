@@ -58,10 +58,11 @@ public abstract class ItemBase : GenericBase<ItemDef>
             if (!string.IsNullOrWhiteSpace(Description)) LanguageAPI.Add(Value.descriptionToken, Description);
             if (!string.IsNullOrWhiteSpace(Lore)) LanguageAPI.Add(Value.loreToken, Lore);
 
-            CreateDisplay();
+            LogDisplay();
         }
 
-        ItemAPI.Add(new CustomItem(Value, []));
+        ItemAPI.Add(new CustomItem(Value, ItemDisplay()));
     }
-    protected virtual void CreateDisplay() { }
+    public virtual ItemDisplayRuleDict ItemDisplay() => new ItemDisplayRuleDict();
+    protected virtual void LogDisplay() { }
 }

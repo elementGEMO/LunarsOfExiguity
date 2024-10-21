@@ -27,7 +27,15 @@ public static class LoEConfig
         );
         Rework_Name = LoEPlugin.Instance.Config.Bind(
             token, "Relic Names", RewriteOptions.Relic,
-            "[ Chanes the naming conventions of Lunars | Does not effect 'Disables ...' ]"
+            "[ Changes the naming conventions of Lunars | Does not effect 'Disables ...' ]"
+        );
+        ShrineCleanseRework.Irradiant_Chance = LoEPlugin.Instance.Config.Bind(
+            token,
+            "Chance for Irradiant Pearl", 20,
+            new ConfigDescription(
+                "[ 20 = 20% Chance | for Irradiant Pearl when using Cleansing Pool on a Lunar without a Purified item ]",
+                new AcceptableValueRange<int>(1, 100)
+            )
         );
         Round_To = LoEPlugin.Instance.Config.Bind(
             token, "Item Stat Rounding", 0,

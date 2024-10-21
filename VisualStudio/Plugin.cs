@@ -40,10 +40,11 @@ namespace LunarsOfExiguity
         }
         private void SetUpMisc()
         {
-            //Colors.Init();
             new PurifiedTier();
-            new SkillDisableDebuff();
             new ShrineCleanseRework();
+
+            new SkillDisableDebuff();
+            new FocusCounterBuff();
         }
         private void SetUpItems()
         {
@@ -54,11 +55,13 @@ namespace LunarsOfExiguity
             new PureGestureItem();
 
             new FocusedConvergenceRework();
+            new PureFocusItem();
         }
         private void SetUpMethods()
         {
             new ConsumeHooks();
             new GestureDrownedHooks();
+            new FocusConvergenceHooks();
         }
         private void SetupAssets()
         {
