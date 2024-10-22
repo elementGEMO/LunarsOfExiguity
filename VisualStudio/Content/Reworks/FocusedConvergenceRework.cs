@@ -20,7 +20,7 @@ public class FocusedConvergenceRework : ItemReworkBase
 
     protected override string PickupOverride => "Teleporter charges faster... " + "BUT all enemies are invincible".Style(FontColor.cDeath) + ", until after the event, taking damage instead.";
     protected override string DescriptionOverride => string.Format(
-        "Teleporters charge " + "{0}% faster".Style(FontColor.cIsUtility) + ", but " + "enemies are invincible ".Style(FontColor.cIsHealth) + "during it. Once complete, " + "enemies ".Style(FontColor.cIsHealth) + "lose " + "{1}% health".Style(FontColor.cIsHealth) + ", reduced by " + "{2}% ".Style(FontColor.cIsHealth) + "each time you were hit during the event.",
+        "Teleporters charge " + "{0}% faster".Style(FontColor.cIsUtility) + ", but " + "enemies are invincible ".Style(FontColor.cIsHealth) + "during it. After the " + "Teleporter event".Style(FontColor.cIsUtility) + ", " + "enemies ".Style(FontColor.cIsHealth) + "lose " + "{1}% health".Style(FontColor.cIsHealth) + ", reduced by " + "{2}% ".Style(FontColor.cIsHealth) + "each time you were hit during it.",
         RoundVal(Charge_Speed_Percent.Value), Max_Damage_Percent.Value, Percent_Loss_Hit.Value
     );
 
@@ -57,14 +57,18 @@ public class FocusedConvergenceRework : ItemReworkBase
     }
     protected override void Initialize()
     {
-        LanguageAPI.AddOverlay(PureFocusItem.ItemDef.pickupToken, string.Format(
-            PureFocusItem.SimplePickup + "Fractures {0}".Style("#D2B088") + ".",
-            LoEConfig.Rework_Name.Value == LoEConfig.RewriteOptions.Relic ? RelicNameOverride : CursedNameOverride
-        ));
+        if (PureFocusItem.Item_Enabled.Value)
+        {
+            LanguageAPI.AddOverlay(PureFocusItem.ItemDef.pickupToken, string.Format(
+                PureFocusItem.SimplePickup + "Fractures {0}".Style("#D2B088") + ".",
+                LoEConfig.Rework_Name.Value == LoEConfig.RewriteOptions.Relic ? RelicNameOverride : CursedNameOverride
+            ));
 
-        LanguageAPI.AddOverlay(PureFocusItem.ItemDef.descriptionToken, string.Format(
-            PureFocusItem.SimpleDesc + "Fractures {0}".Style("#D2B088") + ".",
-            LoEConfig.Rework_Name.Value == LoEConfig.RewriteOptions.Relic ? RelicNameOverride : CursedNameOverride
-        ));
+            LanguageAPI.AddOverlay(PureFocusItem.ItemDef.descriptionToken, string.Format(
+                PureFocusItem.SimpleDesc + "Fractures {2}".Style("#D2B088") + ".",
+                PureFocusItem.Max_Damage_Percent.Value, PureFocusItem.Percent_Loss_Hit.Value,
+                LoEConfig.Rework_Name.Value == LoEConfig.RewriteOptions.Relic ? RelicNameOverride : CursedNameOverride
+            ));
+        }
     }
 }

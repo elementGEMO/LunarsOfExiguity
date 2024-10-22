@@ -11,15 +11,42 @@ namespace LunarsOfExiguity;
 public class FocusConvergenceHooks
 {
     private static readonly string InternalName = "FocusConvergenceHooks";
-    public static DamageColorIndex FocusDamage = ColorsAPI.RegisterDamageColor(new Color32(255, 86, 131, 255));
-    public FocusConvergenceHooks()
+    public static bool ReworkItemEnabled;
+    public static bool PureItemEnabled;
+
+    private static readonly DamageColorIndex FocusDamage = ColorsAPI.RegisterDamageColor(new Color32(255, 86, 131, 255));
+    private struct PlayerDamageInstances
     {
-        IL.RoR2.HoldoutZoneController.DoUpdate += DamageAll;
-        On.RoR2.HoldoutZoneController.Start += DisableConvergence;
-        IL.RoR2.HealthComponent.TakeDamageProcess += IncreaseDamageCounter;
-        CharacterBody.onBodyAwakeGlobal += Invincibility;
+        public int Instances;
+        public CharacterBody Player;
+        public ItemIndex Item;
     }
 
+    public FocusConvergenceHooks()
+    {
+        ReworkItemEnabled = FocusedConvergenceRework.Rework_Enabled.Value;
+        PureItemEnabled = PureFocusItem.Item_Enabled.Value;
+
+        if (ReworkItemEnabled)
+        {
+            On.RoR2.HoldoutZoneController.Start += DisableConvergence;
+            CharacterBody.onBodyAwakeGlobal += Invincibility;
+        }
+        if (ReworkItemEnabled || PureItemEnabled)
+        {
+            IL.RoR2.HoldoutZoneController.DoUpdate += DamageAll;
+            IL.RoR2.HealthComponent.TakeDamageProcess += IncreaseDamageCounter;
+        }
+    }
+
+    private static void DisableConvergence(On.RoR2.HoldoutZoneController.orig_Start orig, HoldoutZoneController self)
+    {
+        self.gameObject.AddComponent<FasterDuration>();
+        self.applyFocusConvergence = false;
+
+        orig(self);
+    }
+    private static void Invincibility(CharacterBody self) => self.gameObject.AddComponent<InvincibleDuringHoldout>();
     private static void DamageAll(ILContext il)
     {
         var cursor = new ILCursor(il);
@@ -27,19 +54,40 @@ public class FocusConvergenceHooks
         {
             cursor.EmitDelegate(() =>
             {
-                bool hasItem = Util.GetItemCountGlobal(RoR2Content.Items.FocusConvergence.itemIndex, true, false) > 0;
-                if (hasItem)
+                bool hasFocus = ReworkItemEnabled && Util.GetItemCountGlobal(RoR2Content.Items.FocusConvergence.itemIndex, true, false) > 0;
+                bool hasPure = PureItemEnabled && Util.GetItemCountGlobal(PureFocusItem.ItemDef.itemIndex, true, false) > 0;
+
+                if (hasFocus || hasPure)
                 {
-                    List<TeamComponent> allPlayers = [];
+                    List<PlayerDamageInstances> allPlayers = [];
 
                     foreach (TeamComponent playerComponent in TeamComponent.GetTeamMembers(TeamIndex.Player))
                     {
                         HealthComponent healthComponent = playerComponent.body?.healthComponent;
                         if (!healthComponent || !healthComponent.alive) continue;
 
-                        if (healthComponent.body.inventory?.GetItemCount(RoR2Content.Items.FocusConvergence.itemIndex) > 0)
+                        Inventory inventory = playerComponent.body.inventory;
+                        if (!inventory) continue;
+
+                        PlayerDamageInstances damageInstance = new()
                         {
-                            allPlayers.Add(playerComponent);
+                            Instances = playerComponent.body.GetBuffCount(FocusCounterBuff.BuffDef),
+                            Player = playerComponent.body,
+                            Item = ItemIndex.None
+                        };
+
+                        if (damageInstance.Instances > 0)
+                        {
+                            if (ReworkItemEnabled && inventory.GetItemCount(RoR2Content.Items.FocusConvergence) > 0)
+                            {
+                                damageInstance.Item = RoR2Content.Items.FocusConvergence.itemIndex;
+                            }
+                            else if (PureItemEnabled && inventory.GetItemCount(PureFocusItem.ItemDef) > 0)
+                            {
+                                damageInstance.Item = PureFocusItem.ItemDef.itemIndex;
+                            }
+
+                            if (damageInstance.Item != ItemIndex.None) allPlayers.Add(damageInstance);
                         }
                     }
 
@@ -57,17 +105,24 @@ public class FocusConvergenceHooks
 
                         healthComponent.body.RemoveOldestTimedBuff(RoR2Content.Buffs.Immune);
 
-                        foreach (TeamComponent playerComponent in allPlayers)
+                        foreach (PlayerDamageInstances damageInstance in allPlayers)
                         {
                             if (!healthComponent || !healthComponent.alive) break;
 
-                            int buffCount = playerComponent.body.GetBuffCount(FocusCounterBuff.BuffDef);
-                            float damageMod = FocusedConvergenceRework.Max_Damage_Percent.Value / 100f * Mathf.Pow(1f - FocusedConvergenceRework.Percent_Loss_Hit.Value / 100f, buffCount);
-                            playerComponent.body.RemoveBuff(FocusCounterBuff.BuffDef);
+                            float damageMod = 0;
+                            if (ReworkItemEnabled && damageInstance.Item == RoR2Content.Items.FocusConvergence.itemIndex)
+                            {
+                                damageMod = FocusedConvergenceRework.Max_Damage_Percent.Value / 100f * Mathf.Pow(1f - FocusedConvergenceRework.Percent_Loss_Hit.Value / 100f, damageInstance.Instances);
+                            }
+                            else if (PureItemEnabled && damageInstance.Item == PureFocusItem.ItemDef.itemIndex)
+                            {
+                                damageMod = PureFocusItem.Max_Damage_Percent.Value / 100f * Mathf.Pow(1f - PureFocusItem.Percent_Loss_Hit.Value / 100f, damageInstance.Instances);
+                            }
+                            damageInstance.Player.RemoveBuff(FocusCounterBuff.BuffDef);
 
                             healthComponent.TakeDamage(new DamageInfo
                             {
-                                attacker = playerComponent.body.gameObject,
+                                attacker = damageInstance.Player.gameObject,
                                 position = healthComponent.body.transform.position,
                                 procCoefficient = 0,
                                 damageType = DamageType.BypassArmor | DamageType.BypassOneShotProtection | DamageType.BypassBlock,
@@ -78,14 +133,8 @@ public class FocusConvergenceHooks
                     }
                 }
             });
-        } else Log.Warning(InternalName + " - #1 (DamageAll) Failure");
-    }
-    private static void DisableConvergence(On.RoR2.HoldoutZoneController.orig_Start orig, HoldoutZoneController self)
-    {
-        self.gameObject.AddComponent<FasterDuration>();
-        self.applyFocusConvergence = false;
-
-        orig(self);
+        }
+        else Log.Warning(InternalName + " - #1 (DamageAll) Failure");
     }
     private static void IncreaseDamageCounter(ILContext il)
     {
@@ -110,12 +159,16 @@ public class FocusConvergenceHooks
             {
                 if (self.alive && damageInfo.damage > 0 && TeleporterInteraction.instance && TeleporterInteraction.instance.isCharging)
                 {
-                    if (self.body?.inventory && self.body.inventory.GetItemCount(RoR2Content.Items.FocusConvergence) > 0) self.body.AddBuff(FocusCounterBuff.BuffDef);
+                    if (self.body?.inventory)
+                    {
+                        if (ReworkItemEnabled && self.body.inventory.GetItemCount(RoR2Content.Items.FocusConvergence) > 0) self.body.AddBuff(FocusCounterBuff.BuffDef);
+                        else if (PureItemEnabled && self.body.inventory.GetItemCount(PureFocusItem.ItemDef) > 0) self.body.AddBuff(FocusCounterBuff.BuffDef);
+                    }
                 }
             });
-        } else Log.Warning(InternalName + " - #1 (IncreaseDamageCounter) Failure");
+        }
+        else Log.Warning(InternalName + " - #1 (IncreaseDamageCounter) Failure");
     }
-    private static void Invincibility(CharacterBody self) => self.gameObject.AddComponent<InvincibleDuringHoldout>();
 
     public class InvincibleDuringHoldout : NetworkBehaviour
     {

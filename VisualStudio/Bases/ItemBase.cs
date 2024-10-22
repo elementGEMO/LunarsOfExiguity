@@ -1,5 +1,7 @@
 ﻿using R2API;
 using RoR2;
+using System.ComponentModel;
+using System;
 using UnityEngine;
 
 namespace LunarsOfExiguity;
@@ -66,3 +68,26 @@ public abstract class ItemBase : GenericBase<ItemDef>
     public virtual ItemDisplayRuleDict ItemDisplay() => new ItemDisplayRuleDict();
     protected virtual void LogDisplay() { }
 }
+
+public class FloatingPointFix : MonoBehaviour
+{
+    private Transform transformComponent;
+    private ModelPanelParameters modelComponent;
+    private static readonly int sizeModifier = 100;
+
+    private void Awake()
+    {
+        transformComponent = GetComponent<Transform>();
+        modelComponent = GetComponent<ModelPanelParameters>();
+    }
+    private void Start()
+    {
+        if (!transformComponent || !modelComponent) return;
+        if (SceneCatalog.currentSceneDef.cachedName == "logbook")
+        {
+            transformComponent.localScale *= sizeModifier;
+            modelComponent.maxDistance *= sizeModifier;
+            modelComponent.minDistance *= sizeModifier;
+        }
+    }
+} 

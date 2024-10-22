@@ -22,11 +22,9 @@ public class PureGestureItem : ItemBase
 
     protected override string PickupText => SimplePickup + "Fractures Gesture of the Drowned".Style("#D2B088") + ".";
     public static string SimplePickup = "Chance on Equipment activation to not use charge. ";
-    protected override string Description => SimpleDesc + "Fractures Gesture of the Drowned".Style("#D2B088") + ".";
-    public static string SimpleDesc = string.Format(
-        "Activating your Equipment has a " + "{0}% ".Style(FontColor.cIsUtility) + "chance to " + "not use charge".Style(FontColor.cIsUtility) + ". ",
-        Percent_Chance.Value
-    );
+
+    protected override string Description => string.Format(SimpleDesc + "Fractures Gesture of the Drowned".Style("#D2B088") + ".", Percent_Chance.Value);
+    public static string SimpleDesc = "Activating your Equipment has a " + "{0}% ".Style(FontColor.cIsUtility) + "chance to " + "not use charge".Style(FontColor.cIsUtility) + ". ";
 
     protected override string Lore => "The tranquil murmur of the waters echo as a reminder. Their kin remains.\r\n\r\n" +
         "This shell, passed from one to another. Carrying the memories of lost remnants, and new experiences - their hopes, their struggles, their legacy.\r\n\r\n" +
@@ -44,7 +42,7 @@ public class PureGestureItem : ItemBase
         );
         Item_Enabled = LoEPlugin.Instance.Config.Bind(
             DisplayName + " - Item",
-            "Enable Rework", true,
+            "Enable Item", true,
             "[ True = Reworked | False = Vanilla ]"
         );
 
@@ -68,6 +66,8 @@ public class PureGestureItem : ItemBase
         modelParam.cameraPositionTransform = foundMesh;
         modelParam.minDistance = 0.05f;
         modelParam.maxDistance = 0.25f;
+
+        PickupModelPrefab.AddComponent<FloatingPointFix>();
     }
     private void PairFractured()
     {
