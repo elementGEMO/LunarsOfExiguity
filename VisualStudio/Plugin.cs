@@ -56,12 +56,15 @@ namespace LunarsOfExiguity
 
             new FocusedConvergenceRework();
             new PureFocusItem();
+
+            new BrittleCrownRework();
         }
         private void SetUpMethods()
         {
             new ConsumeHooks();
             new GestureDrownedHooks();
             new FocusConvergenceHooks();
+            new BrittleCrownHooks();
         }
         private void SetupAssets()
         {
