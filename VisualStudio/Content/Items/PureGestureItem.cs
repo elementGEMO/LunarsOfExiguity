@@ -13,6 +13,7 @@ public class PureGestureItem : ItemBase
 
     protected override string Name => "PureGesture";
     public static ItemDef ItemDef;
+
     protected override CombinedItemTier Tier => PurifiedTier.PurifiedItemTierDef;
     protected override Sprite PickupIconSprite => LoEPlugin.Bundle.LoadAsset<Sprite>("PureGestureIcon");
     protected override GameObject PickupModelPrefab => LoEPlugin.Bundle.LoadAsset<GameObject>("PureGestureModel");
@@ -43,7 +44,7 @@ public class PureGestureItem : ItemBase
         Item_Enabled = LoEPlugin.Instance.Config.Bind(
             DisplayName + " - Item",
             "Enable Item", true,
-            "[ True = Reworked | False = Vanilla ]"
+            "[ True = Enabled | False = Disabled ]"
         );
 
         return Item_Enabled.Value;

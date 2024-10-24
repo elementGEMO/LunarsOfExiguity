@@ -12,7 +12,6 @@ public class FracturedItem : ItemBase
     protected override string Name => "Fractured";
     public static ItemDef ItemDef;
 
-    protected override GameObject PickupModelPrefab { get; }
     protected override Sprite PickupIconSprite => LoEPlugin.Bundle.LoadAsset<Sprite>("LunarConsumedIcon");
 
     protected override ItemTag[] Tags => [ItemTag.CannotCopy, ItemTag.CannotSteal, ItemTag.CannotDuplicate];

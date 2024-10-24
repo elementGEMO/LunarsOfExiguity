@@ -14,6 +14,7 @@ public class PureFocusItem : ItemBase
 
     protected override string Name => "PureFocus";
     public static ItemDef ItemDef;
+
     protected override CombinedItemTier Tier => PurifiedTier.PurifiedItemTierDef;
     protected override Sprite PickupIconSprite => LoEPlugin.Bundle.LoadAsset<Sprite>("PureFocusIcon");
     protected override GameObject PickupModelPrefab => LoEPlugin.Bundle.LoadAsset<GameObject>("PureFocusModel");
@@ -53,7 +54,7 @@ public class PureFocusItem : ItemBase
         Item_Enabled = LoEPlugin.Instance.Config.Bind(
             DisplayName + " - Item",
             "Enable Item", true,
-            "[ True = Reworked | False = Vanilla ]"
+            "[ True = Enabled | False = Disabled ]"
         );
 
         return Item_Enabled.Value;

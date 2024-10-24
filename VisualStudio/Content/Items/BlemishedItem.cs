@@ -12,7 +12,6 @@ public class BlemishedItem : ItemBase
     protected override string Name => "Blemished";
     public static ItemDef ItemDef;
 
-    protected override GameObject PickupModelPrefab { get; }
     protected override Sprite PickupIconSprite => LoEPlugin.Bundle.LoadAsset<Sprite>("PureConsumedIcon");
 
     protected override ItemTag[] Tags => [ItemTag.CannotCopy, ItemTag.CannotSteal, ItemTag.CannotDuplicate];

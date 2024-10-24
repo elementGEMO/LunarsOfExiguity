@@ -65,7 +65,7 @@ public abstract class ItemBase : GenericBase<ItemDef>
 
         ItemAPI.Add(new CustomItem(Value, ItemDisplay()));
     }
-    public virtual ItemDisplayRuleDict ItemDisplay() => new ItemDisplayRuleDict();
+    protected virtual ItemDisplayRuleDict ItemDisplay() => new ItemDisplayRuleDict();
     protected virtual void LogDisplay() { }
 }
 

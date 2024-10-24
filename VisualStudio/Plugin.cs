@@ -58,6 +58,7 @@ namespace LunarsOfExiguity
             new PureFocusItem();
 
             new BrittleCrownRework();
+            new PureCrownItem();
         }
         private void SetUpMethods()
         {

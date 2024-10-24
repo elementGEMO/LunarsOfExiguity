@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 2204390614
+CRC: 3159055740
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: d1522511e88215125ab342e07e09d7f2
+    Hash: 5d2ecca8e8badea4dcbbbc63325b765b
   TypeTreeHash:
     serializedVersion: 2
     Hash: b824e6e31f7423187b48afc99cdf7781
@@ -32,13 +32,16 @@ Assets:
 - Assets/Items/Gesture/PureGesture/PureGestureStubbedMat.mat
 - Assets/Items/Gesture/PureGesture/PureGestureIcon.png
 - Assets/Items/Focus/FocusCounterIcon.png
+- Assets/Items/Crown/Pure/PureCrownIcon.png
 - Assets/Items/Focus/PureFocus/PureFocusModel.prefab
 - Assets/Items/Focus/PureFocus/PureFocusStubbedMat.mat
+- Assets/Items/Crown/Pure/PureCrownMat.mat
 - Assets/Items/Gesture/DrownedDebuffIcon.png
 - Assets/Items/Pearls/PearlIcon.png
 - Assets/Items/Pearls/ShinyPearlIcon.png
 - Assets/Items/Focus/PureFocus/PureFocusIcon.png
 - Assets/ItemTiers/PureBackgroundIcon.png
+- Assets/Items/Crown/Pure/PureCrownModel.prefab
 - Assets/Items/Focus/PureFocus/PureFocusStubbedBlackholeMat.mat
 - Assets/Items/Blemished/PureConsumedIcon.png
 - Assets/Items/Fractured/LunarConsumedIcon.png

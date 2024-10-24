@@ -9,7 +9,6 @@ public class BrittleCrownRework : ItemReworkBase
 {
     public static ConfigEntry<bool> Rework_Enabled;
     public static ConfigEntry<float> Debt_Damage;
-    public static ConfigEntry<float> Price_Modifier;
 
     protected override string Name => "GoldOnHit";
     public static readonly string StaticInternal = "GoldOnHit";
@@ -29,11 +28,6 @@ public class BrittleCrownRework : ItemReworkBase
             RelicNameOverride + " - Rework",
             "Debt Damage Percent", 1.0f,
             "[ 1 = +1% Damage | per 1 Gold in Debt ]"
-        );
-        Price_Modifier = LoEPlugin.Instance.Config.Bind(
-            RelicNameOverride + " - Rework",
-            "Hidden Debt Modifier", 0.0f,
-            "[ 0 = +0% Cost | to Debt Purchases ]"
         );
         Rework_Enabled = LoEPlugin.Instance.Config.Bind(
             RelicNameOverride + " - Rework",
