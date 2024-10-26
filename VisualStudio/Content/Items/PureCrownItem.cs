@@ -1,10 +1,11 @@
 ﻿using BepInEx.Configuration;
 using RoR2;
+using R2API;
 using UnityEngine;
 
 using static LoEUtils;
 using static LoEColors;
-using R2API;
+using static LoERenderHelper;
 
 namespace LunarsOfExiguity;
 public class PureCrownItem : ItemBase
@@ -52,8 +53,11 @@ public class PureCrownItem : ItemBase
     }
     protected override ItemDisplayRuleDict ItemDisplay()
     {
+
+        PickupModelPrefab.AddComponent<ItemDisplay>().rendererInfos = ItemDisplaySetup(PickupModelPrefab);
         ItemDisplayRuleDict baseDisplay = new();
 
+        // Risk of Rain 2
         baseDisplay.Add("CommandoBody", new ItemDisplayRule
         {
             followerPrefab = PickupModelPrefab,
@@ -62,7 +66,254 @@ public class PureCrownItem : ItemBase
             childName = "HeadCenter",
             localPos = new Vector3(0f, 0.115f, -0.025f),
             localAngles = new Vector3(345f, 360f, 0f),
-            localScale = new Vector3(12f, 12f, 12f)
+            localScale = Vector3.one * 12f
+        });
+
+        baseDisplay.Add("HuntressBody", new ItemDisplayRule
+        {
+            followerPrefab = PickupModelPrefab,
+            ruleType = ItemDisplayRuleType.ParentedPrefab,
+
+            childName = "HeadCenter",
+            localPos = new Vector3(0f, 0.1f, -0.06f),
+            localAngles = new Vector3(337.5f, 1f, 0f),
+            localScale = Vector3.one * 10f
+        });
+
+        baseDisplay.Add("Bandit2Body", new ItemDisplayRule
+        {
+            followerPrefab = PickupModelPrefab,
+            ruleType = ItemDisplayRuleType.ParentedPrefab,
+
+            childName = "Hat",
+            localPos = new Vector3(0f, 0.120f, -0.042f),
+            localAngles = new Vector3(337.5f, 0f, 0f),
+            localScale = Vector3.one * 10f
+        });
+
+        baseDisplay.Add("ToolbotBody", new ItemDisplayRule
+        {
+            followerPrefab = PickupModelPrefab,
+            ruleType = ItemDisplayRuleType.ParentedPrefab,
+
+            childName = "Head",
+            localPos = new Vector3(0f, 2.57f, 1.73f),
+            localAngles = new Vector3(75.95f, 0f, 0f),
+            localScale = Vector3.one * 75f
+        });
+
+        baseDisplay.Add("EngiBody", new ItemDisplayRule
+        {
+            followerPrefab = PickupModelPrefab,
+            ruleType = ItemDisplayRuleType.ParentedPrefab,
+
+            childName = "HeadCenter",
+            localPos = new Vector3(0f, 0.18f, -0.01f),
+            localAngles = new Vector3(0f, 0f, 0f),
+            localScale = Vector3.one * 11f
+        });
+
+        baseDisplay.Add("MageBody", new ItemDisplayRule
+        {
+            followerPrefab = PickupModelPrefab,
+            ruleType = ItemDisplayRuleType.ParentedPrefab,
+
+            childName = "HeadCenter",
+            localPos = new Vector3(0f, 0.09f, -0.075f),
+            localAngles = new Vector3(4.9f, 0f, 0f),
+            localScale = Vector3.one * 6f
+        });
+
+        baseDisplay.Add("MercBody", new ItemDisplayRule
+        {
+            followerPrefab = PickupModelPrefab,
+            ruleType = ItemDisplayRuleType.ParentedPrefab,
+
+            childName = "HeadCenter",
+            localPos = new Vector3(0f, 0.11f, 0f),
+            localAngles = new Vector3(3.95f, 0f, 0f),
+            localScale = Vector3.one * 9f
+        });
+
+        baseDisplay.Add("TreebotBody", new ItemDisplayRule
+        {
+            followerPrefab = PickupModelPrefab,
+            ruleType = ItemDisplayRuleType.ParentedPrefab,
+
+            childName = "HeadCenter",
+            localPos = new Vector3(0.05f, -0.05f, 0f),
+            localAngles = new Vector3(90f, 90f, 0f),
+            localScale = new Vector3(10f, 10f, 3.5f)
+        });
+
+        baseDisplay.Add("LoaderBody", new ItemDisplayRule
+        {
+            followerPrefab = PickupModelPrefab,
+            ruleType = ItemDisplayRuleType.ParentedPrefab,
+
+            childName = "HeadCenter",
+            localPos = new Vector3(0f, 0.140f, 0.0275f),
+            localAngles = new Vector3(8.9f, 0f, 0f),
+            localScale = Vector3.one * 9f
+        });
+
+        baseDisplay.Add("CrocoBody", new ItemDisplayRule
+        {
+            followerPrefab = PickupModelPrefab,
+            ruleType = ItemDisplayRuleType.ParentedPrefab,
+
+            childName = "HeadCenter",
+            localPos = new Vector3(0f, 0.195f, 1.150f),
+            localAngles = new Vector3(65f, 180f, 180f),
+            localScale = Vector3.one * 125f
+        });
+
+        baseDisplay.Add("CaptainBody", new ItemDisplayRule
+        {
+            followerPrefab = PickupModelPrefab,
+            ruleType = ItemDisplayRuleType.ParentedPrefab,
+
+            childName = "Head",
+            localPos = new Vector3(0f, 0.275f, 0.075f),
+            localAngles = new Vector3(13.875f, 0f, 0f),
+            localScale = Vector3.one * 10.5f
+        });
+
+        baseDisplay.Add("HereticBody", new ItemDisplayRule
+        {
+            followerPrefab = PickupModelPrefab,
+            ruleType = ItemDisplayRuleType.ParentedPrefab,
+
+            childName = "Head",
+            localPos = new Vector3(-0.255f, -0.072f, 0f),
+            localAngles = new Vector3(302f, 270f, 180f),
+            localScale = Vector3.one * 15f
+        });
+
+        // Survivors of the Void
+        baseDisplay.Add("RailgunnerBody", new ItemDisplayRule
+        {
+            followerPrefab = PickupModelPrefab,
+            ruleType = ItemDisplayRuleType.ParentedPrefab,
+
+            childName = "Head",
+            localPos = new Vector3(0f, 0.210f, -0.020f),
+            localAngles = new Vector3(356.520f, 0f, 0f),
+            localScale = Vector3.one * 9f
+        });
+
+        baseDisplay.Add("VoidSurvivorBody", new ItemDisplayRule
+        {
+            followerPrefab = PickupModelPrefab,
+            ruleType = ItemDisplayRuleType.ParentedPrefab,
+
+            childName = "Head",
+            localPos = new Vector3(0f, 0.135f, -0.085f),
+            localAngles = new Vector3(317.950f, 0f, 0f),
+            localScale = Vector3.one * 11.5f
+        });
+
+        // Seekers of the Storm
+        baseDisplay.Add("SeekerBody", new ItemDisplayRule
+        {
+            followerPrefab = PickupModelPrefab,
+            ruleType = ItemDisplayRuleType.ParentedPrefab,
+
+            childName = "Head",
+            localPos = new Vector3(0f, 0.215f, 0.018f),
+            localAngles = new Vector3(3.675f, 0f, 0f),
+            localScale = Vector3.one * 9f
+        });
+
+        baseDisplay.Add("FalseSonBody", new ItemDisplayRule
+        {
+            followerPrefab = PickupModelPrefab,
+            ruleType = ItemDisplayRuleType.ParentedPrefab,
+
+            childName = "Head",
+            localPos = new Vector3(0f, 0.425f, -0.003f),
+            localAngles = new Vector3(357.625f, 0f, 0f),
+            localScale = new Vector3(16f, 16f, 16.5f)
+        });
+
+        baseDisplay.Add("ChefBody", new ItemDisplayRule
+        {
+            followerPrefab = PickupModelPrefab,
+            ruleType = ItemDisplayRuleType.ParentedPrefab,
+
+            childName = "Head",
+            localPos = new Vector3(-0.9f, -0.390f, -0.047f),
+            localAngles = new Vector3(314.215f, 267.225f, 173.125f),
+            localScale = Vector3.one * 15f
+        });
+
+        // Starstorm 2
+        baseDisplay.Add("NemCommandoBody", new ItemDisplayRule
+        {
+            followerPrefab = PickupModelPrefab,
+            ruleType = ItemDisplayRuleType.ParentedPrefab,
+
+            childName = "Head",
+            localPos = new Vector3(0f, 1.250f, -0.007f),
+            localAngles = new Vector3(7.15f, 1.96f, 2.03f),
+            localScale = Vector3.one * 45f
+        });
+
+        baseDisplay.Add("NemMercBody", new ItemDisplayRule
+        {
+            followerPrefab = PickupModelPrefab,
+            ruleType = ItemDisplayRuleType.ParentedPrefab,
+
+            childName = "Head",
+            localPos = new Vector3(0f, 0.25f, 0f),
+            localAngles = new Vector3(0f, 0f, 0f),
+            localScale = Vector3.one * 9f
+        });
+
+        baseDisplay.Add("Executioner2Body", new ItemDisplayRule
+        {
+            followerPrefab = PickupModelPrefab,
+            ruleType = ItemDisplayRuleType.ParentedPrefab,
+
+            childName = "HeadCenter",
+            localPos = new Vector3(0f, 0.167f, -0.325f),
+            localAngles = new Vector3(345f, 0f, 0f),
+            localScale = Vector3.one * 10f
+        });
+
+        baseDisplay.Add("ChirrBody", new ItemDisplayRule
+        {
+            followerPrefab = PickupModelPrefab,
+            ruleType = ItemDisplayRuleType.ParentedPrefab,
+
+            childName = "Head",
+            localPos = new Vector3(0f, 0f, 0.575f),
+            localAngles = new Vector3(90f, 0f, 0f),
+            localScale = Vector3.one * 30f
+        });
+
+        // PaladinMod
+        baseDisplay.Add("RobPaladinBody", new ItemDisplayRule
+        {
+            followerPrefab = PickupModelPrefab,
+            ruleType = ItemDisplayRuleType.ParentedPrefab,
+
+            childName = "HeadCenter",
+            localPos = new Vector3(0f, 0.45f, 0.09f),
+            localAngles = new Vector3(13.16f, 0f, 0f),
+            localScale = Vector3.one * 14f
+        });
+
+        // RobomandoMod
+        baseDisplay.Add("RobomandoBody", new ItemDisplayRule
+        {
+            followerPrefab = PickupModelPrefab,
+            ruleType = ItemDisplayRuleType.ParentedPrefab,
+
+            childName = "Head",
+            localPos = new Vector3(0f, 0.3f, 0f),
+            localAngles = new Vector3(0f, 90f, 0f),
+            localScale = Vector3.one * 13f
         });
 
         return baseDisplay;

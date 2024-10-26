@@ -4,12 +4,13 @@ using LunarsOfExiguity;
 using UnityEngine;
 using System.Collections.Generic;
 using RoR2;
-public static class LoEUtils
+
+internal static class LoEUtils
 {
     public static string SignVal(this float value) => value >= 0 ? "+" + value : "-" + value;
     public static float RoundVal(float value) => MathF.Round(value, LoEConfig.Round_To.Value);
 }
-public static class LoEColors
+internal static class LoEColors
 {
     public static string Style(this string self, FontColor style) => "<style=" + style + ">" + self + "</style>";
     public static string Style(this string self, string color) => "<color=" + color + ">" + self + "</color>";
@@ -27,7 +28,7 @@ public static class LoEColors
         cIsLunar
     };
 }
-public static partial class LoEColorRegister
+internal class LoEColorRegister
 {
     private static bool _hookEnabled = false;
 
@@ -66,5 +67,26 @@ public static partial class LoEColorRegister
         indexToHexString.Add(Util.RGBToHex(color));
 
         return newIndex;
+    }
+}
+internal class LoERenderHelper
+{
+    public static CharacterModel.RendererInfo[] ItemDisplaySetup(GameObject self)
+    {
+        Renderer[] allRender = self.GetComponentsInChildren<Renderer>();
+        CharacterModel.RendererInfo[] renderInfos = new CharacterModel.RendererInfo[allRender.Length];
+
+        for (int i = 0; i < allRender.Length; i++)
+        {
+            renderInfos[i] = new CharacterModel.RendererInfo
+            {
+                defaultMaterial = allRender[i].sharedMaterial,
+                renderer = allRender[i],
+                defaultShadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On,
+                ignoreOverlays = false
+            };
+        }
+
+        return renderInfos;
     }
 }
