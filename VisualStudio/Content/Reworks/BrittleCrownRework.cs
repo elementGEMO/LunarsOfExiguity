@@ -16,7 +16,7 @@ public class BrittleCrownRework : ItemReworkBase
     protected override string RelicNameOverride => "Relic of Greed";
     protected override string CursedNameOverride => "Relic of Debt";
 
-    protected override string PickupOverride => "...";
+    protected override string PickupOverride => "You can buy everything... " + "BUT you can go into debt, increasing damage taken".Style(FontColor.cDeath) + ".";
     protected override string DescriptionOverride => string.Format(
         "When making a gold purchase that's too expensive, the purchase is " + "completed".Style(FontColor.cIsUtility) + ", but you go into " + "debt".Style(FontColor.cIsHealth) + ". Increase damage taken by " + "{0}% ".Style(FontColor.cIsHealth) + "for " + "every gold owed ".Style(FontColor.cIsHealth) + "while in " + "debt".Style(FontColor.cIsHealth) + ". " + "Scales inversely over time".Style(FontColor.cIsUtility) + ".",
         RoundVal(Debt_Damage.Value).SignVal()
@@ -39,20 +39,18 @@ public class BrittleCrownRework : ItemReworkBase
     }
     protected override void Initialize()
     {
-        /*
-        if (PureFocusItem.Item_Enabled.Value)
+        if (PureCrownItem.Item_Enabled.Value)
         {
-            LanguageAPI.AddOverlay(PureFocusItem.ItemDef.pickupToken, string.Format(
-                PureFocusItem.SimplePickup + "Fractures {0}".Style("#D2B088") + ".",
+            LanguageAPI.AddOverlay(PureCrownItem.ItemDef.pickupToken, string.Format(
+                PureCrownItem.SimplePickup + "Fractures {0}".Style("#D2B088") + ".",
                 LoEConfig.Rework_Name.Value == LoEConfig.RewriteOptions.Relic ? RelicNameOverride : CursedNameOverride
             ));
 
-            LanguageAPI.AddOverlay(PureFocusItem.ItemDef.descriptionToken, string.Format(
-                PureFocusItem.SimpleDesc + "Fractures {2}".Style("#D2B088") + ".",
-                PureFocusItem.Max_Damage_Percent.Value, PureFocusItem.Percent_Loss_Hit.Value,
+            LanguageAPI.AddOverlay(PureCrownItem.ItemDef.descriptionToken, string.Format(
+                PureCrownItem.SimpleDesc + "Fractures {1}".Style("#D2B088") + ".",
+                RoundVal(PureCrownItem.Chance_Free.Value),
                 LoEConfig.Rework_Name.Value == LoEConfig.RewriteOptions.Relic ? RelicNameOverride : CursedNameOverride
             ));
         }
-        */
     }
 }

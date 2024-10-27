@@ -74,6 +74,20 @@ internal class LoERenderHelper
     public static CharacterModel.RendererInfo[] ItemDisplaySetup(GameObject self)
     {
         Renderer[] allRender = self.GetComponentsInChildren<Renderer>();
+        List<CharacterModel.RendererInfo> renderInfos = [];
+
+        foreach (Renderer render in allRender)
+        {
+            renderInfos.Add(new CharacterModel.RendererInfo
+            {
+                defaultMaterial = render.sharedMaterial,
+                renderer = render,
+                defaultShadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On,
+                ignoreOverlays = false
+            });
+        }
+
+        /*
         CharacterModel.RendererInfo[] renderInfos = new CharacterModel.RendererInfo[allRender.Length];
 
         for (int i = 0; i < allRender.Length; i++)
@@ -86,7 +100,8 @@ internal class LoERenderHelper
                 ignoreOverlays = false
             };
         }
+        */
 
-        return renderInfos;
+        return [.. renderInfos];
     }
 }

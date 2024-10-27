@@ -11,6 +11,7 @@ namespace LunarsOfExiguity;
 public class PureCrownItem : ItemBase
 {
     public static ConfigEntry<bool> Item_Enabled;
+    public static ConfigEntry<float> Chance_Free;
 
     protected override string Name => "PureCrown";
     public static ItemDef ItemDef;
@@ -21,14 +22,13 @@ public class PureCrownItem : ItemBase
 
     protected override string DisplayName => "Honor of Greed";
     protected override string CursedNameOverride => "Honor of Debt";
+    protected override string PickupText => SimplePickup + "Fractures Brittle Crown".Style("#D2B088") + ".";
+    public static string SimplePickup = "All cash interactables have a chance to be free. ";
+
+    protected override string Description => string.Format(SimpleDesc + "Fractures Brittle Crown".Style("#D2B088") + ".", Chance_Free.Value);
+    public static string SimpleDesc = "All " + "gold purchase interactables ".Style(FontColor.cIsUtility) + "have a " + "{0}% ".Style(FontColor.cIsUtility) + "chance to be " + "free".Style(FontColor.cIsUtility) + ". ";
 
     /*
-    protected override string PickupText => SimplePickup + "Fractures Gesture of the Drowned".Style("#D2B088") + ".";
-    public static string SimplePickup = "Chance on Equipment activation to not use charge. ";
-
-    protected override string Description => string.Format(SimpleDesc + "Fractures Gesture of the Drowned".Style("#D2B088") + ".", Percent_Chance.Value);
-    public static string SimpleDesc = "Activating your Equipment has a " + "{0}% ".Style(FontColor.cIsUtility) + "chance to " + "not use charge".Style(FontColor.cIsUtility) + ". ";
-
     protected override string Lore => "The tranquil murmur of the waters echo as a reminder. Their kin remains.\r\n\r\n" +
         "This shell, passed from one to another. Carrying the memories of lost remnants, and new experiences - their hopes, their struggles, their legacy.\r\n\r\n" +
         "Would you allow this cycle to flow, or will you claim it as your own?";
@@ -36,6 +36,14 @@ public class PureCrownItem : ItemBase
 
     protected override bool IsEnabled()
     {
+        Chance_Free = LoEPlugin.Instance.Config.Bind(
+            DisplayName + " - Item",
+            "Chance for Free Chest", 15f,
+            new ConfigDescription(
+                "[ 15 = 15% Chance | Free for each Gold Interactable ]",
+                new AcceptableValueRange<float>(0, 100)
+            )
+        );
         Item_Enabled = LoEPlugin.Instance.Config.Bind(
             DisplayName + " - Item",
             "Enable Item", true,
@@ -111,6 +119,26 @@ public class PureCrownItem : ItemBase
             localPos = new Vector3(0f, 0.18f, -0.01f),
             localAngles = new Vector3(0f, 0f, 0f),
             localScale = Vector3.one * 11f
+        });
+        baseDisplay.Add("EngiTurretBody", new ItemDisplayRule
+        {
+            followerPrefab = PickupModelPrefab,
+            ruleType = ItemDisplayRuleType.ParentedPrefab,
+
+            childName = "Head",
+            localPos = new Vector3(0f, 1.105f, -1.425f),
+            localAngles = new Vector3(332.5f, 0f, 0f),
+            localScale = Vector3.one * 25f
+        });
+        baseDisplay.Add("EngiWalkerTurretBody", new ItemDisplayRule
+        {
+            followerPrefab = PickupModelPrefab,
+            ruleType = ItemDisplayRuleType.ParentedPrefab,
+
+            childName = "Head",
+            localPos = new Vector3(0f, 1.725f, -0.58f),
+            localAngles = new Vector3(0f, 0f, 0f),
+            localScale = Vector3.one * 25f
         });
 
         baseDisplay.Add("MageBody", new ItemDisplayRule
@@ -314,6 +342,100 @@ public class PureCrownItem : ItemBase
             localPos = new Vector3(0f, 0.3f, 0f),
             localAngles = new Vector3(0f, 90f, 0f),
             localScale = Vector3.one * 13f
+        });
+
+        // DriverMod
+        baseDisplay.Add("RobDriverBody", new ItemDisplayRule
+        {
+            followerPrefab = PickupModelPrefab,
+            ruleType = ItemDisplayRuleType.ParentedPrefab,
+
+            childName = "Head",
+            localPos = new Vector3(0f, 0.262f, 0f),
+            localAngles = new Vector3(0f, 0f, 0f),
+            localScale = Vector3.one * 10f
+        });
+
+        // HANDOverclockedMod
+        baseDisplay.Add("HANDOverclockedBody", new ItemDisplayRule
+        {
+            followerPrefab = PickupModelPrefab,
+            ruleType = ItemDisplayRuleType.ParentedPrefab,
+
+            childName = "Hat",
+            localPos = new Vector3(0f, 0.657f, 0f),
+            localAngles = new Vector3(0f, 330f, 0f),
+            localScale = Vector3.one * 50f
+        });
+
+        // EnforcerMod
+        baseDisplay.Add("EnforcerBody", new ItemDisplayRule
+        {
+            followerPrefab = PickupModelPrefab,
+            ruleType = ItemDisplayRuleType.ParentedPrefab,
+
+            childName = "Head",
+            localPos = new Vector3(0f, 0.275f, 0f),
+            localAngles = new Vector3(0f, 90f, 0f),
+            localScale = Vector3.one * 12.5f
+        });
+        baseDisplay.Add("NemesisEnforcerBody", new ItemDisplayRule
+        {
+            followerPrefab = PickupModelPrefab,
+            ruleType = ItemDisplayRuleType.ParentedPrefab,
+
+            childName = "Head",
+            localPos = new Vector3(0f, 0.01f, 0f),
+            localAngles = new Vector3(0f, 90f, 0f),
+            localScale = Vector3.one * 0.35f
+        });
+
+        // MinerUnearthedMod
+        baseDisplay.Add("MinerBody", new ItemDisplayRule
+        {
+            followerPrefab = PickupModelPrefab,
+            ruleType = ItemDisplayRuleType.ParentedPrefab,
+
+            childName = "Head",
+            localPos = new Vector3(0f, 0.003f, 0f),
+            localAngles = new Vector3(0f, 0f, 0f),
+            localScale = Vector3.one * 0.105f
+        });
+
+        // RavagerMod
+        baseDisplay.Add("RobRavagerBody", new ItemDisplayRule
+        {
+            followerPrefab = PickupModelPrefab,
+            ruleType = ItemDisplayRuleType.ParentedPrefab,
+
+            childName = "Head",
+            localPos = new Vector3(0f, 0.37f, 0f),
+            localAngles = new Vector3(0f, 0f, 0f),
+            localScale = Vector3.one * 10f
+        });
+
+        // ArsonistMod
+        baseDisplay.Add("ArsonistBody", new ItemDisplayRule
+        {
+            followerPrefab = PickupModelPrefab,
+            ruleType = ItemDisplayRuleType.ParentedPrefab,
+
+            childName = "Head",
+            localPos = new Vector3(0f, 0.2f, 0.025f),
+            localAngles = new Vector3(0f, 0f, 0f),
+            localScale = Vector3.one * 9f
+        });
+
+        // RocketMod
+        baseDisplay.Add("RocketSurvivorBody", new ItemDisplayRule
+        {
+            followerPrefab = PickupModelPrefab,
+            ruleType = ItemDisplayRuleType.ParentedPrefab,
+
+            childName = "head",
+            localPos = new Vector3(-0.015f, 0.225f, 0f),
+            localAngles = new Vector3(0f, 90f, 0f),
+            localScale = Vector3.one * 10f
         });
 
         return baseDisplay;

@@ -55,7 +55,7 @@ public class GestureDrownedRework : ItemReworkBase
 
             LanguageAPI.AddOverlay(PureGestureItem.ItemDef.descriptionToken, string.Format(
                 PureGestureItem.SimpleDesc + "Fractures {1}".Style("#D2B088") + ".",
-                PureGestureItem.Percent_Chance.Value,
+                RoundVal(PureGestureItem.Percent_Chance.Value),
                 LoEConfig.Rework_Name.Value == LoEConfig.RewriteOptions.Relic ? RelicNameOverride : CursedNameOverride
             ));
         }

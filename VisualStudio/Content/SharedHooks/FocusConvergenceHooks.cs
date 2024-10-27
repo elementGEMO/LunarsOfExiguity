@@ -104,6 +104,7 @@ public class FocusConvergenceHooks
                         }, true);
 
                         healthComponent.body.RemoveOldestTimedBuff(RoR2Content.Buffs.Immune);
+                        healthComponent.body.RemoveOldestTimedBuff(RoR2Content.Buffs.HiddenInvincibility);
 
                         foreach (PlayerDamageInstances damageInstance in allPlayers)
                         {
@@ -119,6 +120,8 @@ public class FocusConvergenceHooks
                                 damageMod = PureFocusItem.Max_Damage_Percent.Value / 100f * Mathf.Pow(1f - PureFocusItem.Percent_Loss_Hit.Value / 100f, damageInstance.Instances);
                             }
                             damageInstance.Player.RemoveBuff(FocusCounterBuff.BuffDef);
+
+                            Log.Debug("Damage: " +  damageMod);
 
                             healthComponent.TakeDamage(new DamageInfo
                             {

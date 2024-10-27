@@ -9,8 +9,8 @@ public class FocusedConvergenceRework : ItemReworkBase
 {
     public static ConfigEntry<bool> Rework_Enabled;
     public static ConfigEntry<float> Charge_Speed_Percent;
-    public static ConfigEntry<int> Max_Damage_Percent;
-    public static ConfigEntry<int> Percent_Loss_Hit;
+    public static ConfigEntry<float> Max_Damage_Percent;
+    public static ConfigEntry<float> Percent_Loss_Hit;
 
     protected override string Name => "FocusConvergence";
     public static readonly string StaticInternal = "FocusConvergence";
@@ -21,7 +21,7 @@ public class FocusedConvergenceRework : ItemReworkBase
     protected override string PickupOverride => "Teleporter charges faster... " + "BUT all enemies are invincible".Style(FontColor.cDeath) + ", until after the event, taking damage instead.";
     protected override string DescriptionOverride => string.Format(
         "Teleporters charge " + "{0}% faster".Style(FontColor.cIsUtility) + ", but " + "enemies are invincible ".Style(FontColor.cIsHealth) + "during it. After the " + "Teleporter event".Style(FontColor.cIsUtility) + ", " + "enemies ".Style(FontColor.cIsHealth) + "lose " + "{1}% health".Style(FontColor.cIsHealth) + ", reduced by " + "{2}% ".Style(FontColor.cIsHealth) + "each time you were hit during it.",
-        RoundVal(Charge_Speed_Percent.Value), Max_Damage_Percent.Value, Percent_Loss_Hit.Value
+        RoundVal(Charge_Speed_Percent.Value), RoundVal(Max_Damage_Percent.Value), RoundVal(Percent_Loss_Hit.Value)
     );
 
     protected override bool IsEnabled()
@@ -33,18 +33,18 @@ public class FocusedConvergenceRework : ItemReworkBase
         );
         Max_Damage_Percent = LoEPlugin.Instance.Config.Bind(
             RelicNameOverride + " - Rework",
-            "Health Loss", 100,
+            "Health Loss", 100f,
             new ConfigDescription(
                 "[ 100 = 100% Health Loss | on Enemies at Teleporter Complete ]",
-                new AcceptableValueRange<int>(0, 100)
+                new AcceptableValueRange<float>(0, 100)
             )
         );
         Percent_Loss_Hit = LoEPlugin.Instance.Config.Bind(
             RelicNameOverride + " - Rework",
-            "Percent Loss", 25,
+            "Percent Loss", 25f,
             new ConfigDescription(
                 "[ 25 = 25% Percent Loss | on Health Damage per Hit Recieved ]",
-                new AcceptableValueRange<int>(0, 100)
+                new AcceptableValueRange<float>(0, 100)
             )
         );
         Rework_Enabled = LoEPlugin.Instance.Config.Bind(

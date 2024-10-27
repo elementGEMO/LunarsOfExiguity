@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 3159055740
+CRC: 3426632450
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 5d2ecca8e8badea4dcbbbc63325b765b
+    Hash: 067abb50fb451c5784934d5fce6ec8c4
   TypeTreeHash:
     serializedVersion: 2
     Hash: b824e6e31f7423187b48afc99cdf7781
@@ -43,6 +43,7 @@ Assets:
 - Assets/ItemTiers/PureBackgroundIcon.png
 - Assets/Items/Crown/Pure/PureCrownModel.prefab
 - Assets/Items/Focus/PureFocus/PureFocusStubbedBlackholeMat.mat
+- Assets/Items/Crown/PureCrownSymbol.png
 - Assets/Items/Blemished/PureConsumedIcon.png
 - Assets/Items/Fractured/LunarConsumedIcon.png
 - Assets/Items/Gesture/PureGesture/PureGestureModel.prefab

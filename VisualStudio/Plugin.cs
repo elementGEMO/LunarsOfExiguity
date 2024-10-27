@@ -11,6 +11,7 @@ namespace LunarsOfExiguity
     [BepInDependency(LanguageAPI.PluginGUID)]
     [BepInDependency(ItemAPI.PluginGUID)]
     [BepInDependency(ColorsAPI.PluginGUID)]
+    [BepInDependency(PrefabAPI.PluginGUID)]
     [BepInPlugin(PluginGUID, PluginName, PluginVersion)]
     public class LoEPlugin : BaseUnityPlugin
     {

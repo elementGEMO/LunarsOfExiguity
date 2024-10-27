@@ -9,7 +9,7 @@ namespace LunarsOfExiguity;
 public class PureGestureItem : ItemBase
 {
     public static ConfigEntry<bool> Item_Enabled;
-    public static ConfigEntry<int> Percent_Chance;
+    public static ConfigEntry<float> Percent_Chance;
 
     protected override string Name => "PureGesture";
     public static ItemDef ItemDef;
@@ -24,7 +24,7 @@ public class PureGestureItem : ItemBase
     protected override string PickupText => SimplePickup + "Fractures Gesture of the Drowned".Style("#D2B088") + ".";
     public static string SimplePickup = "Chance on Equipment activation to not use charge. ";
 
-    protected override string Description => string.Format(SimpleDesc + "Fractures Gesture of the Drowned".Style("#D2B088") + ".", Percent_Chance.Value);
+    protected override string Description => string.Format(SimpleDesc + "Fractures Gesture of the Drowned".Style("#D2B088") + ".", RoundVal(Percent_Chance.Value));
     public static string SimpleDesc = "Activating your Equipment has a " + "{0}% ".Style(FontColor.cIsUtility) + "chance to " + "not use charge".Style(FontColor.cIsUtility) + ". ";
 
     protected override string Lore => "The tranquil murmur of the waters echo as a reminder. Their kin remains.\r\n\r\n" +
@@ -35,10 +35,10 @@ public class PureGestureItem : ItemBase
     {
         Percent_Chance = LoEPlugin.Instance.Config.Bind(
             DisplayName + " - Item",
-            "Chance to Not Charge", 35,
+            "Chance to Not Charge", 35f,
             new ConfigDescription(
                 "[ 35 = 35% Chance | to not use Charge ]",
-                new AcceptableValueRange<int>(1, 100)
+                new AcceptableValueRange<float>(0, 100)
             )
         );
         Item_Enabled = LoEPlugin.Instance.Config.Bind(
