@@ -76,19 +76,16 @@ public class FocusConvergenceHooks
                             Item = ItemIndex.None
                         };
 
-                        if (damageInstance.Instances > 0)
+                        if (ReworkItemEnabled && inventory.GetItemCount(RoR2Content.Items.FocusConvergence) > 0)
                         {
-                            if (ReworkItemEnabled && inventory.GetItemCount(RoR2Content.Items.FocusConvergence) > 0)
-                            {
-                                damageInstance.Item = RoR2Content.Items.FocusConvergence.itemIndex;
-                            }
-                            else if (PureItemEnabled && inventory.GetItemCount(PureFocusItem.ItemDef) > 0)
-                            {
-                                damageInstance.Item = PureFocusItem.ItemDef.itemIndex;
-                            }
-
-                            if (damageInstance.Item != ItemIndex.None) allPlayers.Add(damageInstance);
+                            damageInstance.Item = RoR2Content.Items.FocusConvergence.itemIndex;
                         }
+                        else if (PureItemEnabled && inventory.GetItemCount(PureFocusItem.ItemDef) > 0)
+                        {
+                            damageInstance.Item = PureFocusItem.ItemDef.itemIndex;
+                        }
+
+                        if (damageInstance.Item != ItemIndex.None) allPlayers.Add(damageInstance);
                     }
 
                     foreach (TeamComponent monsterComponent in TeamComponent.GetTeamMembers(TeamIndex.Monster))
@@ -120,8 +117,6 @@ public class FocusConvergenceHooks
                                 damageMod = PureFocusItem.Max_Damage_Percent.Value / 100f * Mathf.Pow(1f - PureFocusItem.Percent_Loss_Hit.Value / 100f, damageInstance.Instances);
                             }
                             damageInstance.Player.RemoveBuff(FocusCounterBuff.BuffDef);
-
-                            Log.Debug("Damage: " +  damageMod);
 
                             healthComponent.TakeDamage(new DamageInfo
                             {
