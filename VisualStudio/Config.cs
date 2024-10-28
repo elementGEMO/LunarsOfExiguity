@@ -29,6 +29,10 @@ public static class LoEConfig
             token, "Relic Names", RewriteOptions.Relic,
             "[ Changes the naming conventions of Lunars | Does not effect 'Disables ...' ]"
         );
+        CooldownHooks.Cooldown_Minimum = LoEPlugin.Instance.Config.Bind(
+            token, "Cooldown Minimum", 0f,
+            "[ 0 = 0s Minimum | Cooldown Reduction Value, Vanilla is 0.5s ]"
+        );
         ShrineCleanseRework.Irradiant_Chance = LoEPlugin.Instance.Config.Bind(
             token,
             "Chance for Irradiant Pearl", 20,

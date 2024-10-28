@@ -12,7 +12,10 @@ namespace LunarsOfExiguity
     [BepInDependency(ItemAPI.PluginGUID)]
     [BepInDependency(ColorsAPI.PluginGUID)]
     [BepInDependency(PrefabAPI.PluginGUID)]
+    [BepInDependency(RecalculateStatsAPI.PluginGUID)]
+
     [BepInPlugin(PluginGUID, PluginName, PluginVersion)]
+
     public class LoEPlugin : BaseUnityPlugin
     {
         public const string PluginGUID = PluginAuthor + "." + PluginName;
@@ -60,13 +63,18 @@ namespace LunarsOfExiguity
 
             new BrittleCrownRework();
             new PureCrownItem();
+
+            new LightFluxRework();
         }
         private void SetUpMethods()
         {
             new ConsumeHooks();
+            new CooldownHooks();
+
             new GestureDrownedHooks();
             new FocusConvergenceHooks();
             new BrittleCrownHooks();
+            new LightFluxHooks();
         }
         private void SetupAssets()
         {
