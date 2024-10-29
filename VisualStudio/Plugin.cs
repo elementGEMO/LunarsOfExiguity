@@ -65,6 +65,7 @@ namespace LunarsOfExiguity
             new PureCrownItem();
 
             new LightFluxRework();
+            new PureLightFluxItem();
         }
         private void SetUpMethods()
         {

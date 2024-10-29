@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 3426632450
+CRC: 452406039
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 067abb50fb451c5784934d5fce6ec8c4
+    Hash: a16e041421c8e5dcbd8a936540405347
   TypeTreeHash:
     serializedVersion: 2
     Hash: b824e6e31f7423187b48afc99cdf7781
@@ -32,6 +32,7 @@ Assets:
 - Assets/Items/Gesture/PureGesture/PureGestureStubbedMat.mat
 - Assets/Items/Gesture/PureGesture/PureGestureIcon.png
 - Assets/Items/Focus/FocusCounterIcon.png
+- Assets/Items/LightFlux/PureLightFluxModel.prefab
 - Assets/Items/Crown/Pure/PureCrownIcon.png
 - Assets/Items/Focus/PureFocus/PureFocusModel.prefab
 - Assets/Items/Focus/PureFocus/PureFocusStubbedMat.mat
@@ -39,11 +40,13 @@ Assets:
 - Assets/Items/Gesture/DrownedDebuffIcon.png
 - Assets/Items/Pearls/PearlIcon.png
 - Assets/Items/Pearls/ShinyPearlIcon.png
+- Assets/Items/LightFlux/PureLightFluxMat.mat
 - Assets/Items/Focus/PureFocus/PureFocusIcon.png
 - Assets/ItemTiers/PureBackgroundIcon.png
 - Assets/Items/Crown/Pure/PureCrownModel.prefab
 - Assets/Items/Focus/PureFocus/PureFocusStubbedBlackholeMat.mat
 - Assets/Items/Crown/PureCrownSymbol.png
+- Assets/Items/LightFlux/PureLightFluxIcon.png
 - Assets/Items/Blemished/PureConsumedIcon.png
 - Assets/Items/Fractured/LunarConsumedIcon.png
 - Assets/Items/Gesture/PureGesture/PureGestureModel.prefab

@@ -30,7 +30,7 @@ public class LightFluxRework : ItemReworkBase
         Charge_Amount = LoEPlugin.Instance.Config.Bind(
             RelicNameOverride + " - Rework",
             "Charge Amount", 4,
-            "[ 4 = +4 Charges | on All Skills ]"
+            "[ 4 = +4 Charge(s) | on All Skills ]"
         );
         Cooldown_Reduction = LoEPlugin.Instance.Config.Bind(
             RelicNameOverride + " - Rework",
@@ -56,22 +56,20 @@ public class LightFluxRework : ItemReworkBase
 
         return Rework_Enabled.Value;
     }
-    /*
     protected override void Initialize()
     {
-        if (PureGestureItem.Item_Enabled.Value)
+        if (PureLightFluxItem.Item_Enabled.Value)
         {
-            LanguageAPI.AddOverlay(PureGestureItem.ItemDef.pickupToken, string.Format(
-                PureGestureItem.SimplePickup + "Fractures {0}".Style("#D2B088") + ".",
+            LanguageAPI.AddOverlay(PureLightFluxItem.ItemDef.pickupToken, string.Format(
+                PureLightFluxItem.SimplePickup + "Fractures {0}".Style("#D2B088") + ".",
                 LoEConfig.Rework_Name.Value == LoEConfig.RewriteOptions.Relic ? RelicNameOverride : CursedNameOverride
             ));
 
-            LanguageAPI.AddOverlay(PureGestureItem.ItemDef.descriptionToken, string.Format(
-                PureGestureItem.SimpleDesc + "Fractures {1}".Style("#D2B088") + ".",
-                RoundVal(PureGestureItem.Percent_Chance.Value),
+            LanguageAPI.AddOverlay(PureLightFluxItem.ItemDef.descriptionToken, string.Format(
+                PureLightFluxItem.SimpleDesc + "Fractures {1}".Style("#D2B088") + ".",
+                PureLightFluxItem.Charge_Amount.Value.SignVal(),
                 LoEConfig.Rework_Name.Value == LoEConfig.RewriteOptions.Relic ? RelicNameOverride : CursedNameOverride
             ));
         }
     }
-    */
 }

@@ -13,35 +13,26 @@ public class LightFluxHooks
 
     public LightFluxHooks()
     {
-        CharacterBody.onBodyInventoryChangedGlobal += AddDirtySkills;
-        On.RoR2.CharacterBody.RecalculateStats += IncreaseCharge;
-        IL.RoR2.CharacterBody.RecalculateStats += ReplaceFluxEffect;
+        ReworkItemEnabled = LightFluxRework.Rework_Enabled.Value;
+        PureItemEnabled = PureLightFluxItem.Item_Enabled.Value;
+
+        if (ReworkItemEnabled)
+        {
+            CharacterBody.onBodyInventoryChangedGlobal += AddDirtySkills;
+            On.RoR2.CharacterBody.RecalculateStats += IncreaseFluxCharge;
+            IL.RoR2.CharacterBody.RecalculateStats += ReplaceFluxEffect;
+        }
+        if (PureItemEnabled)
+        {
+            On.RoR2.CharacterBody.RecalculateStats += IncreasePureCharge;
+        }
     }
 
     private void AddDirtySkills(CharacterBody self)
     {
         if (NetworkServer.active) self.AddItemBehavior<FluxDirtySkills>(self.inventory.GetItemCount(DLC1Content.Items.HalfAttackSpeedHalfCooldowns));
     }
-    private void ReplaceFluxEffect(ILContext il)
-    {
-        ILCursor cursor = new(il);
-        int itemIndex = -1;
-
-        cursor.TryGotoNext(
-            x => x.MatchLdsfld(typeof(DLC1Content.Items), nameof(DLC1Content.Items.HalfAttackSpeedHalfCooldowns)),
-            x => x.MatchCallOrCallvirt<Inventory>(nameof(Inventory.GetItemCount)),
-            x => x.MatchStloc(out itemIndex)
-        );
-
-        if (itemIndex != -1 && cursor.TryGotoNext(x => x.MatchLdarg(0)))
-        {
-            cursor.Emit(OpCodes.Ldloc, itemIndex);
-            cursor.EmitDelegate<Func<int, int>>(self => 0);
-            cursor.Emit(OpCodes.Stloc, itemIndex);
-        }
-        else Log.Warning(InternalName + " - #1 (ReplaceFluxEffect) Failure");
-    }
-    private void IncreaseCharge(On.RoR2.CharacterBody.orig_RecalculateStats orig, CharacterBody self)
+    private void IncreaseFluxCharge(On.RoR2.CharacterBody.orig_RecalculateStats orig, CharacterBody self)
     {
         orig(self);
 
@@ -84,6 +75,43 @@ public class LightFluxHooks
                     float attackSpeedMod = 1f - MathF.Pow(LightFluxRework.Attack_Speed_Percent.Value / 100f, 1f / allMissing);
                     self.attackSpeed *= attackSpeedMod;
                 }
+            }
+        }
+    }
+    private void ReplaceFluxEffect(ILContext il)
+    {
+        ILCursor cursor = new(il);
+        int itemIndex = -1;
+
+        cursor.TryGotoNext(
+            x => x.MatchLdsfld(typeof(DLC1Content.Items), nameof(DLC1Content.Items.HalfAttackSpeedHalfCooldowns)),
+            x => x.MatchCallOrCallvirt<Inventory>(nameof(Inventory.GetItemCount)),
+            x => x.MatchStloc(out itemIndex)
+        );
+
+        if (itemIndex != -1 && cursor.TryGotoNext(x => x.MatchLdarg(0)))
+        {
+            cursor.Emit(OpCodes.Ldloc, itemIndex);
+            cursor.EmitDelegate<Func<int, int>>(self => 0);
+            cursor.Emit(OpCodes.Stloc, itemIndex);
+        }
+        else Log.Warning(InternalName + " - #1 (ReplaceFluxEffect) Failure");
+    }
+
+    private void IncreasePureCharge(On.RoR2.CharacterBody.orig_RecalculateStats orig, CharacterBody self)
+    {
+        orig(self);
+
+        if (self.inventory)
+        {
+            bool hasItem = self.inventory.GetItemCount(PureLightFluxItem.ItemDef) > 0;
+
+            if (hasItem)
+            {
+                if (self.skillLocator.primary) self.skillLocator.primaryBonusStockSkill.SetBonusStockFromBody(PureLightFluxItem.Charge_Amount.Value);
+                if (self.skillLocator.secondary) self.skillLocator.secondaryBonusStockSkill.SetBonusStockFromBody(PureLightFluxItem.Charge_Amount.Value);
+                if (self.skillLocator.utility) self.skillLocator.utilityBonusStockSkill.SetBonusStockFromBody(PureLightFluxItem.Charge_Amount.Value);
+                if (self.skillLocator.special) self.skillLocator.specialBonusStockSkill.SetBonusStockFromBody(PureLightFluxItem.Charge_Amount.Value);
             }
         }
     }
