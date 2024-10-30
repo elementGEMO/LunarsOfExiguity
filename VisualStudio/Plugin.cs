@@ -49,6 +49,7 @@ namespace LunarsOfExiguity
 
             new SkillDisableDebuff();
             new FocusCounterBuff();
+            new StoneGrowthBuff();
         }
         private void SetUpItems()
         {
@@ -66,6 +67,8 @@ namespace LunarsOfExiguity
 
             new LightFluxRework();
             new PureLightFluxItem();
+
+            new StoneFluxRework();
         }
         private void SetUpMethods()
         {
@@ -76,6 +79,7 @@ namespace LunarsOfExiguity
             new FocusConvergenceHooks();
             new BrittleCrownHooks();
             new LightFluxHooks();
+            new StoneFluxHooks();
         }
         private void SetupAssets()
         {

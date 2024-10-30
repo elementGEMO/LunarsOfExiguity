@@ -27,11 +27,12 @@ public class PureFocusItem : ItemBase
     protected override string Description => string.Format(SimpleDesc + "Fractures Focused Convergence".Style("#D2B088") + ".", Max_Damage_Percent.Value, Percent_Loss_Hit.Value);
     public static string SimpleDesc = "After the " + "Teleporter event".Style(FontColor.cIsUtility) + ", " + "enemies ".Style(FontColor.cIsHealth) + "lose " + "{0}% health".Style(FontColor.cIsHealth) + ", reduced by " + "{1}% ".Style(FontColor.cIsHealth) + "each time you were hit during it. ";
 
-    /*
-    protected override string Lore => "The tranquil murmur of the waters echo as a reminder. Their kin remains.\r\n\r\n" +
-        "This shell, passed from one to another. Carrying the memories of lost remnants, and new experiences - their hopes, their struggles, their legacy.\r\n\r\n" +
-        "Would you allow this cycle to flow, or will you claim it as your own?";
-    */
+    protected override string Lore => "They showed their thanks to their protectors, decorating their homes with carvings and statues constructed in their image.\n\n" +
+        "And for that, they were blessed.\n\n" +
+        "They showed their thanks to their savior, laboring to create elaborate temples, cast in shadows by the image of their hero which broke up the horizon.\n\n" +
+        "And for that, they were blessed.\n\n" +
+        "They showed their thanks to the gates that saved them. A misunderstanding of their purpose, a mockery of a divine instrument by a creator long forgotten.\n\n" +
+        "And for that, they were blessed.";
 
     protected override bool IsEnabled()
     {

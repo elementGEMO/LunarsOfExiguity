@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 452406039
+CRC: 116367937
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: a16e041421c8e5dcbd8a936540405347
+    Hash: e03811ebae82a8402c3c6d3d4daf3a9d
   TypeTreeHash:
     serializedVersion: 2
     Hash: b824e6e31f7423187b48afc99cdf7781
@@ -50,4 +50,5 @@ Assets:
 - Assets/Items/Blemished/PureConsumedIcon.png
 - Assets/Items/Fractured/LunarConsumedIcon.png
 - Assets/Items/Gesture/PureGesture/PureGestureModel.prefab
+- Assets/Items/StoneFlux/StoneGrowthIcon.png
 Dependencies: []

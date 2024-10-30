@@ -28,11 +28,11 @@ public class PureCrownItem : ItemBase
     protected override string Description => string.Format(SimpleDesc + "Fractures Brittle Crown".Style("#D2B088") + ".", Chance_Free.Value);
     public static string SimpleDesc = "All " + "gold purchase interactables ".Style(FontColor.cIsUtility) + "have a " + "{0}% ".Style(FontColor.cIsUtility) + "chance to be " + "free".Style(FontColor.cIsUtility) + ". ";
 
-    /*
-    protected override string Lore => "The tranquil murmur of the waters echo as a reminder. Their kin remains.\r\n\r\n" +
-        "This shell, passed from one to another. Carrying the memories of lost remnants, and new experiences - their hopes, their struggles, their legacy.\r\n\r\n" +
-        "Would you allow this cycle to flow, or will you claim it as your own?";
-    */
+    protected override string Lore => "A beautiful garden.\n\n" +
+        "My head hangs heavy tonight - the light sets and I see it shimmering across sunfruit and the wilty, mossy lilyvines. My subjects are abound: some lie at gentle rest. Others dutiful are tending to the chimes.\n\n" +
+        "They do not see this as greed. When their kin brings them feast and bauble, they do not feel shame for wanting more. These lives of each and every stature and shape. Each and every one, housing their own stories... I see them march and celebrate in the light, offerings placed in Our garden. Idols of my form, shaped from heated silver. Royal jelly brought up from their burrows, nestled in the dune brush. Slivers of obsidian wrapped in rope whose surface thirstily drinks up the sunlight. Scavenged trinkets, urns and vessels of gratitude- full of flowers and painted beads. The gifts come and go incessantly, and you brand it as greed simply to cherish these lives. If it is greed to be pained when a flower wilts too soon, or simply to want more of life - then so be it.\n\n" +
+        "I am grounded, for a moment, to oversee today's celebrations. Timid little ones... meekly staring at my wrappings behind their Elders. I feel the weight of my crown, made in the image of the rising sun. A symbol of hope and light, heavy with my promise. At times, I could not raise my head to the sky even when I'd wished to. So I look down - to them instead. To their games, amusing little rituals of song and spiced fruit. Does it sound familiar? Is that greed too, holding onto those memories of you?\n\n" +
+        "The beauty of our garden is that there will always be more - it is not my place to say when it is enough. It is not a gift to me. It is a gift to those who did not make it here. Those you would have left to wither away.";
 
     protected override bool IsEnabled()
     {
