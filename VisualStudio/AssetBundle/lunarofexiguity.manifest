@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 116367937
+CRC: 1132750727
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: e03811ebae82a8402c3c6d3d4daf3a9d
+    Hash: 3a8ce9ca8a9ae86b9696f1e76e1022ee
   TypeTreeHash:
     serializedVersion: 2
     Hash: b824e6e31f7423187b48afc99cdf7781
@@ -29,19 +29,25 @@ ClassTypes:
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
+- Assets/Items/StoneFlux/PureStoneFluxModel.prefab
 - Assets/Items/Gesture/PureGesture/PureGestureStubbedMat.mat
 - Assets/Items/Gesture/PureGesture/PureGestureIcon.png
 - Assets/Items/Focus/FocusCounterIcon.png
 - Assets/Items/LightFlux/PureLightFluxModel.prefab
+- Assets/Items/StoneFlux/PureStoneFluxIcon.png
 - Assets/Items/Crown/Pure/PureCrownIcon.png
 - Assets/Items/Focus/PureFocus/PureFocusModel.prefab
 - Assets/Items/Focus/PureFocus/PureFocusStubbedMat.mat
 - Assets/Items/Crown/Pure/PureCrownMat.mat
+- Assets/Items/Purity/PurePurityMat.mat
+- Assets/Items/Purity/PurePurityIcon.png
 - Assets/Items/Gesture/DrownedDebuffIcon.png
 - Assets/Items/Pearls/PearlIcon.png
+- Assets/Items/Purity/PurePurityModel.prefab
 - Assets/Items/Pearls/ShinyPearlIcon.png
 - Assets/Items/LightFlux/PureLightFluxMat.mat
 - Assets/Items/Focus/PureFocus/PureFocusIcon.png
+- Assets/Items/StoneFlux/PureStoneFluxMat.mat
 - Assets/ItemTiers/PureBackgroundIcon.png
 - Assets/Items/Crown/Pure/PureCrownModel.prefab
 - Assets/Items/Focus/PureFocus/PureFocusStubbedBlackholeMat.mat

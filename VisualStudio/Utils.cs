@@ -1,9 +1,9 @@
 ﻿using System;
-
-using LunarsOfExiguity;
 using UnityEngine;
 using System.Collections.Generic;
 using RoR2;
+
+using LunarsOfExiguity;
 
 internal static class LoEUtils
 {
@@ -29,47 +29,6 @@ internal static class LoEColors
         cIsLunar
     };
 }
-internal class LoEColorRegister
-{
-    private static bool _hookEnabled = false;
-
-    private static readonly List<Color32> indexToColor32 = [];
-    private static readonly List<string> indexToHexString = [];
-    internal static void SetHooks()
-    {
-        if (_hookEnabled)
-        {
-            return;
-        }
-
-        On.RoR2.ColorCatalog.GetColor += GetColor;
-        On.RoR2.ColorCatalog.GetColorHexString += GetColorHex;
-
-        _hookEnabled = true;
-    }
-    private static Color32 GetColor(On.RoR2.ColorCatalog.orig_GetColor orig, ColorCatalog.ColorIndex colorIndex)
-    {
-        if ((int)colorIndex < 0) return indexToColor32[-1 - ((int)colorIndex)];
-        return orig(colorIndex);
-    }
-    private static string GetColorHex(On.RoR2.ColorCatalog.orig_GetColorHexString orig, ColorCatalog.ColorIndex colorIndex)
-    {
-        if ((int)colorIndex < 0) return indexToHexString[-1 - ((int)colorIndex)];
-        return orig(colorIndex);
-    }
-
-    public static ColorCatalog.ColorIndex RegisterColor(Color color)
-    {
-        SetHooks();
-
-        int nextColorIndex = -indexToColor32.Count - 1;
-        ColorCatalog.ColorIndex newIndex = (ColorCatalog.ColorIndex)nextColorIndex;
-        indexToColor32.Add(color);
-        indexToHexString.Add(Util.RGBToHex(color));
-
-        return newIndex;
-    }
-}
 internal class LoERenderHelper
 {
     public static CharacterModel.RendererInfo[] ItemDisplaySetup(GameObject self)
@@ -87,21 +46,6 @@ internal class LoERenderHelper
                 ignoreOverlays = false
             });
         }
-
-        /*
-        CharacterModel.RendererInfo[] renderInfos = new CharacterModel.RendererInfo[allRender.Length];
-
-        for (int i = 0; i < allRender.Length; i++)
-        {
-            renderInfos[i] = new CharacterModel.RendererInfo
-            {
-                defaultMaterial = allRender[i].sharedMaterial,
-                renderer = allRender[i],
-                defaultShadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On,
-                ignoreOverlays = false
-            };
-        }
-        */
 
         return [.. renderInfos];
     }

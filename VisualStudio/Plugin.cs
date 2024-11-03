@@ -8,11 +8,15 @@ using ShaderSwapper;
 
 namespace LunarsOfExiguity
 {
+    // R2API Dependencies
     [BepInDependency(LanguageAPI.PluginGUID)]
     [BepInDependency(ItemAPI.PluginGUID)]
     [BepInDependency(ColorsAPI.PluginGUID)]
     [BepInDependency(PrefabAPI.PluginGUID)]
     [BepInDependency(RecalculateStatsAPI.PluginGUID)]
+
+    // Misc Dependencies
+    //[BepInDependency("Goorakh-FreeCostFix-1.0.0", BepInDependency.DependencyFlags.SoftDependency)]
 
     [BepInPlugin(PluginGUID, PluginName, PluginVersion)]
 
@@ -50,6 +54,7 @@ namespace LunarsOfExiguity
             new SkillDisableDebuff();
             new FocusCounterBuff();
             new StoneGrowthBuff();
+            new GrowthDangerBuff();
         }
         private void SetUpItems()
         {
@@ -69,6 +74,10 @@ namespace LunarsOfExiguity
             new PureLightFluxItem();
 
             new StoneFluxRework();
+            new PureStoneFluxItem();
+
+            new PurityRework();
+            new PurePurityItem();
         }
         private void SetUpMethods()
         {
@@ -80,6 +89,7 @@ namespace LunarsOfExiguity
             new BrittleCrownHooks();
             new LightFluxHooks();
             new StoneFluxHooks();
+            new PurityHooks();
         }
         private void SetupAssets()
         {
