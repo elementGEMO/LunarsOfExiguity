@@ -78,6 +78,9 @@ namespace LunarsOfExiguity
 
             new PurityRework();
             new PurePurityItem();
+
+            new GlassRework();
+            new PureGlassItem();
         }
         private void SetUpMethods()
         {
@@ -90,6 +93,7 @@ namespace LunarsOfExiguity
             new LightFluxHooks();
             new StoneFluxHooks();
             new PurityHooks();
+            new GlassHooks();
         }
         private void SetupAssets()
         {
