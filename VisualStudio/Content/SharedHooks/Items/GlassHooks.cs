@@ -6,6 +6,9 @@ using R2API;
 using UnityEngine;
 using UnityEngine.Networking;
 
+using static LoEOverlay;
+using UnityEngine.AddressableAssets;
+
 namespace LunarsOfExiguity;
 public class GlassHooks
 {
@@ -13,10 +16,17 @@ public class GlassHooks
     public static bool ReworkItemEnabled;
     public static bool PureItemEnabled;
 
+    //private Material BrightProvOverlay = LoEPlugin.Bundle.LoadAsset<Material>("PureGlassMat");
+    private GameObject SlashEffect;
+    private DamageColorIndex SlashDamageIndex;
+
     public GlassHooks()
     {
         ReworkItemEnabled = GlassRework.Rework_Enabled.Value;
         PureItemEnabled = PureGlassItem.Item_Enabled.Value;
+
+        SlashEffect = Addressables.LoadAsset<GameObject>("RoR2/DLC2/FalseSon/FalseSonClubSwoosh.prefab").WaitForCompletion();
+        SlashDamageIndex = ColorsAPI.RegisterDamageColor(new Color32(80, 224, 186, 255));
 
         if (ReworkItemEnabled)
         {
@@ -27,8 +37,36 @@ public class GlassHooks
         if (PureItemEnabled)
         {
             RecalculateStatsAPI.GetStatCoefficients += BezerkDamage;
+            GlobalEventManager.onServerDamageDealt += ApplyEffect;
+            //On.RoR2.CharacterModel.UpdateOverlays += TestOverlay;
         }
     }
+
+    private void ApplyEffect(DamageReport damageReport)
+    {
+        if (damageReport.victimBody && damageReport.attackerBody?.inventory)
+        {
+            bool hasItem = damageReport.attackerBody.inventory.GetItemCount(PureGlassItem.ItemDef) > 0;
+
+            if (hasItem)
+            {
+                float healthFraction = damageReport.attackerBody.healthComponent.combinedHealth / damageReport.attackerBody.healthComponent.fullCombinedHealth;
+                foreach (Transform transform in SlashEffect.GetComponentsInChildren<Transform>()) transform.localScale = Vector3.one * (1f - healthFraction);
+                EffectManager.SimpleEffect(SlashEffect, damageReport.damageInfo.position, UnityEngine.Random.rotation, true);
+
+                damageReport.damageInfo.damageColorIndex = SlashDamageIndex;
+            }
+        }
+    }
+
+    /*
+    private void TestOverlay(On.RoR2.CharacterModel.orig_UpdateOverlays orig, CharacterModel self)
+    {
+        orig(self);
+
+        //if (self.GetComponent<CharacterBody>()?.inventory.GetItemCount(PureGlassItem.ItemDef) > 0) AddOverlay(self, BrightProvOverlay);
+    }
+    */
 
     private void BezerkDamage(CharacterBody self, RecalculateStatsAPI.StatHookEventArgs args)
     {

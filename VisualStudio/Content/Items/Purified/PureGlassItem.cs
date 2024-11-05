@@ -17,8 +17,8 @@ public class PureGlassItem : ItemBase
     public static ItemDef ItemDef;
 
     protected override CombinedItemTier Tier => PurifiedTier.PurifiedItemTierDef;
-    //protected override Sprite PickupIconSprite => LoEPlugin.Bundle.LoadAsset<Sprite>("PureLightFluxIcon");
-    //protected override GameObject PickupModelPrefab => LoEPlugin.Bundle.LoadAsset<GameObject>("PureLightFluxModel");
+    protected override Sprite PickupIconSprite => LoEPlugin.Bundle.LoadAsset<Sprite>("PureGlassIcon");
+    protected override GameObject PickupModelPrefab => LoEPlugin.Bundle.LoadAsset<GameObject>("PureGlassModel");
 
     protected override string DisplayName => "Honor of Glass";
     protected override string CursedNameOverride => DisplayName;
@@ -56,7 +56,6 @@ public class PureGlassItem : ItemBase
         PurifiedTier.ItemTierPool.Add(ItemDef.itemIndex);
         ItemCatalog.availability.onAvailable += PairFractured;
     }
-    /*
     protected override void LogDisplay()
     {
         ModelPanelParameters modelParam = PickupModelPrefab.AddComponent<ModelPanelParameters>();
@@ -72,7 +71,6 @@ public class PureGlassItem : ItemBase
 
         PickupModelPrefab.AddComponent<FloatingPointFix>();
     }
-    */
 
     private void PairFractured()
     {

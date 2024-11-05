@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 1132750727
+CRC: 499795528
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 3a8ce9ca8a9ae86b9696f1e76e1022ee
+    Hash: 03dce43513be4951d413bf420ef48684
   TypeTreeHash:
     serializedVersion: 2
     Hash: b824e6e31f7423187b48afc99cdf7781
@@ -35,6 +35,7 @@ Assets:
 - Assets/Items/Focus/FocusCounterIcon.png
 - Assets/Items/LightFlux/PureLightFluxModel.prefab
 - Assets/Items/StoneFlux/PureStoneFluxIcon.png
+- Assets/Items/Glass/PureGlassIcon.png
 - Assets/Items/Crown/Pure/PureCrownIcon.png
 - Assets/Items/Focus/PureFocus/PureFocusModel.prefab
 - Assets/Items/Focus/PureFocus/PureFocusStubbedMat.mat
@@ -43,12 +44,14 @@ Assets:
 - Assets/Items/Purity/PurePurityIcon.png
 - Assets/Items/Gesture/DrownedDebuffIcon.png
 - Assets/Items/Pearls/PearlIcon.png
+- Assets/Items/Glass/PureGlassMat.mat
 - Assets/Items/Purity/PurePurityModel.prefab
 - Assets/Items/Pearls/ShinyPearlIcon.png
 - Assets/Items/LightFlux/PureLightFluxMat.mat
 - Assets/Items/Focus/PureFocus/PureFocusIcon.png
 - Assets/Items/StoneFlux/PureStoneFluxMat.mat
 - Assets/ItemTiers/PureBackgroundIcon.png
+- Assets/Items/Glass/PureGlassModel.prefab
 - Assets/Items/Crown/Pure/PureCrownModel.prefab
 - Assets/Items/Focus/PureFocus/PureFocusStubbedBlackholeMat.mat
 - Assets/Items/Crown/PureCrownSymbol.png

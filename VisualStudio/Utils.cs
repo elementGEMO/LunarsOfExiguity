@@ -50,3 +50,16 @@ internal class LoERenderHelper
         return [.. renderInfos];
     }
 }
+
+internal class LoEOverlay
+{
+    public static void AddOverlay(CharacterModel model, Material overlayMaterial)
+    {
+        if (model.activeOverlayCount >= CharacterModel.maxOverlays || !overlayMaterial) return;
+
+        Material[] allOverlays = model.currentOverlays;
+        int overlayCount = model.activeOverlayCount;
+        model.activeOverlayCount = overlayCount + 1;
+        allOverlays[overlayCount] = overlayMaterial;
+    }
+}
