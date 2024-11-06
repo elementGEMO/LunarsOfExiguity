@@ -33,14 +33,6 @@ public static class LoEConfig
             token, "Cooldown Minimum", 0f,
             "[ 0 = 0s Minimum | Cooldown Reduction Value, Vanilla is 0.5s ]"
         );
-        ShrineCleanseRework.Irradiant_Chance = LoEPlugin.Instance.Config.Bind(
-            token,
-            "Chance for Irradiant Pearl", 20,
-            new ConfigDescription(
-                "[ 20 = 20% Chance | for Irradiant Pearl when using Cleansing Pool on a Lunar without a Purified item ]",
-                new AcceptableValueRange<int>(1, 100)
-            )
-        );
         Round_To = LoEPlugin.Instance.Config.Bind(
             token, "Item Stat Rounding", 0,
             "[ 0 = Whole | 1 = Tenths | 2 = Hundrenths | 3 = ... ]\nRounds item values to respective decimal point"

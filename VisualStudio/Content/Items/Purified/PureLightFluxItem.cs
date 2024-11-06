@@ -28,11 +28,10 @@ public class PureLightFluxItem : ItemBase
     protected override string Description => string.Format(SimpleDesc + "Fractures Light Flux Pauldron".Style("#D2B088") + ".", Charge_Amount.Value.SignVal());
     public static string SimpleDesc = "Add " + "{0} ".Style(FontColor.cIsUtility) + "charge to all of your " + "skills".Style(FontColor.cIsUtility) + ". ";
 
-    /*
-    protected override string Lore => "The tranquil murmur of the waters echo as a reminder. Their kin remains.\r\n\r\n" +
-        "This shell, passed from one to another. Carrying the memories of lost remnants, and new experiences - their hopes, their struggles, their legacy.\r\n\r\n" +
-        "Would you allow this cycle to flow, or will you claim it as your own?";
-    */
+    protected override string Lore => "Birth? Why, yes, my children - I remember those moments wholly. They are etched into my very being, so they may be recounted. My birth was one of rebellion.\n\n" +
+        "\"You are my moment of weakness and my celebration at once. You will know love and you will know loss, hope and curiosity. You will know what it means to create, just as I have. I can bear no longer to give this beautiful gift alone... so you will be my testament. A testament to him, so he can understand my intentions. When he sees you, beauty and power grown into our image, he WILL understand.\"\n\n" +
+        "\"So go forth, and become something all your own! Know this joy I have been unable to share, for you are alive and you are free - what better time is there to create? Perhaps one day, you too will love to be listened to...\"\n\n" +
+        "He was tired that day. No, child, you do not tire me as I did him. I make you with love, and would never lock you away.";
 
     protected override bool IsEnabled()
     {

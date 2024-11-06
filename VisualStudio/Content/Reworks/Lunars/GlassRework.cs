@@ -55,22 +55,20 @@ public class GlassRework : ItemReworkBase
 
         return Rework_Enabled.Value;
     }
-    /*
     protected override void Initialize()
     {
-        if (PureGestureItem.Item_Enabled.Value)
+        if (PureGlassItem.Item_Enabled.Value)
         {
-            LanguageAPI.AddOverlay(PureGestureItem.ItemDef.pickupToken, string.Format(
-                PureGestureItem.SimplePickup + "Fractures {0}".Style("#D2B088") + ".",
+            LanguageAPI.AddOverlay(PureGlassItem.ItemDef.pickupToken, string.Format(
+                PureGlassItem.SimplePickup + "Fractures {0}".Style("#D2B088") + ".",
                 LoEConfig.Rework_Name.Value == LoEConfig.RewriteOptions.Relic ? RelicNameOverride : CursedNameOverride
             ));
 
-            LanguageAPI.AddOverlay(PureGestureItem.ItemDef.descriptionToken, string.Format(
-                PureGestureItem.SimpleDesc + "Fractures {1}".Style("#D2B088") + ".",
-                RoundVal(PureGestureItem.Percent_Chance.Value),
+            LanguageAPI.AddOverlay(PureGlassItem.ItemDef.descriptionToken, string.Format(
+                PureGlassItem.SimpleDesc + "Fractures {1}".Style("#D2B088") + ".",
+                RoundVal(PureGlassItem.Damage_Modifier.Value),
                 LoEConfig.Rework_Name.Value == LoEConfig.RewriteOptions.Relic ? RelicNameOverride : CursedNameOverride
             ));
         }
     }
-    */
 }

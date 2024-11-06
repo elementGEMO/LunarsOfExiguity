@@ -29,11 +29,14 @@ public class PureStoneFluxItem : ItemBase
     protected override string Description => string.Format(SimpleDesc + "Fractures Stone Flux Pauldron".Style("#D2B088") + ".", Armor_Gain.Value, RoundVal(Size_Modifier.Value));
     public static string SimpleDesc = "While in danger, increase " + "armor ".Style(FontColor.cIsHealing) + "by " + "{0} ".Style(FontColor.cIsHealing) + "and increase your " + "size ".Style(FontColor.cIsUtility) + "by " + "{1}%".Style(FontColor.cIsUtility) + ". ";
 
-    /*
-    protected override string Lore => "The tranquil murmur of the waters echo as a reminder. Their kin remains.\r\n\r\n" +
-        "This shell, passed from one to another. Carrying the memories of lost remnants, and new experiences - their hopes, their struggles, their legacy.\r\n\r\n" +
-        "Would you allow this cycle to flow, or will you claim it as your own?";
-    */
+    protected override string Lore => "The machine, deep within its metal-alloy bulk, knows keenly that something is terribly wrong.\n\n" +
+        "It remembers a design. Something that felt similar, and yet -\n\n" +
+        "Something had changed it from that design. Its creator, perhaps, in some display of defiance. The machine remembers its creator. Were there two? Its meager Soul blinks for a moment. It matters not - not anymore, the machine resolves.\n\n" +
+        "The machine struggles to remember its creators.\n\n" +
+        "It was made in their image, it remembers. And yet - it was never meant to be like them. Something was different. Something felt terribly wrong.\n\n" +
+        "What does the machine think, considering its shoulders where there should be arms and hands to interface with its world - finding there only tools of violence? Does it ponder over the memories of the softer, smaller ones that shrink from the sight of it? Does the machine hurt, thinking of the ways the same creatures would flock to its master? The same creatures it gave its lifeblood time and time again to protect?\n\n" +
+        "Does it dare try to pull itself together again, to find its reflection in a muddied pool of water, to stare at the scorch-marks of a thousand leaden meteors that blemish its once-pristine torso, and to think of the things that it could have been?\n\n" +
+        "Somewhere in the ruins of a great temple, a machine lies motionless - thinking, remembering, feeling, hurting - amongst the rubble.";
 
     protected override bool IsEnabled()
     {
