@@ -19,7 +19,7 @@ public class LightFluxRework : ItemReworkBase
     protected override string RelicNameOverride => "Relic of Fatigue";
     protected override string CursedNameOverride => RelicNameOverride;
 
-    protected override string PickupOverride => "...";
+    protected override string PickupOverride => "Add several charges to all of your skills, and reduce all skill cooldowns... " + "BUT attack slower with every charge missing".Style(FontColor.cDeath) + ".";
     protected override string DescriptionOverride => string.Format(
         "Add " + "{0} ".Style(FontColor.cIsUtility) + "charges to all of your " + "skills".Style(FontColor.cIsUtility) + ". " + "Reduces all skill cooldowns ".Style(FontColor.cIsUtility) + "by " + "{1}%".Style(FontColor.cIsUtility) + ". " + "Decrease attack speed ".Style(FontColor.cIsDamage) + "by " + "{2}% ".Style(FontColor.cIsDamage) + "with " + "every charge missing".Style(FontColor.cIsHealth) + ".",
         Charge_Amount.Value.SignVal(), RoundVal(Cooldown_Reduction.Value), RoundVal(Attack_Speed_Percent.Value)

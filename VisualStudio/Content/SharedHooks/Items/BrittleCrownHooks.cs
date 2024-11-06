@@ -30,12 +30,34 @@ public class BrittleCrownHooks
             IL.RoR2.HealthComponent.TakeDamageProcess += ModifyDamage;
             On.RoR2.UI.ScoreboardStrip.UpdateMoneyText += FixNegativeMoney;
             IL.RoR2.PurchaseInteraction.CanBeAffordedByInteractor += AllowDebt;
+            IL.RoR2.ConvertPlayerMoneyToExperience.FixedUpdate += PreventMoney;
         }
         if (PureItemEnabled)
         {
             CreateFreeVisual();
             IL.RoR2.PurchaseInteraction.OnInteractionBegin += RefundFreeUnlock;
             On.RoR2.PurchaseInteraction.Awake += AddFreeComponent;
+        }
+    }
+
+    private void PreventMoney(ILContext il)
+    {
+        ILCursor cursor = new(il);
+        int masterIndex = -1;
+
+        cursor.TryGotoNext(
+            x => x.MatchLdloc(3),
+            x => x.MatchCallOrCallvirt<GameObject>(nameof(GameObject.GetComponent)),
+            x => x.MatchStloc(out masterIndex)
+        );
+
+        if (masterIndex != -1 && cursor.TryGotoNext(x => x.MatchLdarg(0)))
+        {
+            cursor.Emit(OpCodes.Ldloc, masterIndex);
+            cursor.EmitDelegate<Action<CharacterMaster>>(self =>
+            {
+                if ((int)self.money < 0) self.money = 0;
+            });
         }
     }
 

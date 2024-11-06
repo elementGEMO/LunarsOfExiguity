@@ -25,7 +25,7 @@ public class StoneFluxRework : ItemReworkBase
     protected override string RelicNameOverride => "Relic of Acromegaly";
     protected override string CursedNameOverride => RelicNameOverride;
 
-    protected override string PickupOverride => "Taking damage causes you to grow, increasing armor and reducing speed.";
+    protected override string PickupOverride => "Taking damage causes you to grow, increasing armor and " + "reducing speed".Style(FontColor.cDeath) + ".";
     protected override string DescriptionOverride => string.Format(
         "Taking damage increases your " + "size ".Style(FontColor.cIsUtility) + "by " + "{0}%".Style(FontColor.cIsUtility) + ", up to a " + "maximum ".Style(FontColor.cIsUtility) + "of " + "{1}% ".Style(FontColor.cIsUtility) + ", for " + "{2} ".Style(FontColor.cIsUtility) + "seconds. Increases " + "armor ".Style(FontColor.cIsHealing) + "by " + "{3} ".Style(FontColor.cIsHealing) + "and reduces " + "movement speed ".Style(FontColor.cIsHealth) + "by " + "{4}% ".Style(FontColor.cIsHealth) + "for every " + "{0}% ".Style(FontColor.cIsUtility) + "increase in " + "size".Style(FontColor.cIsUtility) + ".",
         RoundVal(Size_Modifier.Value), RoundVal(Max_Size.Value),

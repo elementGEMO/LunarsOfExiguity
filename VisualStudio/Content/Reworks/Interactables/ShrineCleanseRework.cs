@@ -1,4 +1,5 @@
 ﻿using BepInEx.Configuration;
+using R2API;
 using RoR2;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -20,6 +21,8 @@ public class ShrineCleanseRework
         CleansePoolCard = Addressables.LoadAsset<InteractableSpawnCard>("RoR2/Base/ShrineCleanse/iscShrineCleanse.asset").WaitForCompletion();
         CleansePoolCard.directorCreditCost = int.MaxValue;
 
+        LanguageAPI.Add("CLEANSE_POOL_SPAWN", "A Cleansing Pool has surfaced...".Style("#D2B088"));
+
         On.RoR2.CostTypeCatalog.LunarItemOrEquipmentCostTypeHelper.PayCost += ReplaceWithPure;
         SceneDirector.onPrePopulateSceneServer += ForceCleansePool;
     }
@@ -37,7 +40,7 @@ public class ShrineCleanseRework
         Every_Stage = LoEPlugin.Instance.Config.Bind(
             StaticInternal,
             "Guaranteed on Stage", 5,
-            "[ 5 = Every 5th | Stage a Cleansing Pool Spawns, doesn't spawn in any other Scenario ]"
+            "[ 5 = Every 5 | Stages a Cleansing Pool Spawns, doesn't spawn in any other Scenario ]"
         );
         Use_Once = LoEPlugin.Instance.Config.Bind(
             StaticInternal,
@@ -55,6 +58,7 @@ public class ShrineCleanseRework
             int currentStage = Run.instance.stageClearCount + 1;
             if (currentStage % Every_Stage.Value == 0)
             {
+                Chat.SendBroadcastChat(new Chat.SimpleChatMessage { baseToken = "CLEANSE_POOL_SPAWN" });
                 DirectorCore.instance.TrySpawnObject(new DirectorSpawnRequest(CleansePoolCard, new() { placementMode = DirectorPlacementRule.PlacementMode.Random }, scene.rng));
             }
         }
@@ -89,6 +93,6 @@ public class ShrineCleanseRework
             selfShop.SetPickupIndex(new PickupIndex(pureResult));
         }
 
-        selfShop.enabled = false;
+        context.purchasedObject.SetActive(!Use_Once.Value);
     }
 }
