@@ -49,6 +49,8 @@ A significant change with this mod is that ``Lunars`` no longer have the ability
 - **Providence** Fight ..? <sub><sup> _**(Not Guaranteed)**_ </sub></sup>
 
 ## Special Thanks
+#### Code Assistance
+- **SomeoneElse** ``@notsomeoneelse``
 #### Lore Contributors
 - **Gemo**, here I am again
 - **Swuff** ``@en.wikipedia.org``
