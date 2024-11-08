@@ -262,6 +262,7 @@ public class BrittleCrownHooks
 
     public class CrownFreePurchase : NetworkBehaviour
     {
+        [SyncVar]
         private bool ShowIcon;
         private PurchaseInteraction Self;
 

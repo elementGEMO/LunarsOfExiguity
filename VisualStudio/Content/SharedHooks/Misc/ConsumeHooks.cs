@@ -5,19 +5,21 @@ using System.Collections.Generic;
 namespace LunarsOfExiguity;
 public class ConsumeHooks
 {
-    private List<ItemIndex> ItemBlacklist;
+    //private List<ItemIndex> ItemBlacklist;
     public ConsumeHooks()
     {
         Inventory.onInventoryChangedGlobal += OnInventoryChangedGlobal;
         RoR2Application.onFixedUpdate += OnFixedUpdate;
 
-        ItemCatalog.availability.onAvailable += AddBlacklist;
+        //ItemCatalog.availability.onAvailable += AddBlacklist;
     }
 
+    /*
     private void AddBlacklist()
     {
         ItemBlacklist.Add(DLC1Content.Items.LunarSun.itemIndex);
     }
+    */
 
     private void OnFixedUpdate()
     {
@@ -69,8 +71,6 @@ public class ConsumeHooks
             bool isLunarTier = ItemCatalog.GetItemDef(itemIndex).tier == ItemTier.Lunar;
             bool isPureTier = ItemCatalog.GetItemDef(itemIndex).tier == PurifiedTier.PurifiedItemTierDef.tier;
             int itemCount = inventory.GetItemCount(itemIndex);
-
-
 
             if (itemIndex != DLC1Content.Items.LunarSun.itemIndex)
             {

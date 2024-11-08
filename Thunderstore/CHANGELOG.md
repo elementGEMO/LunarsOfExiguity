@@ -1,5 +1,6 @@
 ## Version 0.1.3
 - Fixed ``Relic / Honor of Focus`` from spamming NREs on stages without proper Teleporters
+- Changed the message event for a guaranteed ``Cleansing Pool`` to have ``..`` instead of ``...``, being more consistent with the rest
 - Added a condition behind ``Cleansing Pool`` just in case
 ## Version 0.1.2
 - Added new Config options for ``Cleansing Pool``

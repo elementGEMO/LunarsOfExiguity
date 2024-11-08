@@ -15,6 +15,12 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Compile Remove="OtherDLL\**" />
+	  <EmbeddedResource Remove="OtherDLL\**" />
+	  <None Remove="OtherDLL\**" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="BepInEx.Analyzers" Version="1.0.*">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -29,13 +35,18 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Libs\" />
+	  <Reference Include="ShaderSwapper">
+	    <HintPath>..\LibAssemblies\ShaderSwapper.dll</HintPath>
+	    <Private>False</Private>
+	  </Reference>
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Reference Include="ShaderSwapper">
-	    <HintPath>Libs\ShaderSwapper.dll</HintPath>
-	  </Reference>
+	  <Folder Include="Weaver\" />
 	</ItemGroup>
+
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+	  <Exec Command="call &quot;$(ProjectDir)\Weaver\Weaver.bat&quot;&#xD;&#xA;" />
+	</Target>
 
 </Project>

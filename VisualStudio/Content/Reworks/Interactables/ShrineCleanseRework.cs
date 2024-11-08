@@ -34,7 +34,7 @@ public class ShrineCleanseRework
         if (SpawnType.Value != PoolSpawnType.DirectorCost) CleansePoolCard.directorCreditCost = int.MaxValue;
         else CleansePoolCard.directorCreditCost *= PoolNValue.Value;
 
-        LanguageAPI.Add("CLEANSE_POOL_SPAWN", "A Cleansing Pool has surfaced...".Style("#D2B088"));
+        LanguageAPI.Add("CLEANSE_POOL_SPAWN", "A Cleansing Pool has surfaced..".Style("#D2B088"));
 
         On.RoR2.CostTypeCatalog.LunarItemOrEquipmentCostTypeHelper.PayCost += ReplaceWithPure;
         SceneDirector.onPrePopulateSceneServer += ForceCleansePool;
@@ -123,5 +123,9 @@ public class ShrineCleanseRework
         }
     }
 
-    public class PoolUseCount : NetworkBehaviour { public int Uses; }
+    public class PoolUseCount : NetworkBehaviour
+    {
+        [SyncVar]
+        public int Uses;
+    }
 }

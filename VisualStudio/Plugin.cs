@@ -32,6 +32,8 @@ namespace LunarsOfExiguity
         public static readonly string TokenPrefix = "GEMO_LOE_";
         public void Awake()
         {
+            On.RoR2.Networking.NetworkManagerSystemSteam.OnClientConnect += (s, u, t) => { };
+
             Instance = this;
 
             SetupAssets();
