@@ -1,8 +1,12 @@
+## Version 0.1.3
+- Fixed ``Relic / Honor of Focus`` from spamming NREs on stages without proper Teleporters
+- Added a condition behind ``Cleansing Pool`` just in case
 ## Version 0.1.2
 - Added new Config options for ``Cleansing Pool``
 <br> - Spawn Every # Stage in a Loop
 <br> - Spawn After # Stages
 <br> - Director Cost Modifier
+<br> - Uses Before Consume
 - Added a condition to ``Relic of Glass`` to prevent extremely small health that allows taking damage without dying
 - ``Relic of Purity`` now sets proc-coefficient to an extremely small number, letting Survivors apply their status effects normally
 <br> Default stat increases are now decreased due to allowing some items to function as well

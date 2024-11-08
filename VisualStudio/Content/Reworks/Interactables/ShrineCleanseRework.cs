@@ -77,10 +77,11 @@ public class ShrineCleanseRework
             if (SpawnType.Value == PoolSpawnType.EveryNStage && (currentStage - PoolNValue.Value) % 5 == 0) spawnPool = true;
             if (SpawnType.Value == PoolSpawnType.AfterNStages && currentStage % PoolNValue.Value == 0) spawnPool = true;
 
-            if (spawnPool)
+            if ((SceneInfo.instance.countsAsStage || SceneInfo.instance.sceneDef.allowItemsToSpawnObjects) && spawnPool)
             {
+                Xoroshiro128Plus newRNG = new(scene.rng.nextUlong);
                 Chat.SendBroadcastChat(new Chat.SimpleChatMessage { baseToken = "CLEANSE_POOL_SPAWN" });
-                DirectorCore.instance.TrySpawnObject(new DirectorSpawnRequest(CleansePoolCard, new() { placementMode = DirectorPlacementRule.PlacementMode.Random }, scene.rng));
+                DirectorCore.instance.TrySpawnObject(new DirectorSpawnRequest(CleansePoolCard, new() { placementMode = DirectorPlacementRule.PlacementMode.Random }, newRNG));
             }
         }
     }
@@ -114,12 +115,9 @@ public class ShrineCleanseRework
             selfShop.SetPickupIndex(new PickupIndex(pureResult));
         }
 
-        //context.purchasedObject.SetActive(!Use_Once.Value);
-
         PoolUseCount count = context.purchasedObject.GetComponent<PoolUseCount>() ?? context.purchasedObject.AddComponent<PoolUseCount>();
         if (count)
         {
-            Log.Debug(count.Uses + " -> " + (count.Uses + 1));
             count.Uses++;
             if (count.Uses >= Use_Amount.Value) context.purchasedObject.SetActive(false);
         }

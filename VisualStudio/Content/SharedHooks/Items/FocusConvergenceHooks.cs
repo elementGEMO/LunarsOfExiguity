@@ -179,7 +179,7 @@ public class FocusConvergenceHooks
         }
         private void FixedUpdate()
         {
-            if (Self)
+            if (Self && TeleporterInteraction.instance)
             {
                 bool hasItem = Util.GetItemCountGlobal(RoR2Content.Items.FocusConvergence.itemIndex, true, false) > 0;
                 if (hasItem)
