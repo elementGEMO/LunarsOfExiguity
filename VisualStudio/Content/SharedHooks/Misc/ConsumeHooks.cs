@@ -5,10 +5,18 @@ using System.Collections.Generic;
 namespace LunarsOfExiguity;
 public class ConsumeHooks
 {
+    private List<ItemIndex> ItemBlacklist;
     public ConsumeHooks()
     {
         Inventory.onInventoryChangedGlobal += OnInventoryChangedGlobal;
         RoR2Application.onFixedUpdate += OnFixedUpdate;
+
+        ItemCatalog.availability.onAvailable += AddBlacklist;
+    }
+
+    private void AddBlacklist()
+    {
+        ItemBlacklist.Add(DLC1Content.Items.LunarSun.itemIndex);
     }
 
     private void OnFixedUpdate()
@@ -62,9 +70,14 @@ public class ConsumeHooks
             bool isPureTier = ItemCatalog.GetItemDef(itemIndex).tier == PurifiedTier.PurifiedItemTierDef.tier;
             int itemCount = inventory.GetItemCount(itemIndex);
 
-            if (HasPureCounterpart(inventory, itemIndex)) TryReplacement(ConsumeType.Fractured, inventory, itemIndex, itemCount);
-            else if (isLunarTier && itemCount > 1) TryReplacement(ConsumeType.Fractured, inventory, itemIndex, itemCount - 1, 1);
-            else if (isPureTier && !IgnoresBlemished(itemIndex) && itemCount > 1) TryReplacement(ConsumeType.Blemished, inventory, itemIndex, itemCount - 1, 1);
+
+
+            if (itemIndex != DLC1Content.Items.LunarSun.itemIndex)
+            {
+                if (HasPureCounterpart(inventory, itemIndex)) TryReplacement(ConsumeType.Fractured, inventory, itemIndex, itemCount);
+                else if (isLunarTier && itemCount > 1) TryReplacement(ConsumeType.Fractured, inventory, itemIndex, itemCount - 1, 1);
+                else if (isPureTier && !IgnoresBlemished(itemIndex) && itemCount > 1) TryReplacement(ConsumeType.Blemished, inventory, itemIndex, itemCount - 1, 1);
+            }
         }
     }
 

@@ -29,8 +29,8 @@ public class PurityRework : ItemReworkBase
     {
         Stat_Modifier = LoEPlugin.Instance.Config.Bind(
             RelicNameOverride + " - Rework",
-            "Charge Amount", 150f,
-            "[ 150 = +150% Stat | Multiplier on ALL Stats ]"
+            "Charge Amount", 100f,
+            "[ 100 = +100% Stat | Multiplier on ALL Stats ]"
         );
         Cooldown_Reduce = LoEPlugin.Instance.Config.Bind(
             RelicNameOverride + " - Rework",

@@ -1,8 +1,8 @@
 {
     "name": "LunarsOfExiguity",
-    "version_number": "0.1.0",
+    "version_number": "0.1.2",
     "website_url": "https://github.com/elementGEMO/LunarsOfExiguity",
-    "description": "Overhauls almost every Lunar item, and adds a new Cleansing Pool item tier! Highly configurable! Currently includes 7 Lunar overhauls and 7 new items.",
+    "description": "Overhauls the Lunar Tier, and adds a new Cleansing Pool Tier! Extremely configurable. Currently includes 7 Lunar reworks and 7 Purified items.",
     "dependencies": [
         "RiskofThunder-R2API_Core-5.1.2",
         "RiskofThunder-R2API_ContentManagement-1.0.6",
@@ -11,6 +11,7 @@
         "RiskofThunder-R2API_Prefab-1.0.4",
         "RiskofThunder-R2API_Colors-1.0.3",
         "RiskofThunder-R2API_Items-1.0.4",
-		"Smooth_Salad-ShaderSwapper-1.0.1"
+		"Smooth_Salad-ShaderSwapper-1.0.1",
+		"Goorakh-FreeCostFix-1.0.0"
     ]
 }

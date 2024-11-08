@@ -3,6 +3,7 @@ using R2API;
 using RoR2;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.Networking;
 
 namespace LunarsOfExiguity;
 public class ShrineCleanseRework
@@ -10,8 +11,18 @@ public class ShrineCleanseRework
     public static string StaticInternal = "Cleansing Pool";
 
     public static ConfigEntry<int> Irradiant_Chance;
-    public static ConfigEntry<int> Every_Stage;
-    public static ConfigEntry<bool> Use_Once;
+    public static ConfigEntry<PoolSpawnType> SpawnType;
+    public static ConfigEntry<int> PoolNValue;
+    public static ConfigEntry<int> Use_Amount;
+
+    public static int StageCounter;
+
+    public enum PoolSpawnType
+    {
+        EveryNStage,
+        AfterNStages,
+        DirectorCost
+    }
 
     private InteractableSpawnCard CleansePoolCard;
     public ShrineCleanseRework()
@@ -19,7 +30,9 @@ public class ShrineCleanseRework
         CreateConfig();
 
         CleansePoolCard = Addressables.LoadAsset<InteractableSpawnCard>("RoR2/Base/ShrineCleanse/iscShrineCleanse.asset").WaitForCompletion();
-        CleansePoolCard.directorCreditCost = int.MaxValue;
+
+        if (SpawnType.Value != PoolSpawnType.DirectorCost) CleansePoolCard.directorCreditCost = int.MaxValue;
+        else CleansePoolCard.directorCreditCost *= PoolNValue.Value;
 
         LanguageAPI.Add("CLEANSE_POOL_SPAWN", "A Cleansing Pool has surfaced...".Style("#D2B088"));
 
@@ -37,18 +50,21 @@ public class ShrineCleanseRework
                 new AcceptableValueRange<int>(1, 100)
             )
         );
-        Every_Stage = LoEPlugin.Instance.Config.Bind(
+        SpawnType = LoEPlugin.Instance.Config.Bind(
             StaticInternal,
-            "Guaranteed on Stage", 5,
-            "[ 5 = Every 5 | Stages a Cleansing Pool Spawns, doesn't spawn in any other Scenario ]"
+            "Spawn Type", PoolSpawnType.EveryNStage,
+            "[ EveryNStage = Every Stage 1 - 5 in a Loop has a Pool | AfterNStages = After N Stage spawn a Pool | DirectorCost = Lower Spawns Frequently, Higher Spawns Less Frequently ]"
         );
-        Use_Once = LoEPlugin.Instance.Config.Bind(
+        PoolNValue = LoEPlugin.Instance.Config.Bind(
             StaticInternal,
-            "Availability", true,
-            "[ True = Can be used once max | False = Can be used infinitely ]"
+            "Pool N Variable", 5,
+            "[ 5 = Spawn Every 5th Stage | 2 = Spawn After 2 Stages | 1 = 1x to Vanilla Director Cost ]"
         );
-
-        if (Every_Stage.Value <= 0) Every_Stage.Value = 1;
+        Use_Amount = LoEPlugin.Instance.Config.Bind(
+            StaticInternal,
+            "Available Uses", 1,
+            "[ 1 = 1 Time | before Cleansing Pool Disappears ]"
+        );
     }
 
     private void ForceCleansePool(SceneDirector scene)
@@ -56,7 +72,12 @@ public class ShrineCleanseRework
         if (Run.instance)
         {
             int currentStage = Run.instance.stageClearCount + 1;
-            if (currentStage % Every_Stage.Value == 0)
+            bool spawnPool = false;
+
+            if (SpawnType.Value == PoolSpawnType.EveryNStage && (currentStage - PoolNValue.Value) % 5 == 0) spawnPool = true;
+            if (SpawnType.Value == PoolSpawnType.AfterNStages && currentStage % PoolNValue.Value == 0) spawnPool = true;
+
+            if (spawnPool)
             {
                 Chat.SendBroadcastChat(new Chat.SimpleChatMessage { baseToken = "CLEANSE_POOL_SPAWN" });
                 DirectorCore.instance.TrySpawnObject(new DirectorSpawnRequest(CleansePoolCard, new() { placementMode = DirectorPlacementRule.PlacementMode.Random }, scene.rng));
@@ -93,6 +114,16 @@ public class ShrineCleanseRework
             selfShop.SetPickupIndex(new PickupIndex(pureResult));
         }
 
-        context.purchasedObject.SetActive(!Use_Once.Value);
+        //context.purchasedObject.SetActive(!Use_Once.Value);
+
+        PoolUseCount count = context.purchasedObject.GetComponent<PoolUseCount>() ?? context.purchasedObject.AddComponent<PoolUseCount>();
+        if (count)
+        {
+            Log.Debug(count.Uses + " -> " + (count.Uses + 1));
+            count.Uses++;
+            if (count.Uses >= Use_Amount.Value) context.purchasedObject.SetActive(false);
+        }
     }
+
+    public class PoolUseCount : NetworkBehaviour { public int Uses; }
 }

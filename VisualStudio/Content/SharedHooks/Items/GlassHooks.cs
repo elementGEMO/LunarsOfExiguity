@@ -163,7 +163,7 @@ public class GlassHooks
 
             cursor.EmitDelegate<Action<HealthComponent, float>>((self, damage) =>
             {
-                if (self.body.inventory?.GetItemCount(RoR2Content.Items.LunarDagger) > 0 && damage < self.fullCombinedHealth)
+                if (self.body.inventory?.GetItemCount(RoR2Content.Items.LunarDagger) > 0 && Mathf.FloorToInt(self.fullCombinedHealth - damage) > 1)
                 {
                     float applyAmount = damage / self.fullCombinedHealth * self.body.cursePenalty * 100f;
                     applyAmount *= 1f + (self.body.cursePenalty - 1f);

@@ -29,7 +29,7 @@ public class FocusConvergenceHooks
 
         if (ReworkItemEnabled)
         {
-            On.RoR2.HoldoutZoneController.Start += DisableConvergence;
+            On.RoR2.HoldoutZoneController.FocusConvergenceController.Awake += DisableController;
             CharacterBody.onBodyAwakeGlobal += Invincibility;
         }
         if (ReworkItemEnabled || PureItemEnabled)
@@ -39,12 +39,11 @@ public class FocusConvergenceHooks
         }
     }
 
-    private static void DisableConvergence(On.RoR2.HoldoutZoneController.orig_Start orig, HoldoutZoneController self)
+    private void DisableController(On.RoR2.HoldoutZoneController.FocusConvergenceController.orig_Awake orig, MonoBehaviour self)
     {
-        self.gameObject.AddComponent<FasterDuration>();
-        self.applyFocusConvergence = false;
-
-        orig(self);
+        HoldoutZoneController baseController = self.GetComponent<HoldoutZoneController>();
+        baseController.gameObject.AddComponent<FasterDuration>();
+        UnityEngine.Object.Destroy(self);
     }
     private static void Invincibility(CharacterBody self) => self.gameObject.AddComponent<InvincibleDuringHoldout>();
     private static void DamageAll(ILContext il)
@@ -86,9 +85,12 @@ public class FocusConvergenceHooks
                         }
 
                         if (damageInstance.Item != ItemIndex.None) allPlayers.Add(damageInstance);
+                        damageInstance.Player.RemoveBuff(FocusCounterBuff.BuffDef);
                     }
 
-                    foreach (TeamComponent monsterComponent in TeamComponent.GetTeamMembers(TeamIndex.Monster))
+                    List<TeamComponent> allMonsters = [.. TeamComponent.GetTeamMembers(TeamIndex.Monster)];
+
+                    foreach (TeamComponent monsterComponent in allMonsters)
                     {
                         HealthComponent healthComponent = monsterComponent.body?.healthComponent;
                         if (!healthComponent || !healthComponent.alive) continue;
@@ -116,7 +118,6 @@ public class FocusConvergenceHooks
                             {
                                 damageMod = PureFocusItem.Max_Damage_Percent.Value / 100f * Mathf.Pow(1f - PureFocusItem.Percent_Loss_Hit.Value / 100f, damageInstance.Instances);
                             }
-                            damageInstance.Player.RemoveBuff(FocusCounterBuff.BuffDef);
 
                             healthComponent.TakeDamage(new DamageInfo
                             {

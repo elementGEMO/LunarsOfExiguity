@@ -70,7 +70,7 @@ public class PurityHooks
     {
         if (damageInfo.attacker && damageInfo.attacker.GetComponent<CharacterBody>())
         {
-            if (damageInfo.attacker.GetComponent<CharacterBody>().inventory?.GetItemCount(RoR2Content.Items.LunarBadLuck) > 0) return;
+            if (damageInfo.attacker.GetComponent<CharacterBody>().inventory?.GetItemCount(RoR2Content.Items.LunarBadLuck) > 0) damageInfo.procCoefficient = float.Epsilon;//return;
         }
 
         orig(self, damageInfo, victim);
@@ -79,7 +79,7 @@ public class PurityHooks
     {
         if (damageInfo.attacker && damageInfo.attacker.GetComponent<CharacterBody>())
         {
-            if (damageInfo.attacker.GetComponent<CharacterBody>().inventory?.GetItemCount(RoR2Content.Items.LunarBadLuck) > 0) damageInfo.procCoefficient = 0;
+            if (damageInfo.attacker.GetComponent<CharacterBody>().inventory?.GetItemCount(RoR2Content.Items.LunarBadLuck) > 0) damageInfo.procCoefficient = float.Epsilon;//damageInfo.procCoefficient = 0;
         }
 
         orig(self, damageInfo);
