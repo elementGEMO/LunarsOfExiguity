@@ -11,6 +11,7 @@ public class ShrineCleanseRework
     public static string StaticInternal = "Cleansing Pool";
 
     public static ConfigEntry<int> Irradiant_Chance;
+    public static ConfigEntry<bool> Scale_Players;
     public static ConfigEntry<PoolSpawnType> SpawnType;
     public static ConfigEntry<int> PoolNValue;
     public static ConfigEntry<int> Use_Amount;
@@ -30,9 +31,12 @@ public class ShrineCleanseRework
         CreateConfig();
 
         CleansePoolCard = Addressables.LoadAsset<InteractableSpawnCard>("RoR2/Base/ShrineCleanse/iscShrineCleanse.asset").WaitForCompletion();
+        GameObject CleansePool = Addressables.LoadAsset<GameObject>("RoR2/Base/ShrineCleanse/ShrineCleanse.prefab").WaitForCompletion();
 
         if (SpawnType.Value != PoolSpawnType.DirectorCost) CleansePoolCard.directorCreditCost = int.MaxValue;
         else CleansePoolCard.directorCreditCost *= PoolNValue.Value;
+
+        CleansePool.AddComponent<PoolUseCount>();
 
         LanguageAPI.Add("CLEANSE_POOL_SPAWN", "A Cleansing Pool has surfaced..".Style("#D2B088"));
 
@@ -49,6 +53,11 @@ public class ShrineCleanseRework
                 "[ 20 = 20% Chance | for Irradiant Pearl when using Cleansing Pool on a Lunar without a Purified item ]",
                 new AcceptableValueRange<int>(1, 100)
             )
+        );
+        Scale_Players = LoEPlugin.Instance.Config.Bind(
+            StaticInternal,
+            "Scale With Players", true,
+            "[ True = +1 Guaranteed Pool per Player | False = One Guaranteed Pool per Stage ]"
         );
         SpawnType = LoEPlugin.Instance.Config.Bind(
             StaticInternal,
@@ -81,12 +90,16 @@ public class ShrineCleanseRework
             {
                 Xoroshiro128Plus newRNG = new(scene.rng.nextUlong);
                 Chat.SendBroadcastChat(new Chat.SimpleChatMessage { baseToken = "CLEANSE_POOL_SPAWN" });
-                DirectorCore.instance.TrySpawnObject(new DirectorSpawnRequest(CleansePoolCard, new() { placementMode = DirectorPlacementRule.PlacementMode.Random }, newRNG));
+
+                int spawnAmount = 1;
+                if (Scale_Players.Value) spawnAmount = CharacterMaster.readOnlyInstancesList.Count;
+
+                for (int i = 0; i< spawnAmount; i++) DirectorCore.instance.TrySpawnObject(new DirectorSpawnRequest(CleansePoolCard, new() { placementMode = DirectorPlacementRule.PlacementMode.Random }, newRNG));
             }
         }
     }
 
-    private void ReplaceWithPure(On.RoR2.CostTypeCatalog.LunarItemOrEquipmentCostTypeHelper.orig_PayCost orig, CostTypeDef costTypeDef, CostTypeDef.PayCostContext context)
+    public void ReplaceWithPure(On.RoR2.CostTypeCatalog.LunarItemOrEquipmentCostTypeHelper.orig_PayCost orig, CostTypeDef costTypeDef, CostTypeDef.PayCostContext context)
     {
         orig(costTypeDef, context);
 
@@ -115,17 +128,22 @@ public class ShrineCleanseRework
             selfShop.SetPickupIndex(new PickupIndex(pureResult));
         }
 
-        PoolUseCount count = context.purchasedObject.GetComponent<PoolUseCount>() ?? context.purchasedObject.AddComponent<PoolUseCount>();
-        if (count)
-        {
-            count.Uses++;
-            if (count.Uses >= Use_Amount.Value) context.purchasedObject.SetActive(false);
-        }
+        PoolUseCount count = context.purchasedObject.GetComponent<PoolUseCount>();
+        if (count) count.Uses++;
+    }
+}
+
+public class PoolUseCount : NetworkBehaviour
+{
+    [SyncVar]
+    public int Uses;
+    private GameObject Self;
+
+    public void Awake() => Self = gameObject;
+    public void LateUpdate()
+    {
+        if (!Self) return;
+        if (Self.active == true && Uses >= ShrineCleanseRework.Use_Amount.Value) Self.SetActive(false);
     }
 
-    public class PoolUseCount : NetworkBehaviour
-    {
-        [SyncVar]
-        public int Uses;
-    }
 }

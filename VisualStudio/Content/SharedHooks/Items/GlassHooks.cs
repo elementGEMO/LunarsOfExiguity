@@ -16,7 +16,6 @@ public class GlassHooks
     public static bool ReworkItemEnabled;
     public static bool PureItemEnabled;
 
-    //private Material BrightProvOverlay = LoEPlugin.Bundle.LoadAsset<Material>("PureGlassMat");
     private GameObject SlashEffect;
     private DamageColorIndex SlashDamageIndex;
 
@@ -38,7 +37,6 @@ public class GlassHooks
         {
             RecalculateStatsAPI.GetStatCoefficients += BezerkDamage;
             GlobalEventManager.onServerDamageDealt += ApplyEffect;
-            //On.RoR2.CharacterModel.UpdateOverlays += TestOverlay;
         }
     }
 
@@ -59,15 +57,6 @@ public class GlassHooks
         }
     }
 
-    /*
-    private void TestOverlay(On.RoR2.CharacterModel.orig_UpdateOverlays orig, CharacterModel self)
-    {
-        orig(self);
-
-        //if (self.GetComponent<CharacterBody>()?.inventory.GetItemCount(PureGlassItem.ItemDef) > 0) AddOverlay(self, BrightProvOverlay);
-    }
-    */
-
     private void BezerkDamage(CharacterBody self, RecalculateStatsAPI.StatHookEventArgs args)
     {
         if (NetworkServer.active && self.inventory)
@@ -77,21 +66,9 @@ public class GlassHooks
             if (hasItem)
             {
                 float damageMod = PureGlassItem.Damage_Modifier.Value / 100f;
-                float healthFraction = self.healthComponent.combinedHealth / self.healthComponent.fullCombinedHealth;
+                float healthFraction = Math.Min(1f, self.healthComponent.combinedHealth / self.healthComponent.fullCombinedHealth);
 
                 args.damageMultAdd += damageMod * (1f - healthFraction);
-
-                /*
-                float currentHealth = self.healthComponent.fullCombinedHealth;
-                float baseHealth = currentHealth * self.cursePenalty;
-
-                float healthFraction = currentHealth / baseHealth;
-                float damageMod = GlassRework.Damage_Modifier.Value / 100f;
-
-                args.damageMultAdd += Mathf.Pow(GlassRework.Exponent_Coefficient.Value, damageMod * (1f - healthFraction)) - 1f;
-                */
-
-
             }
         }
     }

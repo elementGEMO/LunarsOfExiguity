@@ -3,6 +3,7 @@ using R2API;
 using System;
 using MonoMod.Cil;
 using Mono.Cecil.Cil;
+using MonoMod.RuntimeDetour;
 using UnityEngine.Networking;
 using UnityEngine.AddressableAssets;
 using UnityEngine;
@@ -17,7 +18,7 @@ public class BrittleCrownHooks
 
     public static GameObject ProvidenceSymbol;
     public static GameObject SymbolExplodeEffect;
-    private static readonly Color BaseSymbolColor = new(0f, 93f / 255f, 85f / 255f);
+    public static readonly Color BaseSymbolColor = new Color32(0, 93, 85, 255);
 
     public BrittleCrownHooks()
     {
@@ -26,6 +27,8 @@ public class BrittleCrownHooks
 
         if (ReworkItemEnabled)
         {
+            //new Hook(typeof(CharacterMaster).GetMethod("get_money"), ConvertInt);
+
             IL.RoR2.GlobalEventManager.ProcessHitEnemy += DisableGold;
             IL.RoR2.HealthComponent.TakeDamageProcess += ModifyDamage;
             On.RoR2.UI.ScoreboardStrip.UpdateMoneyText += FixNegativeMoney;
@@ -38,6 +41,11 @@ public class BrittleCrownHooks
             IL.RoR2.PurchaseInteraction.OnInteractionBegin += RefundFreeUnlock;
             On.RoR2.PurchaseInteraction.Awake += AddFreeComponent;
         }
+    }
+
+    private static uint ConvertInt(Func<CharacterMaster, uint> orig, CharacterMaster self)
+    {
+        return (uint) Mathf.Max((int)self._money, 0);
     }
 
     private void PreventMoney(ILContext il)
@@ -154,15 +162,11 @@ public class BrittleCrownHooks
             cursor.EmitDelegate<Func<HealthComponent, float, float>>((self, damage) =>
             {
                 float damageMod = damage;
-                int debtMoney = (int) self.body.master.money;
+                int debtMoney = (int) self.body.master._money;
 
                 if (debtMoney < 0)
                 {
-                    Log.Debug("Damage Before Debt: " + damageMod);
-
                     damageMod *= 1f + Mathf.Abs(debtMoney * BrittleCrownRework.Debt_Damage.Value) / 100f / Run.instance.difficultyCoefficient;
-
-                    Log.Debug("Damage After Debt: " + damageMod);
 
                     EffectManager.SpawnEffect(HealthComponent.AssetReferences.loseCoinsImpactEffectPrefab, new EffectData()
                     {
@@ -259,68 +263,68 @@ public class BrittleCrownHooks
         orig(self);
         if (self.costType == CostTypeIndex.Money) self.gameObject.AddComponent<CrownFreePurchase>();
     }
+}
 
-    public class CrownFreePurchase : NetworkBehaviour
+public class CrownFreePurchase : NetworkBehaviour
+{
+    [SyncVar]
+    public bool ShowIcon;
+    private PurchaseInteraction Self;
+
+    private GameObject ProvIcon;
+    private GameObject Hologram;
+
+    public void Awake()
     {
-        [SyncVar]
-        private bool ShowIcon;
-        private PurchaseInteraction Self;
+        Self = GetComponent<PurchaseInteraction>();
+        int itemCount = Util.GetItemCountGlobal(PureCrownItem.ItemDef.itemIndex, false, false);
 
-        private GameObject ProvIcon;
-        private GameObject Hologram;
-
-        public void Awake()
+        if (itemCount > 0 && Util.CheckRoll(PureCrownItem.Chance_Free.Value, itemCount - 1))
         {
-            Self = GetComponent<PurchaseInteraction>();
-            int itemCount = Util.GetItemCountGlobal(PureCrownItem.ItemDef.itemIndex, false, false);
-
-            if (itemCount > 0 && Util.CheckRoll(PureCrownItem.Chance_Free.Value, itemCount - 1))
-            {
-                CreateVisual();
-                ShowIcon = true;
-                Hologram = transform.FindChild("HologramPivot")?.gameObject;
-            }
-            else
-            {
-                enabled = false;
-                Destroy(this);
-            }
+            CreateVisual();
+            ShowIcon = true;
+            Hologram = transform.FindChild("HologramPivot")?.gameObject;
         }
-        public void LateUpdate()
+        else
         {
-            if (!ProvIcon || !Self) return;
+            enabled = false;
+            Destroy(this);
+        }
+    }
+    public void LateUpdate()
+    {
+        if (!ProvIcon || !Self) return;
 
-            if (Self.Networkcost != 0) Self.Networkcost = 0;
-            if (Self.cost != 0) Self.cost = 0;
+        if (Self.Networkcost != 0) Self.Networkcost = 0;
+        if (Self.cost != 0) Self.cost = 0;
 
-            if (ShowIcon != Self.available)
+        if (ShowIcon != Self.available)
+        {
+            ShowIcon = Self.available;
+            ProvIcon.SetActive(ShowIcon);
+
+            if (!ShowIcon)
             {
-                ShowIcon = Self.available;
-                ProvIcon.SetActive(ShowIcon);
-
-                if (!ShowIcon)
+                EffectManager.SpawnEffect(BrittleCrownHooks.SymbolExplodeEffect, new EffectData
                 {
-                    EffectManager.SpawnEffect(SymbolExplodeEffect, new EffectData
-                    {
-                        origin = ProvIcon.transform.position,
-                        rotation = UnityEngine.Random.rotation
-                    }, true);
-                }
+                    origin = ProvIcon.transform.position,
+                    rotation = UnityEngine.Random.rotation
+                }, true);
             }
+        }
 
-            if (Hologram && Hologram.transform.GetComponentInChildren<TextMeshPro>())
-            {
-                TextMeshPro text = Hologram.transform.GetComponentInChildren<TextMeshPro>();
-                text.text = "...";
-                text.color = BaseSymbolColor;
-            }
-        }
-        private void CreateVisual()
+        if (Hologram && Hologram.transform.GetComponentInChildren<TextMeshPro>())
         {
-            ProvIcon = Instantiate(ProvidenceSymbol);
-            ProvIcon.name = "PureHonorSymbol";
-            ProvIcon.transform.parent = gameObject.transform;
-            ProvIcon.transform.localPosition = new Vector3(0f, 5f, 0f);
+            TextMeshPro text = Hologram.transform.GetComponentInChildren<TextMeshPro>();
+            text.text = "...";
+            text.color = BrittleCrownHooks.BaseSymbolColor;
         }
+    }
+    private void CreateVisual()
+    {
+        ProvIcon = Instantiate(BrittleCrownHooks.ProvidenceSymbol);
+        ProvIcon.name = "PureHonorSymbol";
+        ProvIcon.transform.parent = gameObject.transform;
+        ProvIcon.transform.localPosition = new Vector3(0f, 5f, 0f);
     }
 }

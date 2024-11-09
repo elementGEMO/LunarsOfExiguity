@@ -143,7 +143,7 @@ public class GestureDrownedHooks
 
     private static void DebuffAdded(CharacterBody self) => self.gameObject.AddComponent<DrownedHandler>();
 
-    public class DrownedHandler : NetworkBehaviour
+    public class DrownedHandler : MonoBehaviour
     {
         private float Duration;
         private CharacterBody Self;

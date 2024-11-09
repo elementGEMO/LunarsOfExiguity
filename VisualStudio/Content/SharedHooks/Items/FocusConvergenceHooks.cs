@@ -41,8 +41,10 @@ public class FocusConvergenceHooks
 
     private void DisableController(On.RoR2.HoldoutZoneController.FocusConvergenceController.orig_Awake orig, MonoBehaviour self)
     {
+        HoldoutZoneController.FocusConvergenceController temp = self.GetComponent<HoldoutZoneController.FocusConvergenceController>();
         HoldoutZoneController baseController = self.GetComponent<HoldoutZoneController>();
         baseController.gameObject.AddComponent<FasterDuration>();
+        temp.holdoutZoneController = baseController;
         UnityEngine.Object.Destroy(self);
     }
     private static void Invincibility(CharacterBody self) => self.gameObject.AddComponent<InvincibleDuringHoldout>();
@@ -156,12 +158,31 @@ public class FocusConvergenceHooks
 
             cursor.EmitDelegate<Action<HealthComponent, DamageInfo>>((self, damageInfo) =>
             {
-                if (self.alive && damageInfo.damage > 0 && TeleporterInteraction.instance && TeleporterInteraction.instance.isCharging)
+                if (self.body?.inventory && self.alive && damageInfo.damage > 0)
                 {
-                    if (self.body?.inventory)
+                    bool hasItem = false;
+                    if (ReworkItemEnabled && self.body.inventory.GetItemCount(RoR2Content.Items.FocusConvergence) > 0) hasItem = true;
+                    else if (PureItemEnabled && self.body.inventory.GetItemCount(PureFocusItem.ItemDef) > 0) hasItem = true;
+
+                    if (hasItem)
                     {
-                        if (ReworkItemEnabled && self.body.inventory.GetItemCount(RoR2Content.Items.FocusConvergence) > 0) self.body.AddBuff(FocusCounterBuff.BuffDef);
-                        else if (PureItemEnabled && self.body.inventory.GetItemCount(PureFocusItem.ItemDef) > 0) self.body.AddBuff(FocusCounterBuff.BuffDef);
+                        bool activeCharge = false;
+                        var allHoldouts = InstanceTracker.GetInstancesList<HoldoutZoneController>();
+
+                        if (allHoldouts.Count > 0)
+                        {
+                            foreach (HoldoutZoneController holdout in allHoldouts)
+                            {
+                                if (!holdout) continue;
+                                if (holdout.applyFocusConvergence && holdout.charge > 0 && holdout.charge < 1)
+                                {
+                                    activeCharge = true;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (activeCharge) self.body.AddBuff(FocusCounterBuff.BuffDef);
                     }
                 }
             });
@@ -169,7 +190,7 @@ public class FocusConvergenceHooks
         else Log.Warning(InternalName + " - #1 (IncreaseDamageCounter) Failure");
     }
 
-    public class InvincibleDuringHoldout : NetworkBehaviour
+    public class InvincibleDuringHoldout : MonoBehaviour
     {
         private CharacterBody Self;
         private void Awake()
@@ -177,15 +198,26 @@ public class FocusConvergenceHooks
             if (!GetComponent<HealthComponent>() || !GetComponent<HealthComponent>().alive) Destroy(GetComponent<InvincibleDuringHoldout>());
             else Self = GetComponent<CharacterBody>();
         }
-        private void FixedUpdate()
+        private void LateUpdate()
         {
-            if (Self && TeleporterInteraction.instance)
+            var allHoldouts = InstanceTracker.GetInstancesList<HoldoutZoneController>();
+            if (Self && allHoldouts.Count > 0)
             {
                 bool hasItem = Util.GetItemCountGlobal(RoR2Content.Items.FocusConvergence.itemIndex, true, false) > 0;
                 if (hasItem)
                 {
-                    var holdoutInstance = TeleporterInteraction.instance;
-                    if (holdoutInstance.isCharging && holdoutInstance.chargeFraction < 1)
+                    bool activeCharge = false;
+                    foreach (HoldoutZoneController holdout in allHoldouts)
+                    {
+                        if (!holdout) continue;
+                        if (holdout.applyFocusConvergence && holdout.charge > 0 && holdout.charge < 1)
+                        {
+                            activeCharge = true;
+                            break;
+                        }
+                    }
+
+                    if (activeCharge)
                     {
                         if (Self.teamComponent && Self.teamComponent.teamIndex != TeamIndex.Player)
                         {

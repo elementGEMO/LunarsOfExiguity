@@ -15,7 +15,7 @@ ren %TargetDir%\%TargetFileName% %TargetFileName%.prepatch
 
 REM le epic networking patch
 REM    Unity.UNetWeaver.exe    {path to Coremodule}                      {Path  Networking}                                     {output path} {Path to patching dll}  {Path to all needed references for the to-be-patched dll}
-.\Weaver\Unity.UNetWeaver.exe .\Weaver\Libs\UnityEngine.CoreModule.dll .\Weaver\Libs\com.unity.multiplayer-hlapi.Runtime.dll %TargetDir%\ .\Weaver\%TargetFileName% .\Weaver\Libs
+Weaver\Unity.UNetWeaver.exe .\Weaver\Libs\UnityEngine.CoreModule.dll .\Weaver\Libs\com.unity.multiplayer-hlapi.Runtime.dll %TargetDir%\ Weaver\%TargetFileName% .\Weaver\Libs
 del Weaver\%TargetFileName%
 del %TargetDir%\Robocopy
 
