@@ -9,7 +9,7 @@
 - Changed the message event for a guaranteed ``Cleansing Pool`` to have ``..`` instead of ``...``, being more consistent with the rest
 - Added a condition behind ``Cleansing Pool`` just in case
 - Fixed ``Relic / Honor of Focus`` from spamming NREs on stages without proper Teleporters
-- Fixed ``Relic / Honor of Foucs`` to properly work on all Holdout Zones that ``Focused Convergence`` was allowed on
+- Fixed ``Relic / Honor of Focus`` to properly work on all Holdout Zones that ``Focused Convergence`` was allowed on
 - Fixed ``Honor of Glass`` giving negative damage boosts when having barrier
 ## Version 0.1.2
 - Added new Config options for ``Cleansing Pool``

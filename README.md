@@ -25,7 +25,7 @@ A significant change with this mod is that ``Lunars`` no longer have the ability
 <sup> The following are only the pickup descriptions of the items. </sup>
 | Icon | Item | Description | Lore by |
 |-|-|------|-|
-| <img src="https://github.com/elementGEMO/LunarsOfExiguity/blob/master/OtherAssets/Items/PureGesture/PureGestureIcon.png?raw=true" width="64"> | Honor of the Drowned | Chance on Equipment activation to note use charge. **Fractures Relic of the Drowned**. | ``Gemo`` |
+| <img src="https://github.com/elementGEMO/LunarsOfExiguity/blob/master/OtherAssets/Items/PureGesture/PureGestureIcon.png?raw=true" width="64"> | Honor of the Drowned | Chance on Equipment activation to not use charge. **Fractures Relic of the Drowned**. | ``Gemo`` |
 | <img src="https://github.com/elementGEMO/LunarsOfExiguity/blob/master/OtherAssets/Items/PureFocus/PureFocusIcon.png?raw=true" width="64"> | Honor of Focus | All enemies after the Teleporter event take damage. **Fractures Relic of Focus**. | ``Swuff`` |
 | <img src="https://github.com/elementGEMO/LunarsOfExiguity/blob/master/OtherAssets/Items/PureCrown/PureCrownIcon.png?raw=true" width="64"> | Honor of Greed | All cash interactables have a chance to be free. **Fractures Relic of Greed**. | ``Yarrow`` |
 | <img src="https://github.com/elementGEMO/LunarsOfExiguity/blob/master/OtherAssets/Items/PureLightFlux/PureLightFluxIcon.png?raw=true" width="64"> | Honor of Fatigue| Add an extra charge to all of your skills. **Fractures Relic of Fatigue**. | ``Yarrow`` |
