@@ -55,6 +55,7 @@ namespace LunarsOfExiguity
 
             new SkillDisableDebuff();
             new FocusCounterBuff();
+            new DebtCountBuff();
             new StoneGrowthBuff();
             new GrowthDangerBuff();
         }

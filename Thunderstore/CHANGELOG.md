@@ -1,3 +1,7 @@
+## Version 0.1.4
+- ``Relic of Greed``'s debt is now handled way more efficiently, and no longer causes other modded money items to not be extremely overpowered
+- ``Relic of Greed`` now turns your money red to have a more obvious indicator
+- ``Relic of Greed`` also changes the damage number color to also indicate taking more damage
 ## Version 0.1.3
 - Networked ``Honor of Greed`` to properly show on all clients
 - Networked ``Cleansing Pool`` to disappear on all clients

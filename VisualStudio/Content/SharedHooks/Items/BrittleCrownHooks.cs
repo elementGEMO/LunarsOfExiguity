@@ -8,6 +8,7 @@ using UnityEngine.Networking;
 using UnityEngine.AddressableAssets;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 namespace LunarsOfExiguity;
 public class BrittleCrownHooks
@@ -20,6 +21,13 @@ public class BrittleCrownHooks
     public static GameObject SymbolExplodeEffect;
     public static readonly Color BaseSymbolColor = new Color32(0, 93, 85, 255);
 
+    private static readonly Color HudMoneyColor = new Color32(255, 252, 196, 255);
+    private static readonly Color BarMoneyColor = new Color32(248, 252, 151, 255);
+    private static readonly Color DebtColor = new Color32(255, 121, 126, 255);
+
+    private static readonly Color AlphaMoneyColor = new Color32(197, 189, 144, 34);
+    private static readonly Color AlphaDebtColor = new Color32(255, 121, 126, 34);
+
     public BrittleCrownHooks()
     {
         ReworkItemEnabled = BrittleCrownRework.Rework_Enabled.Value;
@@ -27,13 +35,14 @@ public class BrittleCrownHooks
 
         if (ReworkItemEnabled)
         {
-            //new Hook(typeof(CharacterMaster).GetMethod("get_money"), ConvertInt);
+            new Hook(typeof(CharacterMaster).GetMethod("set_money"), SetMoney);
+
+            On.RoR2.UI.HUD.Update += UpdateHud;
+            On.RoR2.UI.ScoreboardStrip.UpdateMoneyText += UpdateStripHud;
 
             IL.RoR2.GlobalEventManager.ProcessHitEnemy += DisableGold;
             IL.RoR2.HealthComponent.TakeDamageProcess += ModifyDamage;
-            On.RoR2.UI.ScoreboardStrip.UpdateMoneyText += FixNegativeMoney;
             IL.RoR2.PurchaseInteraction.CanBeAffordedByInteractor += AllowDebt;
-            IL.RoR2.ConvertPlayerMoneyToExperience.FixedUpdate += PreventMoney;
         }
         if (PureItemEnabled)
         {
@@ -43,70 +52,74 @@ public class BrittleCrownHooks
         }
     }
 
-    private static uint ConvertInt(Func<CharacterMaster, uint> orig, CharacterMaster self)
+    private static void SetMoney(Action<CharacterMaster, uint> orig, CharacterMaster self, uint value)
     {
-        return (uint) Mathf.Max((int)self._money, 0);
-    }
+        if (value == self._money) return;
 
-    private void PreventMoney(ILContext il)
-    {
-        ILCursor cursor = new(il);
-        int masterIndex = -1;
-
-        cursor.TryGotoNext(
-            x => x.MatchLdloc(3),
-            x => x.MatchCallOrCallvirt<GameObject>(nameof(GameObject.GetComponent)),
-            x => x.MatchStloc(out masterIndex)
-        );
-
-        if (masterIndex != -1 && cursor.TryGotoNext(x => x.MatchLdarg(0)))
+        CharacterBody selfBody = self.GetBody();
+        if (selfBody)
         {
-            cursor.Emit(OpCodes.Ldloc, masterIndex);
-            cursor.EmitDelegate<Action<CharacterMaster>>(self =>
+            int buffCount = selfBody.GetBuffCount(DebtCountBuff.BuffDef);
+            int intValue = Mathf.Abs((int)value);
+
+            if ((int)value < 0)
             {
-                if ((int)self.money < 0) self.money = 0;
-            });
+                for (int i = 0; i < intValue; i++) selfBody.AddBuff(DebtCountBuff.BuffDef);
+                value = 0U;
+            }
+            else if (buffCount > 0)
+            {
+                for (int i = 0; i < value; i++) selfBody.RemoveBuff(DebtCountBuff.BuffDef);
+                value = (uint)Mathf.Max(intValue - buffCount, 0);
+            }
         }
+
+        if (value == self._money) return;
+
+        self.SetDirtyBit(2U);
+        self._money = value;
     }
 
-    private void CreateFreeVisual()
+    private void UpdateHud(On.RoR2.UI.HUD.orig_Update orig, RoR2.UI.HUD self)
     {
-        ProvidenceSymbol = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/ShrineChance/ShrineChance.prefab").WaitForCompletion().InstantiateClone("TempShrinePrefab", true).transform.FindChild("Symbol").gameObject;
-        MeshRenderer mesh = ProvidenceSymbol.GetComponent<MeshRenderer>();
-        Material newMat = new(mesh.sharedMaterial);
+        orig(self);
 
-        newMat.mainTexture = LoEPlugin.Bundle.LoadAsset<Sprite>("PureCrownSymbol").texture;
-        newMat.SetColor("_TintColor", BaseSymbolColor);
-        newMat.SetFloat("_AlphaBoost", 0.6f);
-        mesh.sharedMaterial = newMat;
-
-        ProvidenceSymbol.transform.localScale *= 1.5f;
-
-        SymbolExplodeEffect = PrefabAPI.InstantiateClone(Resources.Load<GameObject>("Prefabs/Effects/MonstersOnShrineUse"), "PureCrownExplode", true);
-        UnityEngine.Object.Destroy(SymbolExplodeEffect.transform.FindChild("Chunks01_Ps").gameObject);
-        UnityEngine.Object.Destroy(SymbolExplodeEffect.transform.FindChild("Chunks01_Ps (1)").gameObject);
-        UnityEngine.Object.Destroy(SymbolExplodeEffect.transform.FindChild("Rings").gameObject);
-
-        foreach (ParticleSystemRenderer particle in SymbolExplodeEffect.transform.GetComponentsInChildren<ParticleSystemRenderer>())
+        if (self.moneyText)
         {
-            if (!particle.sharedMaterial) continue;
-            Material particleMat = new(particle.sharedMaterial);
-            particleMat.DisableKeyword("VERTEXCOLOR");
-            particleMat.SetColor("_TintColor", BaseSymbolColor);
-            particle.sharedMaterial = particleMat;
+            int targetMoney = 0;
+            if (self.targetMaster) targetMoney = (int) self.targetMaster.money - self.targetMaster.GetBody().GetBuffCount(DebtCountBuff.BuffDef);
+            self.moneyText.targetValue = targetMoney;
+
+            if (targetMoney >= 0) self.moneyText.targetText.color = HudMoneyColor;
+            else self.moneyText.targetText.color = DebtColor;
+
+            var gradientPanel = self.moneyText.transform.Find("BackgroundPanel")?.GetComponent<RawImage>();
+            if (gradientPanel)
+            {
+                if (targetMoney >= 0) gradientPanel.color = AlphaMoneyColor;
+                else gradientPanel.color = AlphaDebtColor;
+            }
+
+            var cashSymbol = self.moneyText.transform.Find("DollarSign")?.GetComponent<RoR2.UI.HGTextMeshProUGUI>();
+            if (cashSymbol)
+            {
+                if (targetMoney >= 0) cashSymbol.color = HudMoneyColor;
+                else cashSymbol.color = DebtColor;
+            }
         }
-
-        SymbolExplodeEffect.transform.GetComponentInChildren<Light>().color = BaseSymbolColor;
-        SymbolExplodeEffect.transform.FindChild("BlastDark_Ps").localScale = Vector3.one * 1.25f;
-
-        new EffectDef()
+    }
+    private void UpdateStripHud(On.RoR2.UI.ScoreboardStrip.orig_UpdateMoneyText orig, RoR2.UI.ScoreboardStrip self)
+    {
+        if (self.master)
         {
-            prefab = SymbolExplodeEffect,
-            prefabName = "PureCrownExplode",
-            prefabEffectComponent = SymbolExplodeEffect.GetComponent<EffectComponent>()
-        };
+            self.previousMoney = (uint)((int)self.master.money - self.master.GetBody().GetBuffCount(DebtCountBuff.BuffDef));
 
-        ContentAddition.AddEffect(SymbolExplodeEffect);
+            string cashPlacement = (int)self.previousMoney >= 0 ? "$" : "-$";
+            self.moneyText.text = string.Format("{0}{1}", cashPlacement, Mathf.Abs((int)self.previousMoney));
+
+            if ((int)self.previousMoney >= 0) self.moneyText.color = BarMoneyColor;
+            else self.moneyText.color = DebtColor;
+        }
     }
 
     private void DisableGold(ILContext il)
@@ -157,16 +170,18 @@ public class BrittleCrownHooks
         ))
         {
             cursor.Emit(OpCodes.Ldarg, 0);
+            cursor.Emit(OpCodes.Ldarg, 1);
             cursor.Emit(OpCodes.Ldloc, damageIndex);
 
-            cursor.EmitDelegate<Func<HealthComponent, float, float>>((self, damage) =>
+            cursor.EmitDelegate<Func<HealthComponent, DamageInfo, float, float>>((self, damageInfo, damage) =>
             {
-                float damageMod = damage;
-                int debtMoney = (int) self.body.master._money;
+                float setDamage = damage;
+                int buffCount = self.body.GetBuffCount(DebtCountBuff.BuffDef);
 
-                if (debtMoney < 0)
+                if (buffCount > 0)
                 {
-                    damageMod *= 1f + Mathf.Abs(debtMoney * BrittleCrownRework.Debt_Damage.Value) / 100f / Run.instance.difficultyCoefficient;
+                    setDamage *= 1f + (buffCount * BrittleCrownRework.Debt_Damage.Value / 100f) / Run.instance.difficultyCoefficient;
+                    damageInfo.damageColorIndex = DamageColorIndex.WeakPoint;
 
                     EffectManager.SpawnEffect(HealthComponent.AssetReferences.loseCoinsImpactEffectPrefab, new EffectData()
                     {
@@ -175,7 +190,7 @@ public class BrittleCrownHooks
                     }, true);
                 }
 
-                return damageMod;
+                return setDamage;
             });
 
             cursor.Emit(OpCodes.Stloc, damageIndex);
@@ -195,15 +210,6 @@ public class BrittleCrownHooks
             }
         }
         else Log.Warning(InternalName + " - #1 (ModifyDamage) Failure");
-    }
-    private void FixNegativeMoney(On.RoR2.UI.ScoreboardStrip.orig_UpdateMoneyText orig, RoR2.UI.ScoreboardStrip self)
-    {
-        if (self.master && self.master.money != self.previousMoney)
-        {
-            self.previousMoney = self.master.money;
-            string cashPlacement = (int) self.previousMoney >= 0 ? "$" : "-$";
-            self.moneyText.text = string.Format("{0}{1}", cashPlacement, Mathf.Abs((int) self.previousMoney));
-        }
     }
     private void AllowDebt(ILContext il)
     {
@@ -234,6 +240,46 @@ public class BrittleCrownHooks
             cursor.Emit(OpCodes.Stloc, numIndex);
         }
         else Log.Warning(InternalName + " - #1 (AllowDebt) Failure");
+    }
+
+    private void CreateFreeVisual()
+    {
+        ProvidenceSymbol = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/ShrineChance/ShrineChance.prefab").WaitForCompletion().InstantiateClone("TempShrinePrefab", true).transform.FindChild("Symbol").gameObject;
+        MeshRenderer mesh = ProvidenceSymbol.GetComponent<MeshRenderer>();
+        Material newMat = new(mesh.sharedMaterial);
+
+        newMat.mainTexture = LoEPlugin.Bundle.LoadAsset<Sprite>("PureCrownSymbol").texture;
+        newMat.SetColor("_TintColor", BaseSymbolColor);
+        newMat.SetFloat("_AlphaBoost", 0.6f);
+        mesh.sharedMaterial = newMat;
+
+        ProvidenceSymbol.transform.localScale *= 1.5f;
+
+        SymbolExplodeEffect = PrefabAPI.InstantiateClone(Resources.Load<GameObject>("Prefabs/Effects/MonstersOnShrineUse"), "PureCrownExplode", true);
+        UnityEngine.Object.Destroy(SymbolExplodeEffect.transform.FindChild("Chunks01_Ps").gameObject);
+        UnityEngine.Object.Destroy(SymbolExplodeEffect.transform.FindChild("Chunks01_Ps (1)").gameObject);
+        UnityEngine.Object.Destroy(SymbolExplodeEffect.transform.FindChild("Rings").gameObject);
+
+        foreach (ParticleSystemRenderer particle in SymbolExplodeEffect.transform.GetComponentsInChildren<ParticleSystemRenderer>())
+        {
+            if (!particle.sharedMaterial) continue;
+            Material particleMat = new(particle.sharedMaterial);
+            particleMat.DisableKeyword("VERTEXCOLOR");
+            particleMat.SetColor("_TintColor", BaseSymbolColor);
+            particle.sharedMaterial = particleMat;
+        }
+
+        SymbolExplodeEffect.transform.GetComponentInChildren<Light>().color = BaseSymbolColor;
+        SymbolExplodeEffect.transform.FindChild("BlastDark_Ps").localScale = Vector3.one * 1.25f;
+
+        new EffectDef()
+        {
+            prefab = SymbolExplodeEffect,
+            prefabName = "PureCrownExplode",
+            prefabEffectComponent = SymbolExplodeEffect.GetComponent<EffectComponent>()
+        };
+
+        ContentAddition.AddEffect(SymbolExplodeEffect);
     }
 
     private void RefundFreeUnlock(ILContext il)

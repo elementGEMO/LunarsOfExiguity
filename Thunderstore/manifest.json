@@ -1,6 +1,6 @@
 {
     "name": "LunarsOfExiguity",
-    "version_number": "0.1.3",
+    "version_number": "0.1.4",
     "website_url": "https://github.com/elementGEMO/LunarsOfExiguity",
     "description": "Overhauls the Lunar Tier, and adds a new Cleansing Pool Tier! Extremely configurable. Currently includes 7 Lunar reworks and 7 Purified items.",
     "dependencies": [
